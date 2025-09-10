@@ -1,0 +1,109 @@
+---
+import { Icon } from "astro-icon/components";
+import { profileConfig } from "../../config";
+import { url } from "../../utils/url-utils";
+import ImageWrapper from "../misc/ImageWrapper.astro";
+
+const config = profileConfig;
+const umamiShareId = profileConfig.umami?.shareId || "";
+const umamiRegion = profileConfig.umami?.region || "eu";
+---
+<div class="card-base p-3">
+    <a aria-label="Go to About Page" href={url('/about/')}
+       class="group block relative mx-auto mt-1 lg:mx-0 lg:mt-0 mb-3
+       max-w-[12rem] lg:max-w-none overflow-hidden rounded-xl active:scale-95">
+        <div class="absolute transition pointer-events-none group-hover:bg-black/30 group-active:bg-black/50
+        w-full h-full z-50 flex items-center justify-center">
+            <Icon name="fa6-regular:address-card"
+                  class="transition opacity-0 scale-90 group-hover:scale-100 group-hover:opacity-100 text-white text-5xl">
+            </Icon>
+        </div>
+        <ImageWrapper src={config.avatar || ""} alt="Profile Image of the Author" class="mx-auto lg:w-full h-full lg:mt-0 "></ImageWrapper>
+    </a>
+    <div class="px-2">
+        <div class="font-bold text-xl text-center mb-1 dark:text-neutral-50 transition">{config.name}</div>
+        <div class="h-1 w-5 bg-[var(--primary)] mx-auto rounded-full mb-2 transition"></div>
+        <div class="text-center text-neutral-400 mb-2.5 transition">{config.bio}</div>
+        <div class="flex gap-2 justify-center mb-1">
+            {config.links.length > 1 && config.links.map(item =>
+                    <a rel="me" aria-label={item.name} href={item.url} target="_blank" class="btn-regular rounded-lg h-10 w-10 active:scale-90">
+                        <Icon name={item.icon} class="text-[1.5rem]"></Icon>
+                    </a>
+            )}
+            {config.links.length == 1 && <a rel="me" aria-label={config.links[0].name} href={config.links[0].url} target="_blank"
+                                            class="btn-regular rounded-lg h-10 gap-2 px-3 font-bold active:scale-95">
+                <Icon name={config.links[0].icon} class="text-[1.5rem]"></Icon>
+                {config.links[0].name}
+            </a>}
+        </div>
+        {config.umami?.enable && (
+          <>
+            <div class="text-sm text-gray-500 mt-2 text-center">
+              <Icon name="fa6-solid:eye" class="inline-block mr-1 text-gray-400 text-sm align-middle" />
+              浏览量：<span id="umami-pageviews">-</span>，
+              访问次数：<span id="umami-visits">-</span>
+            </div>
+            <script is:inline define:vars={{umamiShareId, umamiRegion}}>
+              const fetchUmamiStats = async () => {
+                try {
+                  const shareId = umamiShareId;
+                  const region = umamiRegion;
+                  console.log('Profile shareId:', shareId, 'region:', region);
+                  
+                  const shareRes = await fetch(`https://${region}.umami.is/api/share/${shareId}`);
+                  console.log('Profile shareRes status:', shareRes.status);
+                  
+                  if (!shareRes.ok) {
+                    throw new Error(`Share API failed: ${shareRes.status}`);
+                  }
+                  
+                  const shareData = await shareRes.json();
+                  console.log('Profile shareData:', shareData);
+                  const token = shareData.token;
+                  const websiteId = shareData.websiteId || shareData.website_id || shareData.id;
+                  console.log('Profile token:', token, 'websiteId:', websiteId);
+                  
+                  const url = `https://${region}.umami.is/api/websites/${websiteId}/stats?` +
+                    new URLSearchParams({
+                      startAt: '1753333200000',
+                      endAt: Date.now(),
+                      unit: 'hour',
+                      timezone: 'Asia/Shanghai',
+                      url: '/',
+                      compare: 'false',
+                    });
+                  console.log('Profile statsUrl:', url);
+                  
+                  const res = await fetch(url, {
+                    method: 'GET',
+                    headers: {
+                      'x-umami-share-token': token,
+                    },
+                  });
+                  console.log('Profile stats res status:', res.status);
+                  
+                  const data = await res.json();
+                  console.log('Profile stats data:', data);
+                  
+                  if (res.ok) {
+                    const pageviews = data?.pageviews?.value ?? 'N/A';
+                    const visits = data?.visits?.value ?? 'N/A';
+                    document.getElementById('umami-pageviews').textContent = pageviews;
+                    document.getElementById('umami-visits').textContent = visits;
+                  } else {
+                    document.getElementById('umami-pageviews').textContent = 'N/A';
+                    document.getElementById('umami-visits').textContent = 'N/A';
+                  }
+                } catch (error) {
+                  console.error('Profile Umami stats error:', error);
+                  document.getElementById('umami-pageviews').textContent = 'Error';
+                  document.getElementById('umami-visits').textContent = 'Error';
+                }
+              };
+              fetchUmamiStats();
+            </script>
+          </>
+        )}
+    </div>
+</div>
+

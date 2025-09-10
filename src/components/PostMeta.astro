@@ -1,0 +1,161 @@
+---
+import { Icon } from "astro-icon/components";
+import { profileConfig } from "../config";
+import I18nKey from "../i18n/i18nKey";
+import { i18n } from "../i18n/translation";
+import { formatDateToYYYYMMDD } from "../utils/date-utils";
+import { getCategoryUrl, getTagUrl } from "../utils/url-utils";
+
+interface Props {
+	class: string;
+	published: Date;
+	updated?: Date;
+	tags: string[];
+	category: string | null;
+	hideTagsForMobile?: boolean;
+	hideUpdateDate?: boolean;
+}
+const {
+	published,
+	updated,
+	tags,
+	category,
+	hideTagsForMobile = false,
+	hideUpdateDate = false,
+} = Astro.props;
+const className = Astro.props.class;
+const homePaths = ["/", ...Array.from({ length: 20 }, (_, i) => `/${i + 1}/`)];
+const isHome = homePaths.includes(Astro.url.pathname);
+const umamiShareId = profileConfig.umami?.shareId || "";
+const umamiRegion = profileConfig.umami?.region || "eu";
+---
+
+<div class:list={["flex flex-wrap text-neutral-500 dark:text-neutral-400 items-center gap-4 gap-x-4 gap-y-2", className]}>
+    <!-- publish date -->
+    <div class="flex items-center">
+        <div class="meta-icon"
+        >
+            <Icon name="material-symbols:calendar-today-outline-rounded" class="text-xl"></Icon>
+        </div>
+        <span class="text-50 text-sm font-medium">{formatDateToYYYYMMDD(published)}</span>
+    </div>
+
+    <!-- update date -->
+    {!hideUpdateDate && updated && updated.getTime() !== published.getTime() && (
+        <div class="flex items-center">
+            <div class="meta-icon"
+            >
+                <Icon name="material-symbols:edit-calendar-outline-rounded" class="text-xl"></Icon>
+            </div>
+            <span class="text-50 text-sm font-medium">{formatDateToYYYYMMDD(updated)}</span>
+        </div>
+    )}
+
+    <!-- categories -->
+    <div class="flex items-center">
+        <div class="meta-icon"
+        >
+            <Icon name="material-symbols:book-2-outline-rounded" class="text-xl"></Icon>
+        </div>
+        <div class="flex flex-row flex-nowrap items-center">
+            <a href={getCategoryUrl(category)} aria-label={`View all posts in the ${category} category`}
+               class="link-lg transition text-50 text-sm font-medium
+                            hover:text-[var(--primary)] dark:hover:text-[var(--primary)] whitespace-nowrap">
+                {category || i18n(I18nKey.uncategorized)}
+            </a>
+        </div>
+    </div>
+
+    <!-- tags -->
+    <div class:list={["items-center", {"flex": !hideTagsForMobile, "hidden md:flex": hideTagsForMobile}]}>
+        <div class="meta-icon"
+        >
+            <Icon name="material-symbols:tag-rounded" class="text-xl"></Icon>
+        </div>
+        <div class="flex flex-row flex-nowrap items-center">
+            {(tags && tags.length > 0) && tags.map((tag, i) => (
+                <div class:list={[{"hidden": i == 0}, "mx-1.5 text-[var(--meta-divider)] text-sm"]}>/</div>
+                <a href={getTagUrl(tag)} aria-label={`View all posts with the ${tag.trim()} tag`}
+                   class="link-lg transition text-50 text-sm font-medium
+                                hover:text-[var(--primary)] dark:hover:text-[var(--primary)] whitespace-nowrap">
+                    {tag.trim()}
+                </a>
+            ))}
+            {!(tags && tags.length > 0) && <div class="transition text-50 text-sm font-medium">{i18n(I18nKey.noTags)}</div>}
+        </div>
+    </div>
+        <!-- 访问量（首页不显示，且umami.enable为true时显示） -->
+        {!isHome && profileConfig.umami?.enable && (
+                <>
+                    <div class="flex items-center">
+                            <div class="meta-icon">
+                                    <Icon name="material-symbols:visibility-outline-rounded" class="text-xl"></Icon>
+                            </div>
+                            <span>浏览量：<span id="post-umami-pageviews">加载中...</span></span>，
+                            <span>访问次数：<span id="post-umami-visits">加载中...</span></span>
+                    </div>
+
+                    <script is:inline define:vars={{umamiShareId, umamiRegion}}>
+                        const fetchUmamiStats = async () => {
+                            try {
+                                const pathname = window.location.pathname;
+                                const shareId = umamiShareId;
+                                const region = umamiRegion;
+                                console.log('PostMeta shareId:', shareId, 'region:', region);
+                                console.log('PostMeta pathname:', pathname);
+                                
+                                const shareRes = await fetch(`https://${region}.umami.is/api/share/${shareId}`);
+                                console.log('PostMeta shareRes status:', shareRes.status);
+                                
+                                if (!shareRes.ok) {
+                                    throw new Error(`Share API failed: ${shareRes.status}`);
+                                }
+                                
+                                const shareData = await shareRes.json();
+                                console.log('PostMeta shareData:', shareData);
+                                const token = shareData.token;
+                                const websiteId = shareData.websiteId || shareData.website_id || shareData.id;
+                                console.log('PostMeta token:', token, 'websiteId:', websiteId);
+                                
+                                const url = `https://${region}.umami.is/api/websites/${websiteId}/stats?` +
+                                    new URLSearchParams({
+                                        startAt: '1753333200000',
+                                        endAt: Date.now(),
+                                        unit: 'hour',
+                                        timezone: 'Asia/Shanghai',
+                                        url: pathname,
+                                        compare: 'false',
+                                    });
+                                console.log('PostMeta statsUrl:', url);
+                                
+                                const res = await fetch(url, {
+                                    method: 'GET',
+                                    headers: {
+                                        'x-umami-share-token': token,
+                                    },
+                                });
+                                console.log('PostMeta stats res status:', res.status);
+                                
+                                const data = await res.json();
+                                console.log('PostMeta stats data:', data);
+                                
+                                if (res.ok) {
+                                    const pageviews = data?.pageviews?.value ?? 'N/A';
+                                    const visits = data?.visits?.value ?? 'N/A';
+                                    document.getElementById('post-umami-pageviews').textContent = pageviews;
+                                    document.getElementById('post-umami-visits').textContent = visits;
+                                } else {
+                                    document.getElementById('post-umami-pageviews').textContent = 'N/A';
+                                    document.getElementById('post-umami-visits').textContent = 'N/A';
+                                }
+                            } catch (error) {
+                                console.error('PostMeta Umami stats error:', error);
+                                document.getElementById('post-umami-pageviews').textContent = 'Error';
+                                document.getElementById('post-umami-visits').textContent = 'Error';
+                            }
+                        };
+                        fetchUmamiStats();
+                    </script>
+                </>
+        )}
+</div>

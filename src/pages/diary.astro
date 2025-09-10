@@ -1,0 +1,326 @@
+---
+import I18nKey from "../i18n/i18nKey";
+import { i18n } from "../i18n/translation";
+import MainGridLayout from "../layouts/MainGridLayout.astro";
+
+// 示例即刻短文数据
+const moments = [
+	{
+		id: 7,
+		content: "Terraria第一次通关😚🎮",
+		date: "2025-08-10T17:27:00Z",
+		images: [
+			"/images/diary/20250810-1.jpg",
+			"/images/diary/20250810-2.png",
+			"/images/diary/20250810-3.jpg",
+			"/images/diary/20250810-4.gif",
+		],
+	},
+	{
+		id: 6,
+		content: "HDC我来啦!😍",
+		date: "2025-06-22T17:27:00Z",
+		images: [
+			"/images/diary/20250622-1.jpg",
+			"/images/diary/20250622-2.jpg",
+			"/images/diary/20250622-3.jpg",
+			"/images/diary/20250622-4.jpg",
+			"/images/diary/20250622-5.jpg",
+			"/images/diary/20250622-6.jpg",
+		],
+	},
+	{
+		id: 5,
+		content: "高中留宿夜生活🌃🏀",
+		date: "2022-04-22T22:02:00Z",
+		images: ["/images/diary/20220422.png"],
+	},
+	{
+		id: 4,
+		content: "万物皆有裂缝，那是光照进来的地方✨",
+		date: "2020-10-01T10:59:00Z",
+		images: ["/images/diary/20201001.png", "/images/diary/20201001-2.png"],
+	},
+
+	{
+		id: 3,
+		content: "也许，我会在某个有意义的时辰，远隔山海，与你共存🌊",
+		date: "2020-08-10T10:13:00Z",
+		images: ["/images/diary/20200810.png"],
+	},
+	{
+		id: 2,
+		content: "第一个小程序，感谢队友！",
+		date: "2019-08-07T10:30:00Z",
+		images: ["/images/diary/20190807.png", "/images/diary/20190807-2.png"],
+	},
+	{
+		id: 1,
+		content: "升初中啦！第一次军训",
+		date: "2018-08-25T08:54:00Z",
+		images: ["/images/diary/20180825.png", "/images/diary/20180825-2.png"],
+	},
+];
+
+// 时间格式化函数
+function formatTime(dateString: string): string {
+	const now = new Date();
+	const date = new Date(dateString);
+	const diffInMinutes = Math.floor(
+		(now.getTime() - date.getTime()) / (1000 * 60),
+	);
+
+	if (diffInMinutes < 60) {
+		return `${diffInMinutes}${i18n(I18nKey.diaryMinutesAgo)}`;
+	}
+	if (diffInMinutes < 1440) {
+		// 24小时
+		const hours = Math.floor(diffInMinutes / 60);
+		return `${hours}${i18n(I18nKey.diaryHoursAgo)}`;
+	}
+	const days = Math.floor(diffInMinutes / 1440);
+	return `${days}${i18n(I18nKey.diaryDaysAgo)}`;
+}
+---
+
+<MainGridLayout title={i18n(I18nKey.diary)} description="即刻短文">
+	<div class="flex w-full rounded-[var(--radius-large)] overflow-hidden relative min-h-32">
+		<div class="card-base z-10 px-4 py-4 md:px-6 md:py-5 relative w-full">
+			<div class="relative max-w-4xl">
+				<!-- 页面头部 -->
+				<div class="moments-header mb-6">
+					<div class="header-content">
+						<div class="header-info">
+							<h1 class="moments-title text-xl md:text-2xl lg:text-3xl font-bold text-90 mb-1">{i18n(I18nKey.diary)}</h1>
+							<p class="moments-subtitle text-sm md:text-base lg:text-lg text-75">{i18n(I18nKey.diarySubtitle)}</p>
+						</div>	
+						<div class="header-stats">
+							<div class="stat-item text-center">
+								<span class="stat-number text-lg md:text-xl lg:text-2xl font-bold text-[var(--primary)]">{moments.length}</span>
+								<span class="stat-label text-xs md:text-sm lg:text-base text-75">{i18n(I18nKey.diaryCount)}</span>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- 短文列表 -->
+				<div class="moments-timeline">
+					<div class="timeline-list space-y-4">
+					{moments.map(moment => (
+						<div class="moment-item card-base p-4 md:p-6 lg:p-8 hover:shadow-lg transition-all">
+								<div class="moment-content">
+									<p class="moment-text text-sm md:text-base lg:text-lg text-90 leading-relaxed mb-3 md:mb-4">{moment.content}</p>
+									
+									{moment.images && moment.images.length > 0 && (
+				<div class="moment-images grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 md:gap-3 lg:gap-4 mb-3 md:mb-4">
+					{moment.images.map((image, index) => (
+					<div class="image-item relative rounded-md overflow-hidden aspect-square cursor-pointer hover:scale-105 transition-transform">
+						<img 
+							src={image} 
+							alt={i18n(I18nKey.diaryImage)}
+							class="w-full h-full object-cover"
+							loading="lazy"
+						/>
+					</div>
+					))}
+				</div>
+			)}
+								</div>
+								
+								<hr class="moment-divider border-t border-[var(--line-divider)] my-3 md:my-4" />
+								
+								<div class="moment-footer flex justify-between items-center">
+									<div class="moment-time flex items-center gap-1.5 text-75 text-xs md:text-sm lg:text-base">
+										<i class="time-icon text-xs md:text-sm">🕐</i>
+										<time datetime={moment.date}>
+											{formatTime(moment.date)}
+										</time>
+									</div>
+									
+								</div>
+							</div>
+						))}
+					</div>
+				</div>
+
+				<!-- 底部提示 -->
+				<div class="moments-tips text-center mt-6 md:mt-8 lg:mt-10 text-75 text-xs md:text-sm lg:text-base italic">
+					{i18n(I18nKey.diaryTips)}
+				</div>
+			</div>
+		</div>
+	</div>
+</MainGridLayout>
+
+<style>
+	.card-base {
+		background: var(--card-bg);
+		border: 1px solid var(--line-divider);
+		transition: all 0.3s ease;
+	}
+	
+	.moments-header {
+		padding: 1rem;
+		border-radius: 8px;
+		background: linear-gradient(135deg, #4CAF50 0%, #8BC34A 100%);
+		color: white;
+		position: relative;
+		overflow: hidden;
+	}
+
+	/* 新增光泽效果的伪元素样式 */
+	.moments-header::after {
+		content: '';
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background: linear-gradient(
+			to right,
+			rgba(255, 255, 255, 0.1) 0%,
+			rgba(255, 255, 255, 0) 50%,
+			rgba(255, 255, 255, 0.1) 100%
+		);
+		pointer-events: none; /* 确保伪元素不影响鼠标交互 */
+	}
+	
+	.header-content {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		position: relative;
+		z-index: 1;
+	}
+	
+	.moments-title {
+		color: white;
+		text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+	}
+	
+	.moments-subtitle {
+		color: rgba(255, 255, 255, 0.9);
+	}
+	
+	.stat-number {
+		color: white;
+	}
+	
+	.stat-label {
+		color: rgba(255, 255, 255, 0.8);
+	}
+	
+	.image-item img {
+		transition: transform 0.3s ease;
+	}
+	
+	.image-item:hover img {
+		transform: scale(1.05);
+	}
+	
+	.action-btn {
+		background: none;
+		border: none;
+		cursor: pointer;
+		color: var(--text-muted);
+	}
+	
+	.action-btn:hover {
+		color: var(--primary);
+	}
+	
+	/* 响应式设计 */
+	/* 手机端 (小于640px) */
+	@media (max-width: 640px) {
+		.moments-header {
+			padding: 0.75rem;
+		}
+		
+		.header-content {
+			flex-direction: column;
+			text-align: center;
+			gap: 0.75rem;
+		}
+		
+		.moment-images {
+			grid-template-columns: repeat(2, 1fr);
+		}
+		
+		.moment-footer {
+			flex-direction: column;
+			align-items: flex-start;
+			gap: 0.5rem;
+		}
+	}
+	
+	/* 平板竖屏 (641px - 900px) - 优化显示 */
+	@media (min-width: 641px) and (max-width: 900px) {
+		.moments-header {
+			padding: 1.25rem;
+		}
+		
+		.header-content {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+		}
+		
+		.moment-item {
+			padding: 1.5rem;
+		}
+		
+		.moment-images {
+			grid-template-columns: repeat(3, 1fr);
+			gap: 0.75rem;
+			max-width: 500px;
+		}
+		
+		.moment-text {
+			font-size: 1rem;
+			line-height: 1.7;
+		}
+		
+		.moment-footer {
+			margin-top: 1rem;
+		}
+	}
+	
+	/* 平板横屏和桌面端 (大于900px) */
+	@media (min-width: 901px) {
+		.moments-header {
+			padding: 1.5rem;
+		}
+		
+		.moment-item {
+			padding: 2rem;
+		}
+		
+		.moment-images {
+			grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+			max-width: 600px;
+			gap: 1rem;
+		}
+		
+		.moment-text {
+			font-size: 1.1rem;
+			line-height: 1.8;
+		}
+	}
+	
+	/* 优化小屏幕显示 */
+	@media (max-width: 480px) {
+		.card-base {
+			margin: 0 -0.5rem;
+		}
+		
+		.moment-item {
+			border-radius: 8px;
+		}
+		
+		.moments-header {
+			border-radius: 6px;
+		}
+	}
+</style>
+
+

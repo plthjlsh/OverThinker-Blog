@@ -1,0 +1,72 @@
+---
+import * as path from "node:path";
+
+interface Props {
+	id?: string;
+	src: string;
+	class?: string;
+	alt?: string;
+	position?: string;
+	basePath?: string;
+}
+
+import { Image } from "astro:assets";
+import { url } from "../../utils/url-utils";
+
+const { id, src, alt, position = "center", basePath = "/" } = Astro.props;
+const className = Astro.props.class;
+
+const isLocal = !(
+	src.startsWith("/") ||
+	src.startsWith("http") ||
+	src.startsWith("https") ||
+	src.startsWith("data:")
+);
+const isPublic = src.startsWith("/");
+
+let img = null;
+if (isLocal) {
+	try {
+		const files = import.meta.glob<ImageMetadata>("../../../**", {
+			// 调整路径深度
+			import: "default",
+			eager: false,
+		});
+
+		// 修正路径处理
+		let normalizedPath = path
+			.join("../../", basePath, src)
+			.replace(/\\/g, "/")
+			.replace("//", "/");
+
+		const file = files[normalizedPath];
+		if (file) {
+			img = await file();
+		} else {
+			console.warn(`[ImageWrapper] 图片未找到: ${normalizedPath}`);
+		}
+	} catch (error) {
+		console.error("[ImageWrapper] 图片加载错误:", error);
+	}
+}
+
+const imageClass = "w-full h-full object-cover";
+const imageStyle = `object-position: ${position}`;
+---
+
+<div id={id} class:list={[className, 'overflow-hidden relative']}>
+    <div class="transition absolute inset-0 dark:bg-black/10 bg-opacity-50 pointer-events-none"></div>
+    
+    <!-- 安全的图片渲染 -->
+    {isLocal && img ? (
+        <Image src={img} alt={alt || ""} class={imageClass} style={imageStyle}/>
+    ) : (
+        <img 
+            src={isPublic ? url(src) : src} 
+            alt={alt || ""} 
+            class={imageClass} 
+            style={imageStyle}
+            loading="lazy"
+        />
+    )}
+</div>
