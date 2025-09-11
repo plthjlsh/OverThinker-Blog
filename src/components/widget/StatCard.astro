@@ -1,84 +1,84 @@
 ---
 export interface Props {
-  title: string;
-  value: string | number;
-  subtitle?: string;
-  icon?: string;
-  color?: string;
-  gradient?: {
-    from: string;
-    to: string;
-  };
-  size?: 'small' | 'medium' | 'large';
-  trend?: {
-    value: number;
-    isPositive: boolean;
-    label?: string;
-  };
-  link?: {
-    url: string;
-    text: string;
-  };
+	title: string;
+	value: string | number;
+	subtitle?: string;
+	icon?: string;
+	color?: string;
+	gradient?: {
+		from: string;
+		to: string;
+	};
+	size?: "small" | "medium" | "large";
+	trend?: {
+		value: number;
+		isPositive: boolean;
+		label?: string;
+	};
+	link?: {
+		url: string;
+		text: string;
+	};
 }
 
-const { 
-  title, 
-  value, 
-  subtitle, 
-  icon, 
-  color = '#3B82F6', 
-  gradient,
-  size = 'medium',
-  trend,
-  link
+const {
+	title,
+	value,
+	subtitle,
+	icon,
+	color = "#3B82F6",
+	gradient,
+	size = "medium",
+	trend,
+	link,
 } = Astro.props;
 
 // 尺寸样式映射
 const getSizeClasses = (size: string) => {
-  switch (size) {
-    case 'small':
-      return {
-        container: 'p-3',
-        value: 'text-xl',
-        title: 'text-xs',
-        subtitle: 'text-xs',
-        icon: 'text-lg',
-        iconContainer: 'w-8 h-8'
-      };
-    case 'large':
-      return {
-        container: 'p-6',
-        value: 'text-4xl',
-        title: 'text-base',
-        subtitle: 'text-sm',
-        icon: 'text-2xl',
-        iconContainer: 'w-12 h-12'
-      };
-    default: // medium
-      return {
-        container: 'p-4',
-        value: 'text-2xl',
-        title: 'text-sm',
-        subtitle: 'text-xs',
-        icon: 'text-xl',
-        iconContainer: 'w-10 h-10'
-      };
-  }
+	switch (size) {
+		case "small":
+			return {
+				container: "p-3",
+				value: "text-xl",
+				title: "text-xs",
+				subtitle: "text-xs",
+				icon: "text-lg",
+				iconContainer: "w-8 h-8",
+			};
+		case "large":
+			return {
+				container: "p-6",
+				value: "text-4xl",
+				title: "text-base",
+				subtitle: "text-sm",
+				icon: "text-2xl",
+				iconContainer: "w-12 h-12",
+			};
+		default: // medium
+			return {
+				container: "p-4",
+				value: "text-2xl",
+				title: "text-sm",
+				subtitle: "text-xs",
+				icon: "text-xl",
+				iconContainer: "w-10 h-10",
+			};
+	}
 };
 
 const sizeClasses = getSizeClasses(size);
 
 // 生成渐变背景样式
 const getBackgroundStyle = () => {
-  if (gradient) {
-    return `background: linear-gradient(135deg, ${gradient.from}, ${gradient.to})`;
-  }
-  return `background: linear-gradient(135deg, ${color}15, ${color}25)`;
+	if (gradient) {
+		return `background: linear-gradient(135deg, ${gradient.from}, ${gradient.to})`;
+	}
+	return `background: linear-gradient(135deg, ${color}15, ${color}25)`;
 };
 
 // 生成图标容器样式
 const getIconStyle = () => {
-  return `background-color: ${color}20; color: ${color}`;
+	return `background-color: ${color}20; color: ${color}`;
 };
 ---
 

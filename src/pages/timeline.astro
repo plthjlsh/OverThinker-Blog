@@ -1,15 +1,24 @@
 ---
-import MainGridLayout from '../layouts/MainGridLayout.astro';
-import { timelineData, getTimelineStats, getTimelineByType, getFeaturedTimeline, getCurrentItems, getTotalWorkExperience } from '../data/timeline';
-import { i18n } from '../i18n/translation';
-import I18nKey from '../i18n/i18nKey';
-import IconifyLoader from '../components/misc/IconifyLoader.astro';
-import Icon from '../components/misc/Icon.astro';
+import MainGridLayout from "../layouts/MainGridLayout.astro";
+import {
+	timelineData,
+	getTimelineStats,
+	getTimelineByType,
+	getFeaturedTimeline,
+	getCurrentItems,
+	getTotalWorkExperience,
+} from "../data/timeline";
+import { i18n } from "../i18n/translation";
+import I18nKey from "../i18n/i18nKey";
+import IconifyLoader from "../components/misc/IconifyLoader.astro";
+import Icon from "../components/misc/Icon.astro";
 
 const { lang } = Astro.props;
 
 // 收集所有时间线图标用于预加载
-const allIcons = timelineData.map(item => item.icon || getTypeIcon(item.type)).filter(Boolean);
+const allIcons = timelineData
+	.map((item) => item.icon || getTypeIcon(item.type))
+	.filter(Boolean);
 
 // 获取时间线统计信息
 const stats = getTimelineStats();
@@ -22,39 +31,44 @@ const allTimelineItems = getTimelineByType();
 
 // 类型图标映射
 const getTypeIcon = (type: string) => {
-  switch (type) {
-    case 'education': return 'material-symbols:school';
-    case 'work': return 'material-symbols:work';
-    case 'project': return 'material-symbols:code';
-    case 'achievement': return 'material-symbols:emoji-events';
-    default: return 'material-symbols:event';
-  }
+	switch (type) {
+		case "education":
+			return "material-symbols:school";
+		case "work":
+			return "material-symbols:work";
+		case "project":
+			return "material-symbols:code";
+		case "achievement":
+			return "material-symbols:emoji-events";
+		default:
+			return "material-symbols:event";
+	}
 };
 
 // 格式化日期
 const formatDate = (dateString: string) => {
-  const date = new Date(dateString);
-  return date.toLocaleDateString('zh-CN', { year: 'numeric', month: 'long' });
+	const date = new Date(dateString);
+	return date.toLocaleDateString("zh-CN", { year: "numeric", month: "long" });
 };
 
 // 计算持续时间
 const getDuration = (startDate: string, endDate?: string) => {
-  const start = new Date(startDate);
-  const end = endDate ? new Date(endDate) : new Date();
-  const diffTime = Math.abs(end.getTime() - start.getTime());
-  const diffMonths = Math.ceil(diffTime / (1000 * 60 * 60 * 24 * 30));
-  
-  if (diffMonths < 12) {
-    return `${diffMonths} ${i18n(I18nKey.timelineMonths)}`;
-  } else {
-    const years = Math.floor(diffMonths / 12);
-    const months = diffMonths % 12;
-    if (months === 0) {
-      return `${years} ${i18n(I18nKey.timelineYears)}`;
-    } else {
-      return `${years} ${i18n(I18nKey.timelineYears)} ${months} ${i18n(I18nKey.timelineMonths)}`;
-    }
-  }
+	const start = new Date(startDate);
+	const end = endDate ? new Date(endDate) : new Date();
+	const diffTime = Math.abs(end.getTime() - start.getTime());
+	const diffMonths = Math.ceil(diffTime / (1000 * 60 * 60 * 24 * 30));
+
+	if (diffMonths < 12) {
+		return `${diffMonths} ${i18n(I18nKey.timelineMonths)}`;
+	} else {
+		const years = Math.floor(diffMonths / 12);
+		const months = diffMonths % 12;
+		if (months === 0) {
+			return `${years} ${i18n(I18nKey.timelineYears)}`;
+		} else {
+			return `${years} ${i18n(I18nKey.timelineYears)} ${months} ${i18n(I18nKey.timelineMonths)}`;
+		}
+	}
 };
 
 const title = i18n(I18nKey.timeline);

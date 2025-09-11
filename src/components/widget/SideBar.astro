@@ -31,20 +31,21 @@ const componentMap = {
 
 // 渲染组件的辅助函数
 function renderComponent(component: any, index: number, components: any[]) {
-	const ComponentToRender = componentMap[component.type as keyof typeof componentMap];
+	const ComponentToRender =
+		componentMap[component.type as keyof typeof componentMap];
 	if (!ComponentToRender) return null;
-	
+
 	const componentClass = widgetManager.getComponentClass(component, index);
 	const componentStyle = widgetManager.getComponentStyle(component, index);
-	
+
 	return {
 		Component: ComponentToRender,
 		props: {
 			class: componentClass,
 			style: componentStyle,
-			headings: component.type === 'toc' ? headings : undefined,
+			headings: component.type === "toc" ? headings : undefined,
 			...component.customProps,
-		}
+		},
 	};
 }
 ---

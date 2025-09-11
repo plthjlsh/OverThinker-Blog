@@ -23,7 +23,9 @@ const languages = [
 ];
 
 // 根据配置文件的语言设置获取默认翻译语言
-const defaultTranslateLanguage = getTranslateLanguageFromConfig(siteConfig.lang);
+const defaultTranslateLanguage = getTranslateLanguageFromConfig(
+	siteConfig.lang,
+);
 
 function togglePanel() {
 	isOpen = !isOpen;
@@ -35,17 +37,24 @@ function togglePanel() {
 async function changeLanguage(languageCode: string) {
 	try {
 		// 懒加载翻译脚本
-		if (typeof window.loadTranslateScript === 'function') {
+		if (typeof window.loadTranslateScript === "function") {
 			await window.loadTranslateScript();
 		}
-		
-		if (typeof window.translate !== 'undefined' && window.translate.language && typeof window.translate.language.getLocal === 'function') {
+
+		if (
+			typeof window.translate !== "undefined" &&
+			window.translate.language &&
+			typeof window.translate.language.getLocal === "function"
+		) {
 			// 检查是否选择的是简体中文，且当前本地语言也是简体中文
 			const localLang = window.translate.language.getLocal();
-			
-			if (languageCode === 'chinese_simplified' && localLang === 'chinese_simplified') {
+
+			if (
+				languageCode === "chinese_simplified" &&
+				localLang === "chinese_simplified"
+			) {
 				// 如果选择简体中文且本地语言也是简体中文，先重置翻译状态
-				if (typeof window.translate.reset === 'function') {
+				if (typeof window.translate.reset === "function") {
 					window.translate.reset();
 				}
 				// 强制设置允许翻译本地语种
@@ -53,24 +62,26 @@ async function changeLanguage(languageCode: string) {
 					window.translate.language.translateLocal = true;
 				}
 			}
-			
+
 			// 设置目标语言并执行翻译
 			window.translate.to = languageCode;
-			if (typeof window.translate.execute === 'function') {
+			if (typeof window.translate.execute === "function") {
 				window.translate.execute();
 			}
-			
+
 			// 由于我们隐藏了默认的select选择框，不需要更新select.value
 		} else {
-			console.warn('translate.js is not fully loaded or language API is not available');
+			console.warn(
+				"translate.js is not fully loaded or language API is not available",
+			);
 		}
-		
+
 		// 更新当前语言状态
 		currentLanguage = languageCode;
 	} catch (error) {
-		console.error('Failed to load or execute translation:', error);
+		console.error("Failed to load or execute translation:", error);
 	}
-	
+
 	// 关闭面板
 	isOpen = false;
 	if (translatePanel) {
@@ -81,12 +92,12 @@ async function changeLanguage(languageCode: string) {
 // 点击外部关闭面板
 function handleClickOutside(event: MouseEvent) {
 	const target = event.target as HTMLElement;
-	
+
 	// 只有在翻译面板打开时才处理点击外部事件
 	if (!isOpen || !translatePanel) {
 		return;
 	}
-	
+
 	// 检查点击是否在翻译相关元素内部
 	if (
 		!translatePanel.contains(target) &&
@@ -101,12 +112,12 @@ function handleClickOutside(event: MouseEvent) {
 // 组件挂载时添加事件监听和初始化默认语言
 onMount(() => {
 	document.addEventListener("click", handleClickOutside);
-	
+
 	// 初始化当前语言为默认翻译语言
 	currentLanguage = defaultTranslateLanguage;
-	
+
 	// 如果翻译功能已加载，设置默认语言
-	if (typeof window.translate !== 'undefined') {
+	if (typeof window.translate !== "undefined") {
 		window.translate.to = defaultTranslateLanguage;
 		// 由于我们隐藏了默认的select选择框，不需要设置select.value
 	}

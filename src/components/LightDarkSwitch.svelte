@@ -45,8 +45,6 @@ function toggleScheme() {
 	}
 	switchScheme(seq[(i + 1) % seq.length]);
 }
-
-
 </script>
 
 <div class="relative z-50">

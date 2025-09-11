@@ -1,114 +1,119 @@
 ---
-import { i18n } from '../../i18n/translation';
-import I18nKey from '../../i18n/i18nKey';
-import Icon from '../misc/Icon.astro';
+import { i18n } from "../../i18n/translation";
+import I18nKey from "../../i18n/i18nKey";
+import Icon from "../misc/Icon.astro";
 
 export interface Props {
-  skill: {
-    id: string;
-    name: string;
-    description: string;
-    icon?: string;
-    category: string;
-    level: 'beginner' | 'intermediate' | 'advanced' | 'expert';
-    experience: string;
-    relatedProjects?: string[];
-    certifications?: string[];
-    color?: string;
-  };
-  size?: 'small' | 'medium' | 'large';
-  showProgress?: boolean;
-  showIcon?: boolean;
+	skill: {
+		id: string;
+		name: string;
+		description: string;
+		icon?: string;
+		category: string;
+		level: "beginner" | "intermediate" | "advanced" | "expert";
+		experience: string;
+		relatedProjects?: string[];
+		certifications?: string[];
+		color?: string;
+	};
+	size?: "small" | "medium" | "large";
+	showProgress?: boolean;
+	showIcon?: boolean;
 }
 
-const { 
-  skill, 
-  size = 'medium', 
-  showProgress = true, 
-  showIcon = true 
+const {
+	skill,
+	size = "medium",
+	showProgress = true,
+	showIcon = true,
 } = Astro.props;
 
 // 技能等级颜色映射
 const getLevelColor = (level: string) => {
-  switch (level) {
-    case 'expert':
-      return 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400';
-    case 'advanced':
-      return 'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400';
-    case 'intermediate':
-      return 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400';
-    case 'beginner':
-      return 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400';
-    default:
-      return 'bg-gray-100 text-gray-700 dark:bg-gray-900/30 dark:text-gray-400';
-  }
+	switch (level) {
+		case "expert":
+			return "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400";
+		case "advanced":
+			return "bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400";
+		case "intermediate":
+			return "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400";
+		case "beginner":
+			return "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400";
+		default:
+			return "bg-gray-100 text-gray-700 dark:bg-gray-900/30 dark:text-gray-400";
+	}
 };
 
 // 技能等级文本映射
 const getLevelText = (level: string) => {
-  switch (level) {
-    case 'expert':
-      return i18n(I18nKey.skillsExpert);
-    case 'advanced':
-      return i18n(I18nKey.skillsAdvanced);
-    case 'intermediate':
-      return i18n(I18nKey.skillsIntermediate);
-    case 'beginner':
-      return i18n(I18nKey.skillsBeginner);
-    default:
-      return level;
-  }
+	switch (level) {
+		case "expert":
+			return i18n(I18nKey.skillsExpert);
+		case "advanced":
+			return i18n(I18nKey.skillsAdvanced);
+		case "intermediate":
+			return i18n(I18nKey.skillsIntermediate);
+		case "beginner":
+			return i18n(I18nKey.skillsBeginner);
+		default:
+			return level;
+	}
 };
 
 // 技能等级进度条宽度
 const getLevelWidth = (level: string) => {
-  switch (level) {
-    case 'expert': return '100%';
-    case 'advanced': return '80%';
-    case 'intermediate': return '60%';
-    case 'beginner': return '40%';
-    default: return '20%';
-  }
+	switch (level) {
+		case "expert":
+			return "100%";
+		case "advanced":
+			return "80%";
+		case "intermediate":
+			return "60%";
+		case "beginner":
+			return "40%";
+		default:
+			return "20%";
+	}
 };
 
 // 尺寸样式映射
 const getSizeClasses = (size: string) => {
-  switch (size) {
-    case 'small':
-      return {
-        container: 'p-4',
-        icon: 'w-8 h-8',
-        iconText: 'text-lg',
-        title: 'text-base',
-        description: 'text-xs line-clamp-2',
-        badge: 'text-xs',
-        progress: 'h-1.5'
-      };
-    case 'large':
-      return {
-        container: 'p-6',
-        icon: 'w-14 h-14',
-        iconText: 'text-3xl',
-        title: 'text-xl',
-        description: 'text-sm line-clamp-3',
-        badge: 'text-sm',
-        progress: 'h-3'
-      };
-    default: // medium
-      return {
-        container: 'p-5',
-        icon: 'w-10 h-10',
-        iconText: 'text-xl',
-        title: 'text-lg',
-        description: 'text-sm line-clamp-2',
-        badge: 'text-xs',
-        progress: 'h-2'
-      };
-  }
+	switch (size) {
+		case "small":
+			return {
+				container: "p-4",
+				icon: "w-8 h-8",
+				iconText: "text-lg",
+				title: "text-base",
+				description: "text-xs line-clamp-2",
+				badge: "text-xs",
+				progress: "h-1.5",
+			};
+		case "large":
+			return {
+				container: "p-6",
+				icon: "w-14 h-14",
+				iconText: "text-3xl",
+				title: "text-xl",
+				description: "text-sm line-clamp-3",
+				badge: "text-sm",
+				progress: "h-3",
+			};
+		default: // medium
+			return {
+				container: "p-5",
+				icon: "w-10 h-10",
+				iconText: "text-xl",
+				title: "text-lg",
+				description: "text-sm line-clamp-2",
+				badge: "text-xs",
+				progress: "h-2",
+			};
+	}
 };
 
 const sizeClasses = getSizeClasses(size);
-const skillColor = skill.color || '#3B82F6';
+const skillColor = skill.color || "#3B82F6";
 ---
 
 <div class="bg-white dark:bg-slate-800/50 rounded-lg border border-black/10 dark:border-white/10 overflow-hidden hover:shadow-lg transition-all duration-300 group">

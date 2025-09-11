@@ -29,7 +29,7 @@
 	function waitForMermaid(timeout = 10000) {
 		return new Promise((resolve, reject) => {
 			const startTime = Date.now();
-			
+
 			function check() {
 				if (window.mermaid && typeof window.mermaid.initialize === "function") {
 					resolve(window.mermaid);
@@ -39,7 +39,7 @@
 					setTimeout(check, 100);
 				}
 			}
-			
+
 			check();
 		});
 	}
@@ -100,7 +100,7 @@
 	async function initializeMermaid() {
 		try {
 			await waitForMermaid();
-			
+
 			// 初始化 Mermaid 配置
 			window.mermaid.initialize({
 				startOnLoad: false,
@@ -152,7 +152,7 @@
 			}
 
 			// 延迟检测主题，确保 DOM 已经更新
-			await new Promise(resolve => setTimeout(resolve, 100));
+			await new Promise((resolve) => setTimeout(resolve, 100));
 
 			const htmlElement = document.documentElement;
 			const isDark = htmlElement.classList.contains("dark");
@@ -193,14 +193,15 @@
 							}
 
 							// 显示加载状态
-							element.innerHTML = '<div class="mermaid-loading">Rendering diagram...</div>';
+							element.innerHTML =
+								'<div class="mermaid-loading">Rendering diagram...</div>';
 
 							// 渲染图表
 							const { svg } = await window.mermaid.render(
 								`mermaid-${Date.now()}-${index}-${attempts}`,
 								code,
 							);
-							
+
 							element.innerHTML = svg;
 
 							// 添加响应式支持
@@ -221,13 +222,18 @@
 
 							// 渲染成功，跳出重试循环
 							break;
-
 						} catch (error) {
 							attempts++;
-							console.warn(`Mermaid rendering attempt ${attempts} failed for element ${index}:`, error);
-							
+							console.warn(
+								`Mermaid rendering attempt ${attempts} failed for element ${index}:`,
+								error,
+							);
+
 							if (attempts >= maxAttempts) {
-								console.error(`Failed to render Mermaid diagram after ${maxAttempts} attempts:`, error);
+								console.error(
+									`Failed to render Mermaid diagram after ${maxAttempts} attempts:`,
+									error,
+								);
 								element.innerHTML = `
 									<div class="mermaid-error">
 										<p>Failed to render diagram after ${maxAttempts} attempts.</p>
@@ -238,7 +244,9 @@
 								`;
 							} else {
 								// 等待一段时间后重试
-								await new Promise(resolve => setTimeout(resolve, 500 * attempts));
+								await new Promise((resolve) =>
+									setTimeout(resolve, 500 * attempts),
+								);
 							}
 						}
 					}
@@ -248,10 +256,9 @@
 			// 等待所有渲染完成
 			await Promise.all(renderPromises);
 			retryCount = 0; // 重置重试计数
-
 		} catch (error) {
 			console.error("Error in renderMermaidDiagrams:", error);
-			
+
 			// 如果渲染失败，尝试重新渲染
 			if (retryCount < MAX_RETRIES) {
 				retryCount++;
@@ -276,31 +283,36 @@
 
 		return new Promise((resolve, reject) => {
 			const script = document.createElement("script");
-			script.src = "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js";
-			
+			script.src =
+				"https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js";
+
 			script.onload = () => {
 				console.log("Mermaid library loaded successfully");
 				resolve();
 			};
-			
+
 			script.onerror = (error) => {
 				console.error("Failed to load Mermaid library:", error);
 				// 尝试备用 CDN
 				const fallbackScript = document.createElement("script");
 				fallbackScript.src = "https://unpkg.com/mermaid@11/dist/mermaid.min.js";
-				
+
 				fallbackScript.onload = () => {
 					console.log("Mermaid library loaded from fallback CDN");
 					resolve();
 				};
-				
+
 				fallbackScript.onerror = () => {
-					reject(new Error("Failed to load Mermaid from both primary and fallback CDNs"));
+					reject(
+						new Error(
+							"Failed to load Mermaid from both primary and fallback CDNs",
+						),
+					);
 				};
-				
+
 				document.head.appendChild(fallbackScript);
 			};
-			
+
 			document.head.appendChild(script);
 		});
 	}
@@ -318,7 +330,6 @@
 			// 加载并初始化 Mermaid
 			await loadMermaid();
 			await initializeMermaid();
-
 		} catch (error) {
 			console.error("Failed to initialize Mermaid system:", error);
 		}

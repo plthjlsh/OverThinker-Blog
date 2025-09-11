@@ -1,4 +1,8 @@
-import type { WidgetComponentConfig, WidgetComponentType, SidebarLayoutConfig } from "../types/config";
+import type {
+	WidgetComponentConfig,
+	WidgetComponentType,
+	SidebarLayoutConfig,
+} from "../types/config";
 import { sidebarLayoutConfig } from "../config";
 
 /**
@@ -32,7 +36,7 @@ export class WidgetManager {
 	 */
 	private getEnabledComponents(): WidgetComponentConfig[] {
 		return this.config.components
-			.filter(component => component.enable)
+			.filter((component) => component.enable)
 			.sort((a, b) => a.order - b.order);
 	}
 
@@ -41,7 +45,9 @@ export class WidgetManager {
 	 * @param position 组件位置：'top' | 'sticky'
 	 */
 	getComponentsByPosition(position: "top" | "sticky"): WidgetComponentConfig[] {
-		return this.enabledComponents.filter(component => component.position === position);
+		return this.enabledComponents.filter(
+			(component) => component.position === position,
+		);
 	}
 
 	/**
@@ -55,8 +61,10 @@ export class WidgetManager {
 		}
 
 		if (this.config.defaultAnimation.enable) {
-			return this.config.defaultAnimation.baseDelay + 
-				   (index * this.config.defaultAnimation.increment);
+			return (
+				this.config.defaultAnimation.baseDelay +
+				index * this.config.defaultAnimation.increment
+			);
 		}
 
 		return 0;
@@ -77,7 +85,7 @@ export class WidgetManager {
 
 		// 添加响应式隐藏类名
 		if (component.responsive?.hidden) {
-			component.responsive.hidden.forEach(device => {
+			component.responsive.hidden.forEach((device) => {
 				switch (device) {
 					case "mobile":
 						classes.push("hidden", "md:block");
@@ -181,7 +189,7 @@ export class WidgetManager {
 	 */
 	removeComponent(componentType: WidgetComponentType): void {
 		this.config.components = this.config.components.filter(
-			component => component.type !== componentType
+			(component) => component.type !== componentType,
 		);
 		this.enabledComponents = this.getEnabledComponents();
 	}
@@ -192,7 +200,9 @@ export class WidgetManager {
 	 * @param enable 是否启用
 	 */
 	toggleComponent(componentType: WidgetComponentType, enable: boolean): void {
-		const component = this.config.components.find(c => c.type === componentType);
+		const component = this.config.components.find(
+			(c) => c.type === componentType,
+		);
 		if (component) {
 			component.enable = enable;
 			this.enabledComponents = this.getEnabledComponents();
@@ -205,7 +215,9 @@ export class WidgetManager {
 	 * @param newOrder 新的排序值
 	 */
 	reorderComponent(componentType: WidgetComponentType, newOrder: number): void {
-		const component = this.config.components.find(c => c.type === componentType);
+		const component = this.config.components.find(
+			(c) => c.type === componentType,
+		);
 		if (component) {
 			component.order = newOrder;
 			this.enabledComponents = this.getEnabledComponents();
@@ -222,15 +234,19 @@ export const widgetManager = new WidgetManager();
  * 工具函数：根据组件类型获取组件配置
  * @param componentType 组件类型
  */
-export function getComponentConfig(componentType: WidgetComponentType): WidgetComponentConfig | undefined {
-	return widgetManager.config.components.find(c => c.type === componentType);
+export function getComponentConfig(
+	componentType: WidgetComponentType,
+): WidgetComponentConfig | undefined {
+	return widgetManager.config.components.find((c) => c.type === componentType);
 }
 
 /**
  * 工具函数：检查组件是否启用
  * @param componentType 组件类型
  */
-export function isComponentEnabled(componentType: WidgetComponentType): boolean {
+export function isComponentEnabled(
+	componentType: WidgetComponentType,
+): boolean {
 	const config = getComponentConfig(componentType);
 	return config?.enable ?? false;
 }
@@ -239,5 +255,5 @@ export function isComponentEnabled(componentType: WidgetComponentType): boolean 
  * 工具函数：获取所有启用的组件类型
  */
 export function getEnabledComponentTypes(): WidgetComponentType[] {
-	return widgetManager.enabledComponents.map(c => c.type);
+	return widgetManager.enabledComponents.map((c) => c.type);
 }

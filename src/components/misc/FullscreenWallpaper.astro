@@ -18,14 +18,18 @@ if (!config.enable) {
 // 获取当前设备类型的图片源
 const getImageSources = async () => {
 	let srcConfig = config.src;
-	
+
 	// 如果banner关闭且启用了图片API，使用API图片
-	if (!siteConfig.banner.enable && siteConfig.banner.imageApi?.enable && siteConfig.banner.imageApi?.url) {
+	if (
+		!siteConfig.banner.enable &&
+		siteConfig.banner.imageApi?.enable &&
+		siteConfig.banner.imageApi?.url
+	) {
 		try {
 			const response = await fetch(siteConfig.banner.imageApi.url);
 			const text = await response.text();
-			const apiImages = text.split('\n').filter(line => line.trim());
-			
+			const apiImages = text.split("\n").filter((line) => line.trim());
+
 			if (apiImages.length > 0) {
 				// 将API图片同时用于桌面端和移动端
 				return {
@@ -34,10 +38,10 @@ const getImageSources = async () => {
 				};
 			}
 		} catch (error) {
-			console.warn('Failed to fetch images from API for wallpaper:', error);
+			console.warn("Failed to fetch images from API for wallpaper:", error);
 		}
 	}
-	
+
 	const { desktop, mobile } = srcConfig;
 	return {
 		desktop: Array.isArray(desktop) ? desktop : desktop ? [desktop] : [],

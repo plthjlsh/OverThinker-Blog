@@ -1,149 +1,168 @@
 ---
-import { i18n } from '../../i18n/translation';
-import I18nKey from '../../i18n/i18nKey';
-import Icon from '../misc/Icon.astro';
+import { i18n } from "../../i18n/translation";
+import I18nKey from "../../i18n/i18nKey";
+import Icon from "../misc/Icon.astro";
 
 export interface Props {
-  item: {
-    id: string;
-    title: string;
-    description: string;
-    type: 'education' | 'work' | 'project' | 'achievement';
-    startDate: string;
-    endDate?: string;
-    location?: string;
-    organization?: string;
-    position?: string;
-    skills?: string[];
-    achievements?: string[];
-    links?: {
-      name: string;
-      url: string;
-      type: 'website' | 'certificate' | 'project' | 'other';
-    }[];
-    icon?: string;
-    color?: string;
-    featured?: boolean;
-  };
-  showTimeline?: boolean;
-  size?: 'small' | 'medium' | 'large';
-  layout?: 'card' | 'timeline';
+	item: {
+		id: string;
+		title: string;
+		description: string;
+		type: "education" | "work" | "project" | "achievement";
+		startDate: string;
+		endDate?: string;
+		location?: string;
+		organization?: string;
+		position?: string;
+		skills?: string[];
+		achievements?: string[];
+		links?: {
+			name: string;
+			url: string;
+			type: "website" | "certificate" | "project" | "other";
+		}[];
+		icon?: string;
+		color?: string;
+		featured?: boolean;
+	};
+	showTimeline?: boolean;
+	size?: "small" | "medium" | "large";
+	layout?: "card" | "timeline";
 }
 
-const { 
-  item, 
-  showTimeline = true, 
-  size = 'medium',
-  layout = 'timeline'
+const {
+	item,
+	showTimeline = true,
+	size = "medium",
+	layout = "timeline",
 } = Astro.props;
 
 // 类型图标映射
 const getTypeIcon = (type: string) => {
-  switch (type) {
-    case 'education': return 'material-symbols:school';
-    case 'work': return 'material-symbols:work';
-    case 'project': return 'material-symbols:code';
-    case 'achievement': return 'material-symbols:emoji-events';
-    default: return 'material-symbols:event';
-  }
+	switch (type) {
+		case "education":
+			return "material-symbols:school";
+		case "work":
+			return "material-symbols:work";
+		case "project":
+			return "material-symbols:code";
+		case "achievement":
+			return "material-symbols:emoji-events";
+		default:
+			return "material-symbols:event";
+	}
 };
 
 // 类型颜色映射
 const getTypeColor = (type: string) => {
-  switch (type) {
-    case 'education': return 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400';
-    case 'work': return 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400';
-    case 'project': return 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400';
-    case 'achievement': return 'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400';
-    default: return 'bg-gray-100 text-gray-700 dark:bg-gray-900/30 dark:text-gray-400';
-  }
+	switch (type) {
+		case "education":
+			return "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400";
+		case "work":
+			return "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400";
+		case "project":
+			return "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400";
+		case "achievement":
+			return "bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400";
+		default:
+			return "bg-gray-100 text-gray-700 dark:bg-gray-900/30 dark:text-gray-400";
+	}
 };
 
 // 类型文本映射
 const getTypeText = (type: string) => {
-  switch (type) {
-    case 'education': return i18n(I18nKey.timelineEducation);
-    case 'work': return i18n(I18nKey.timelineWork);
-    case 'project': return i18n(I18nKey.timelineProject);
-    case 'achievement': return i18n(I18nKey.timelineAchievement);
-    default: return type;
-  }
+	switch (type) {
+		case "education":
+			return i18n(I18nKey.timelineEducation);
+		case "work":
+			return i18n(I18nKey.timelineWork);
+		case "project":
+			return i18n(I18nKey.timelineProject);
+		case "achievement":
+			return i18n(I18nKey.timelineAchievement);
+		default:
+			return type;
+	}
 };
 
 // 链接图标映射
 const getLinkIcon = (type: string) => {
-  switch (type) {
-    case 'certificate': return '🏆';
-    case 'project': return '🔗';
-    case 'website': return '🌐';
-    default: return '📄';
-  }
+	switch (type) {
+		case "certificate":
+			return "🏆";
+		case "project":
+			return "🔗";
+		case "website":
+			return "🌐";
+		default:
+			return "📄";
+	}
 };
 
 // 格式化日期
 const formatDate = (dateString: string) => {
-  const date = new Date(dateString);
-  return date.toLocaleDateString('zh-CN', { year: 'numeric', month: 'long' });
+	const date = new Date(dateString);
+	return date.toLocaleDateString("zh-CN", { year: "numeric", month: "long" });
 };
 
 // 计算持续时间
 const getDuration = (startDate: string, endDate?: string) => {
-  const start = new Date(startDate);
-  const end = endDate ? new Date(endDate) : new Date();
-  const diffTime = Math.abs(end.getTime() - start.getTime());
-  const diffMonths = Math.ceil(diffTime / (1000 * 60 * 60 * 24 * 30));
-  
-  if (diffMonths < 12) {
-    return `${diffMonths} ${i18n(I18nKey.timelineMonths)}`;
-  } else {
-    const years = Math.floor(diffMonths / 12);
-    const months = diffMonths % 12;
-    if (months === 0) {
-      return `${years} ${i18n(I18nKey.timelineYears)}`;
-    } else {
-      return `${years} ${i18n(I18nKey.timelineYears)} ${months} ${i18n(I18nKey.timelineMonths)}`;
-    }
-  }
+	const start = new Date(startDate);
+	const end = endDate ? new Date(endDate) : new Date();
+	const diffTime = Math.abs(end.getTime() - start.getTime());
+	const diffMonths = Math.ceil(diffTime / (1000 * 60 * 60 * 24 * 30));
+
+	if (diffMonths < 12) {
+		return `${diffMonths} ${i18n(I18nKey.timelineMonths)}`;
+	} else {
+		const years = Math.floor(diffMonths / 12);
+		const months = diffMonths % 12;
+		if (months === 0) {
+			return `${years} ${i18n(I18nKey.timelineYears)}`;
+		} else {
+			return `${years} ${i18n(I18nKey.timelineYears)} ${months} ${i18n(I18nKey.timelineMonths)}`;
+		}
+	}
 };
 
 // 尺寸样式映射
 const getSizeClasses = (size: string) => {
-  switch (size) {
-    case 'small':
-      return {
-        container: 'p-4',
-        node: 'w-8 h-8',
-        nodeIcon: 'text-lg',
-        title: 'text-lg',
-        meta: 'text-xs',
-        description: 'text-sm',
-        badge: 'text-xs'
-      };
-    case 'large':
-      return {
-        container: 'p-8',
-        node: 'w-16 h-16',
-        nodeIcon: 'text-2xl',
-        title: 'text-2xl',
-        meta: 'text-base',
-        description: 'text-base',
-        badge: 'text-sm'
-      };
-    default: // medium
-      return {
-        container: 'p-6',
-        node: 'w-12 h-12',
-        nodeIcon: 'text-xl',
-        title: 'text-xl',
-        meta: 'text-sm',
-        description: 'text-sm',
-        badge: 'text-xs'
-      };
-  }
+	switch (size) {
+		case "small":
+			return {
+				container: "p-4",
+				node: "w-8 h-8",
+				nodeIcon: "text-lg",
+				title: "text-lg",
+				meta: "text-xs",
+				description: "text-sm",
+				badge: "text-xs",
+			};
+		case "large":
+			return {
+				container: "p-8",
+				node: "w-16 h-16",
+				nodeIcon: "text-2xl",
+				title: "text-2xl",
+				meta: "text-base",
+				description: "text-base",
+				badge: "text-sm",
+			};
+		default: // medium
+			return {
+				container: "p-6",
+				node: "w-12 h-12",
+				nodeIcon: "text-xl",
+				title: "text-xl",
+				meta: "text-sm",
+				description: "text-sm",
+				badge: "text-xs",
+			};
+	}
 };
 
 const sizeClasses = getSizeClasses(size);
-const itemColor = item.color || '#3B82F6';
+const itemColor = item.color || "#3B82F6";
 ---
 
 {layout === 'timeline' ? (

@@ -9,15 +9,19 @@ interface Props {
 }
 
 // 处理links中的LinkPreset转换
-const processedLinks = Astro.props.links.map((link: NavBarLink): NavBarLink => ({
-	...link,
-	children: link.children?.map((child: NavBarLink | LinkPreset): NavBarLink => {
-		if (typeof child === "number") {
-			return LinkPresets[child];
-		}
-		return child;
-	})
-}));
+const processedLinks = Astro.props.links.map(
+	(link: NavBarLink): NavBarLink => ({
+		...link,
+		children: link.children?.map(
+			(child: NavBarLink | LinkPreset): NavBarLink => {
+				if (typeof child === "number") {
+					return LinkPresets[child];
+				}
+				return child;
+			},
+		),
+	}),
+);
 ---
 <div id="nav-menu-panel" class:list={["float-panel float-panel-closed absolute transition-all fixed right-4 px-2 py-2 max-h-[80vh] overflow-y-auto"]}>
     {processedLinks.map((link) => (

@@ -1,91 +1,91 @@
 ---
-import { i18n } from '../../i18n/translation';
-import I18nKey from '../../i18n/i18nKey';
+import { i18n } from "../../i18n/translation";
+import I18nKey from "../../i18n/i18nKey";
 
 export interface Props {
-  project: {
-    id: string;
-    title: string;
-    description: string;
-    image?: string;
-    category: string;
-    techStack: string[];
-    status: 'completed' | 'in-progress' | 'planned';
-    demoUrl?: string;
-    sourceUrl?: string;
-    startDate: string;
-    endDate?: string;
-    featured?: boolean;
-    tags?: string[];
-  };
-  size?: 'small' | 'medium' | 'large';
-  showImage?: boolean;
-  maxTechStack?: number;
+	project: {
+		id: string;
+		title: string;
+		description: string;
+		image?: string;
+		category: string;
+		techStack: string[];
+		status: "completed" | "in-progress" | "planned";
+		demoUrl?: string;
+		sourceUrl?: string;
+		startDate: string;
+		endDate?: string;
+		featured?: boolean;
+		tags?: string[];
+	};
+	size?: "small" | "medium" | "large";
+	showImage?: boolean;
+	maxTechStack?: number;
 }
 
-const { 
-  project, 
-  size = 'medium', 
-  showImage = true, 
-  maxTechStack = 4 
+const {
+	project,
+	size = "medium",
+	showImage = true,
+	maxTechStack = 4,
 } = Astro.props;
 
 // 状态样式映射
 const getStatusStyle = (status: string) => {
-  switch (status) {
-    case 'completed':
-      return 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400';
-    case 'in-progress':
-      return 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400';
-    case 'planned':
-      return 'bg-gray-100 text-gray-700 dark:bg-gray-900/30 dark:text-gray-400';
-    default:
-      return 'bg-gray-100 text-gray-700 dark:bg-gray-900/30 dark:text-gray-400';
-  }
+	switch (status) {
+		case "completed":
+			return "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400";
+		case "in-progress":
+			return "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400";
+		case "planned":
+			return "bg-gray-100 text-gray-700 dark:bg-gray-900/30 dark:text-gray-400";
+		default:
+			return "bg-gray-100 text-gray-700 dark:bg-gray-900/30 dark:text-gray-400";
+	}
 };
 
 // 状态文本映射
 const getStatusText = (status: string) => {
-  switch (status) {
-    case 'completed':
-      return i18n(I18nKey.projectsCompleted);
-    case 'in-progress':
-      return i18n(I18nKey.projectsInProgress);
-    case 'planned':
-      return i18n(I18nKey.projectsPlanned);
-    default:
-      return status;
-  }
+	switch (status) {
+		case "completed":
+			return i18n(I18nKey.projectsCompleted);
+		case "in-progress":
+			return i18n(I18nKey.projectsInProgress);
+		case "planned":
+			return i18n(I18nKey.projectsPlanned);
+		default:
+			return status;
+	}
 };
 
 // 尺寸样式映射
 const getSizeClasses = (size: string) => {
-  switch (size) {
-    case 'small':
-      return {
-        container: 'p-4',
-        title: 'text-lg',
-        description: 'text-sm line-clamp-2',
-        tech: 'text-xs',
-        links: 'text-sm'
-      };
-    case 'large':
-      return {
-        container: 'p-6',
-        title: 'text-xl',
-        description: 'text-base line-clamp-3',
-        tech: 'text-sm',
-        links: 'text-base'
-      };
-    default: // medium
-      return {
-        container: 'p-5',
-        title: 'text-lg',
-        description: 'text-sm line-clamp-2',
-        tech: 'text-xs',
-        links: 'text-sm'
-      };
-  }
+	switch (size) {
+		case "small":
+			return {
+				container: "p-4",
+				title: "text-lg",
+				description: "text-sm line-clamp-2",
+				tech: "text-xs",
+				links: "text-sm",
+			};
+		case "large":
+			return {
+				container: "p-6",
+				title: "text-xl",
+				description: "text-base line-clamp-3",
+				tech: "text-sm",
+				links: "text-base",
+			};
+		default: // medium
+			return {
+				container: "p-5",
+				title: "text-lg",
+				description: "text-sm line-clamp-2",
+				tech: "text-xs",
+				links: "text-sm",
+			};
+	}
 };
 
 const sizeClasses = getSizeClasses(size);

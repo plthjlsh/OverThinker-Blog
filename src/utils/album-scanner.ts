@@ -143,7 +143,10 @@ function scanPhotos(folderPath: string, albumId: string): Photo[] {
 	return photos;
 }
 
-function processExternalPhotos(externalPhotos: any[], albumId: string): Photo[] {
+function processExternalPhotos(
+	externalPhotos: any[],
+	albumId: string,
+): Photo[] {
 	const photos: Photo[] = [];
 
 	externalPhotos.forEach((photo, index) => {

@@ -40,28 +40,35 @@ const componentMap = {
  * @param index 组件索引
  * @param allComponents 所有组件列表
  */
-function createComponentRenderer(component: WidgetComponentConfig, index: number, allComponents: WidgetComponentConfig[]) {
-	const ComponentToRender = componentMap[component.type as keyof typeof componentMap];
-	
+function createComponentRenderer(
+	component: WidgetComponentConfig,
+	index: number,
+	allComponents: WidgetComponentConfig[],
+) {
+	const ComponentToRender =
+		componentMap[component.type as keyof typeof componentMap];
+
 	if (!ComponentToRender) {
-		console.warn(`Component type "${component.type}" not found in component map`);
+		console.warn(
+			`Component type "${component.type}" not found in component map`,
+		);
 		return null;
 	}
-	
+
 	// 获取组件的样式和类名
 	const componentClass = widgetManager.getComponentClass(component, index);
 	const componentStyle = widgetManager.getComponentStyle(component, index);
-	
+
 	// 构建组件属性
 	const componentProps = {
 		class: componentClass,
 		style: componentStyle,
 		// 特殊处理：TOC组件需要headings属性
-		...(component.type === 'toc' && { headings }),
+		...(component.type === "toc" && { headings }),
 		// 合并自定义属性
 		...component.customProps,
 	};
-	
+
 	return {
 		Component: ComponentToRender,
 		props: componentProps,
@@ -75,7 +82,9 @@ function createComponentRenderer(component: WidgetComponentConfig, index: number
  */
 function renderComponents(components: WidgetComponentConfig[]) {
 	return components
-		.map((component, index) => createComponentRenderer(component, index, components))
+		.map((component, index) =>
+			createComponentRenderer(component, index, components),
+		)
 		.filter(Boolean); // 过滤掉null值
 }
 

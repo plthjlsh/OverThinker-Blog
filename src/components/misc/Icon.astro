@@ -3,37 +3,37 @@
 // 提供加载状态管理和错误处理
 
 export interface Props {
-  icon: string;
-  class?: string;
-  style?: string;
-  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
-  color?: string;
-  fallback?: string; // 备用图标或文本
-  loading?: 'lazy' | 'eager';
+	icon: string;
+	class?: string;
+	style?: string;
+	size?: "xs" | "sm" | "md" | "lg" | "xl" | "2xl";
+	color?: string;
+	fallback?: string; // 备用图标或文本
+	loading?: "lazy" | "eager";
 }
 
-const { 
-  icon, 
-  class: className = '', 
-  style = '', 
-  size = 'md',
-  color,
-  fallback = '●',
-  loading = 'lazy'
+const {
+	icon,
+	class: className = "",
+	style = "",
+	size = "md",
+	color,
+	fallback = "●",
+	loading = "lazy",
 } = Astro.props;
 
 // 尺寸映射
 const sizeClasses = {
-  'xs': 'text-xs',
-  'sm': 'text-sm', 
-  'md': 'text-base',
-  'lg': 'text-lg',
-  'xl': 'text-xl',
-  '2xl': 'text-2xl'
+	xs: "text-xs",
+	sm: "text-sm",
+	md: "text-base",
+	lg: "text-lg",
+	xl: "text-xl",
+	"2xl": "text-2xl",
 };
 
 const sizeClass = sizeClasses[size] || sizeClasses.md;
-const colorStyle = color ? `color: ${color};` : '';
+const colorStyle = color ? `color: ${color};` : "";
 const combinedStyle = `${colorStyle}${style}`;
 const combinedClass = `${sizeClass} ${className}`.trim();
 

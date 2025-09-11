@@ -66,8 +66,7 @@ let progressBar: HTMLElement;
 let volumeBar: HTMLElement;
 
 const localPlaylist = [
-  
-      {
+	{
 		id: 1,
 		title: "Mushrooms",
 		artist: "Re-Logic",
@@ -75,7 +74,7 @@ const localPlaylist = [
 		url: "assets/music/url/Terraria/Re-Logic - Mushrooms.mp3",
 		duration: 200,
 	},
-    {
+	{
 		id: 2,
 		title: "等你下课 (with 杨瑞代)",
 		artist: "周杰伦",
@@ -83,7 +82,7 @@ const localPlaylist = [
 		url: "assets/music/url/等你下课 (with 杨瑞代).mp3",
 		duration: 200,
 	},
-    {
+	{
 		id: 3,
 		title: "破旧世界",
 		artist: "魔鬼花园",
@@ -91,7 +90,7 @@ const localPlaylist = [
 		url: "assets/music/url/破旧世界.mp3",
 		duration: 200,
 	},
-        {
+	{
 		id: 4,
 		title: "Por Una Cabeza",
 		artist: "Thomas Newman",
@@ -99,7 +98,7 @@ const localPlaylist = [
 		url: "assets/music/url/PorUnaCabeza.mp3",
 		duration: 200,
 	},
-    {
+	{
 		id: 5,
 		title: "Scourge of the Universe",
 		artist: "DM DOKURO",
@@ -107,7 +106,7 @@ const localPlaylist = [
 		url: "assets/music/url/ScourgeOfTheUniverse.mp3",
 		duration: 200,
 	},
-    {
+	{
 		id: 6,
 		title: "有什么奇怪",
 		artist: "郭顶",
@@ -115,7 +114,7 @@ const localPlaylist = [
 		url: "assets/music/url/有什么奇怪.mp3",
 		duration: 200,
 	},
-    {
+	{
 		id: 7,
 		title: "手写的从前",
 		artist: "周杰伦",
@@ -123,7 +122,7 @@ const localPlaylist = [
 		url: "assets/music/url/手写的从前.mp3",
 		duration: 200,
 	},
-	    {
+	{
 		id: 8,
 		title: "我们俩",
 		artist: "郭顶",
@@ -131,7 +130,7 @@ const localPlaylist = [
 		url: "assets/music/url/我们俩.mp3",
 		duration: 200,
 	},
-     {
+	{
 		id: 9,
 		title: "夜曲",
 		artist: "周杰伦",
@@ -139,7 +138,7 @@ const localPlaylist = [
 		url: "assets/music/url/夜曲.mp3",
 		duration: 200,
 	},
-        {
+	{
 		id: 10,
 		title: "风车小镇",
 		artist: "谢安心",
@@ -147,7 +146,7 @@ const localPlaylist = [
 		url: "assets/music/url/风车小镇.mp3",
 		duration: 200,
 	},
-    {
+	{
 		id: 10,
 		title: "Overworld Day",
 		artist: "Re-Logic",
@@ -155,7 +154,7 @@ const localPlaylist = [
 		url: "assets/music/url/Terraria/Re-Logic - Overworld Day.mp3",
 		duration: 200,
 	},
-    {
+	{
 		id: 11,
 		title: "Alternate Day",
 		artist: "Re-Logic",
@@ -163,7 +162,6 @@ const localPlaylist = [
 		url: "assets/music/url/Terraria/Re-Logic - Alternate Day.mp3",
 		duration: 200,
 	},
-    
 ];
 
 async function fetchMetingPlaylist() {

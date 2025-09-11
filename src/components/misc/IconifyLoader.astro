@@ -3,16 +3,12 @@
 // 在页面头部加载，确保图标库尽早可用
 
 export interface Props {
-  preloadIcons?: string[]; // 需要预加载的图标列表
-  timeout?: number; // 加载超时时间
-  retryCount?: number; // 重试次数
+	preloadIcons?: string[]; // 需要预加载的图标列表
+	timeout?: number; // 加载超时时间
+	retryCount?: number; // 重试次数
 }
 
-const { 
-  preloadIcons = [],
-  timeout = 10000,
-  retryCount = 3
-} = Astro.props;
+const { preloadIcons = [], timeout = 10000, retryCount = 3 } = Astro.props;
 ---
 
 <!-- Iconify图标库加载器 -->
