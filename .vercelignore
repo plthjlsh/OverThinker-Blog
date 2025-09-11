@@ -1,1 +1,4 @@
-"pnpm-lock.yaml" 
+# .vercelignore 文件内容
+LICENSE
+# 若还有其他无需部署的文件，也可一并添加，例如：
+# pnpm-lock.yaml（若依赖已通过 lockfile 锁定，且构建无需该文件）
