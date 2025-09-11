@@ -37,7 +37,14 @@ export default defineConfig({
 	vite: {
 		plugins: [yaml()],
 		// 明确确定需要处理的资源类型，避免过度包含
-		assetsInclude: ["**/*.yaml", "**/*.yml", "**/*.md"],
+		assetsInclude: [
+			"**/*.yaml",
+			"**/*.yml",
+			"**/*.md",
+			"**/*.webp",
+			"**/*.png",
+			"**/*.jpg",
+		],
 		build: {
 			rollupOptions: {
 				// 新增 fsevents 排除，解决核心错误

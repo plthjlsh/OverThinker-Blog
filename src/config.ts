@@ -202,7 +202,7 @@ export const navBarConfig: NavBarConfig = {
 			icon: "material-symbols:person",
 			children: [
 				//关闭了追番功能
-				// LinkPreset.Anime,
+				LinkPreset.Anime,
 				LinkPreset.Diary,
 				{
 					name: "相册",

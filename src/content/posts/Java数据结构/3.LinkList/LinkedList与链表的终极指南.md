@@ -10,7 +10,7 @@ draft: false
 ---
 
 
-> **[<font face="STCAIYUN" size =  5 color = #386b44ff>数</font><font face="STCAIYUN" size =  5 color = #386b44ff>据</font><font face="STCAIYUN" size =  5 color = #386b44ff>结</font><font face="STCAIYUN" size =  5 color = #386b44ff>构</font><font face="STCAIYUN" size =  5 color = #386b44ff>专</font><font face="STCAIYUN" size =  5 color = #386b44ff>栏 </font>⬅(click)](http://localhost:4321/archive/?category=Java%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84)**
+> **[<font face="STCAIYUN" size =  5 color = #386b44ff>数</font><font face="STCAIYUN" size =  5 color = #386b44ff>据</font><font face="STCAIYUN" size =  5 color = #386b44ff>结</font><font face="STCAIYUN" size =  5 color = #386b44ff>构</font><font face="STCAIYUN" size =  5 color = #386b44ff>专</font><font face="STCAIYUN" size =  5 color = #386b44ff>栏 </font>⬅(click)](https://blog.csdn.net/weixin_46491509/category_12935100.html?spm=1001.2014.3001.5482)**
 
 ## 🌟 引言
 在Java集合框架中，`LinkedList`和`ArrayList`是最常用的两种列表结构。它们各有优劣，适用于不同的场景。本文将带你深入探索`LinkedList`的底层实现——链表，并通过丰富的代码示例和对比分析，帮助你全面掌握其特性和应用场景。

@@ -1,0 +1,11 @@
+{
+	"title": "一些随拍",
+	"hidden": false,
+	"description": "没有高超的摄影技术，只是单纯的记录生活中的一些瞬间。",
+	"date": "2025-09-11",
+	"location": "Memories",
+	"tags": ["snap", "moments", "life"],
+	"layout": "masonry",
+	"columns": 4,
+	"cover": "cover.jpg"
+}
