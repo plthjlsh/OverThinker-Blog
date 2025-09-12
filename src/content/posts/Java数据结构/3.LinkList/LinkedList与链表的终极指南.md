@@ -64,6 +64,9 @@ class Node {
 
 /*关于LinkedList的实现练习，只实现String属性*/
 
+//通过这个类来表示一个链表的单链表节点，如果是双链表还需要一个prev
+/*关于LinkedList的实现练习，只实现String属性*/
+
 
 //通过这个类来表示一个链表的单链表节点，如果是双链表还需要一个prev
 class Node{
@@ -128,7 +131,124 @@ public class MyLinkedList {
     //指定位置插入
     public void add(int index, String value){
 
+        //1.先进行合法性检查
+        if(index < 0 || index > size()){
+            //index == size时相当于尾插，属于合法情况
+            throw new RuntimeException("Index out of bounds");
+        }
+
+        //2.针对头插特殊处理
+        if(index == 0){
+            addFirst(value);
+            return;
+        }
+
+        //3.根据当前value值，去新建一个节点
+        Node newNode = new Node(value);
+
+        //4.找到index要插入的位置的上一个节点
+        // 由于当前的链表是单向链表，每个节点，只能找到next
+        // 插入新节点需要修改前一个节点的next值
+        // 前一个节点的下标应该是index-1
+        Node prev = head;
+        for (int i = 0; i < index-1; i++) {
+            prev = prev.next;
+        }
+
+        //5.通过上述循环，就让prev指向index-1的位置
+        newNode.next = prev.next;
+        prev.next = newNode;
+
     }
+
+    //虽然没有size但是我们可以现成写一个size()
+    //但是这样的过程时间复杂度为O(N)
+    public int size(){
+        int size = 0;
+
+        for (Node current = head;current != null; current = current.next){
+            size++;
+        }
+        return size;
+    }
+
+    //实现判定某个元素是否在链表中包含
+    public Boolean contains(String value){
+        for (Node current = head; current != null; current = current.next){
+            if(current.value.equals(value)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    //实现搜寻某个元素的下标
+    public int indexOf(String value){
+        int index = 0;
+        for(Node current = head; current != null; current = current.next){
+            if(current.value.equals(value)){
+                return index;
+            }
+            index++;
+        }
+        return -1;
+    }
+
+    //实现删除链表中的某个元素操作（指定下标）
+    public void remove(int index){
+        if(index < 0 || index >= size()){
+            throw new RuntimeException("Index out of bounds");
+        }
+
+//        //自己实现的想法
+//        //判断下标为0
+//        if(index == 0){
+//            head = head.next;
+//        }
+//        int lastIndex = 0;
+//        for (Node prev = head; prev != null; prev = prev.next){
+//            Node toRemove = prev.next;
+//            if( lastIndex == index-1){
+//                prev.next =toRemove.next;
+//            }
+//            lastIndex++;
+//        }
+
+        //其他实现做法
+        //1.这对特殊情况处理
+        if(index == 0){
+            head = head.next;
+            return;
+        }
+        //2.找到被删除元素的前一个节点
+        Node prev = head;
+        for (int i = 0; i < index-1; i++) {
+            prev = prev.next;
+        }
+        //3.循环结束，prev就指向待删除元素的上一个节点
+        Node toRemove = prev.next;
+        //4.进行删除操作
+        prev.next = toRemove.next;
+
+    }
+    //实现删除链表中的某个元素操作（指定值）
+    public void remove(String value){
+        //1.先找到元素所在下标
+        int index = indexOf(value);
+        if(index == -1){
+            System.out.println("所删除元素不存在");
+            return;
+        }
+        remove(index);
+
+    }
+
+    //实现清空链表所有元素
+    public void clear(){
+        //直接修改head，head指向原来的Node对象都没有引用指向了，都会被gc回收
+        head = null;
+    }
+
 
     //重写toString通过这个方法去遍历链表，构成一个字符串，方便打印
     @Override
@@ -151,6 +271,7 @@ public class MyLinkedList {
 
     //----------------------------------------------------------
 
+    //头插测试
     public static void test1(MyLinkedList list){
         list.addFirst("A");
         list.addFirst("B");
@@ -158,6 +279,7 @@ public class MyLinkedList {
         System.out.println(list);
     }
 
+    //尾插测试
     public static void test2(MyLinkedList list){
         list.addLast("A");
         list.addLast("B");
@@ -167,54 +289,365 @@ public class MyLinkedList {
         System.out.println(list);
     }
 
+    //指定位置插入测试
+    public static void test3(MyLinkedList list){
+
+        list.add(0, "a");
+        list.add(1, "b");
+        list.add(2, "c");
+        list.add(3, "d");
+        list.add(0, "000");
+        System.out.println(list);
+    }
+
+    //查找元素是否存在以及查找元素下标测试
+    public static void test4(MyLinkedList list){
+        System.out.println(list.contains("c"));
+        System.out.println(list.contains("000"));
+        System.out.println(list.contains("e"));
+        System.out.println(list.indexOf("c"));
+        System.out.println(list.indexOf("000"));
+        System.out.println(list.indexOf("e"));
+    }
+
+
+    //删除元素测试
+    public static void test5(MyLinkedList list){
+        list.remove(0);
+        list.remove(2);
+        System.out.println(list);
+//        list.remove(100);
+        list.remove("b");
+        System.out.println(list);
+        list.remove("666");
+    }
+
+    //清空链表元素测试
+    public static void test6(MyLinkedList list){
+        list.clear();
+        System.out.println(list);
+    }
+
+    //主方法
     public static void main(String[] args) {
         MyLinkedList list = new MyLinkedList();
-        test1(list);
+//        test1(list);
         MyLinkedList list2 = new MyLinkedList();
         test2(list2);
+//        test3(list2);
+//        test4(list2);
+//        test5(list2);
+        test6(list2);
+        MyLinkedList list3 = new MyLinkedList();     //空链表测试
+//        test4(list3);
     }
 }
+
 
 ```
 
 以下是一个简化版的双向链表实现：
 ```java
-public class MyLinkedList {
-    private Node head;
-    private Node tail;
-    private int size;
+//实现双向链表
+public class MyDLinkedList {
+    //此处创建一个双向链表节点类，由于在这个包中已经存在Node这个类，因此我们创建静态内部类
+    //用静态是为了不让Node依赖MyDLinkedList的this
+    static class Node {
+        public  String value;
+        public Node next = null;
+        public Node prev = null;
+        public Node(String value) {
+            this.value = value;
+        }
+    }
+    //表示整个链表,此处不引入傀儡节点，用null表示空链表
+    private Node head = null;
+    //为了后续方便去实现尾插操作
+    private Node tail = null;
 
-    // 头插法
-    public void addFirst(int data) {
-        Node newNode = new Node(data);
-        if (head == null) {
-            head = tail = newNode;
-        } else {
+    //----------------------------------------
+    //实现链表一些核心操作
+
+    //计算链表长度
+    public int size() {
+        int size = 0;
+        for (Node current = head; current != null; current = current.next) {
+            size++;
+        }
+        return size;
+    }
+
+    //头插
+    public void addFirst(String value) {
+        Node newNode = new Node(value);
+        //链表为空
+        if(head == null) {
+            head = newNode;
+            tail = newNode;
+        }//链表不空
+        else {
+            //1.先让新节点和原来的头节点建立关联
             newNode.next = head;
             head.prev = newNode;
             head = newNode;
+
         }
-        size++;
+
     }
 
-    // 删除指定值的节点
-    public void remove(int key) {
-        Node cur = head;
-        while (cur != null) {
-            if (cur.val == key) {
-                if (cur == head) {
-                    head = head.next;
-                    if (head != null) head.prev = null;
-                } else {
-                    cur.prev.next = cur.next;
-                    if (cur.next != null) cur.next.prev = cur.prev;
-                }
-                size--;
-                return;
-            }
-            cur = cur.next;
+    //尾插
+    public void addLast(String value) {
+        Node newNode = new Node(value);
+        //判断链表为空
+        if(head == null) {
+            head = newNode;
+            tail = newNode;
+        }
+        //判断链表不为空
+        else {
+            tail.next = newNode;
+            newNode.prev = tail;
+            tail = newNode;
         }
     }
+
+    //在中间位置任意插入
+    public void add(int index, String value) {
+        int size = size();     //避免每次使用都去重新遍历，提高效率
+        if (index <0 || index > size){
+            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
+        }
+        if(index == 0) {
+            addFirst(value);
+            return;
+        }
+        if (index == size) {
+            addLast(value);
+            return;
+        }
+        //创建一个prev，指向index上一个节点的位置
+        Node prev = head;
+        for (int i = 0; i < index-1; i++) {
+            prev = prev.next;
+        }
+        //创建一个next，指向index下一个节点的位置
+        Node next = prev.next;
+
+        //在创建一个插入节点
+        Node newNode = new Node(value);
+        prev.next = newNode;
+        newNode.prev = prev;
+        newNode.next = next;
+        next.prev = newNode;
+
+
+    }
+    //实现contains方法
+    public boolean contains(String value) {
+        Node current = head;
+        for (; current != null; current = current.next) {
+            if (current.value.equals(value)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    //实现indexOf
+    public int indexOf(String value) {
+        Node current = head;
+        int index = 0;
+        for (; current != null; current = current.next) {
+            if (current.value.equals(value)) {
+                return index;
+            }
+            index++;
+        }
+        return -1;
+    }
+
+    //删除头部元素
+    public String removeFirst() {
+        if(head == null) {
+            return null;
+        }
+        String value = head.value;
+        if(head.next != null) {
+            head = head.next;
+            head.prev = null;
+        }else {
+            head = null;
+        }
+        return value;
+
+    }
+
+    //删除尾部
+    public String removeLast() {
+        if(head == null) {
+            return null;
+        }
+        String value = tail.value;
+        if(head.next == null) {
+           head = null;
+           tail = null;
+           return value;
+        }
+        tail = tail.prev;
+        tail.next = null;
+        return value;
+    }
+
+    //根据索引进行删除
+    public String remove(int index) {
+        int size = size();
+        if(index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size());
+        }
+        //特殊处理
+        if(index == 0) {
+            return removeFirst();
+        }
+        if(index == size - 1) {
+            return removeLast();
+        }
+        Node prev = head;
+        for (int i = 0; i < index - 1; i++) {
+            prev = prev.next;
+        }
+        Node toRemove = prev.next;
+        Node next = toRemove.next;
+        prev.next = next;
+        next.prev = prev;
+        return toRemove.value;
+
+    }
+
+    //指定值删除
+    public String remove(String value) {
+        if(head == null) {
+            return null;
+        }
+        if (head.value.equals(value)) {
+            return removeFirst();
+        }
+        if(tail.value.equals(value)) {
+            return removeLast();
+        }
+        //遍历链表找到待删除元素位置
+        String val = null;
+        Node toRemove = head;
+        for(; toRemove != null; toRemove = toRemove.next) {
+            if (toRemove.value.equals(value)) {
+                val = toRemove.value;
+                break;
+            }
+        }
+        if (toRemove == null) {
+            return null;
+        }
+        //真正进行删除
+        Node next = toRemove.next;
+        Node prev = toRemove.prev;
+        prev.next = next;
+        next.prev = prev;
+
+        return val;
+    }
+
+    //重写toString
+    @Override
+    public String toString() {
+        StringBuilder stringBuilder = new StringBuilder();
+        Node current = head;
+        stringBuilder.append("[");
+        while(current != null) {
+            if (current.next != null) {
+                stringBuilder.append(current.value);
+                stringBuilder.append(",");
+            }
+            else {
+                stringBuilder.append(current.value);
+            }
+            current = current.next;
+        }
+        stringBuilder.append("]");
+        return stringBuilder.toString();
+    }
+
+    //-------------------------------------------------------------------
+    private void test1(MyDLinkedList list) {
+        list.addFirst("a");
+        list.addFirst("b");
+        list.addFirst("c");
+        System.out.println(list);
+    }
+
+    private void test2(MyDLinkedList list) {
+        list.addLast("a");
+        list.addLast("b");
+        list.addLast("c");
+        System.out.println(list);
+    }
+
+    private void test3(MyDLinkedList list) {
+        list.add(0, "1");
+        list.add(1, "2");
+        list.add(2, "3");
+        System.out.println(list);
+    }
+
+    private void test4(MyDLinkedList list) {
+        System.out.println(list.contains("1"));
+        System.out.println(list.contains("10"));
+        System.out.println(list.indexOf("2"));
+        System.out.println(list.indexOf("10"));
+    }
+
+    private void test5(MyDLinkedList list) {
+
+        //测试头删
+        System.out.println(list.removeFirst());
+        System.out.println(list.removeFirst());
+        System.out.println(list.removeFirst());
+        System.out.println(list);
+
+    }
+
+    private void test6(MyDLinkedList list) {
+        System.out.println(list.removeLast());
+        System.out.println(list.removeLast());
+        System.out.println(list.removeLast());
+        System.out.println(list);
+    }
+
+    private void test7(MyDLinkedList list) {
+        System.out.println(list.remove(1));
+        System.out.println(list.remove(1));
+        System.out.println(list.remove(0));
+        System.out.println(list);
+    }
+
+    private void test8(MyDLinkedList list) {
+        System.out.println(list.remove("1"));
+        System.out.println(list.remove("3"));
+        System.out.println(list.remove("10"));
+        System.out.println(list);
+    }
+
+    //主程序逻辑
+    public static void main(String[] args) {
+        MyDLinkedList list = new MyDLinkedList();
+//        list.test1(list);
+//        list.test2(list);
+        list.test3(list);
+//        list.test4(list);
+//        list.test5(list);
+//        list.test6(list);
+//        list.test7(list);
+        list.test8(list);
+    }
+
 }
 ```
 

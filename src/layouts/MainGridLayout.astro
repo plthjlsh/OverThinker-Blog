@@ -12,6 +12,7 @@ import TypewriterText from "../components/TypewriterText.astro";
 import TOC from "../components/widget/TOC.astro";
 import {
 	fullscreenWallpaperConfig,
+	profileConfig,
 	sidebarLayoutConfig,
 	siteConfig,
 } from "../config";
@@ -169,6 +170,8 @@ const transparentClass = shouldEnableTransparency
 	: "";
 ---
 
+
+
 <Layout title={title} banner={banner} description={description} lang={lang} setOGTypeArticle={setOGTypeArticle}>
 
 <!-- 全屏壁纸 - 仅在banner关闭且全屏壁纸启用时显示 -->
@@ -187,12 +190,22 @@ const transparentClass = shouldEnableTransparency
 )}
 
 <!-- Navbar -->
-<slot slot="head" name="head"></slot>
+<slot slot="head" name="head">
+      {profileConfig.umami?.enable && (
+    <script 
+      defer 
+      src={`https://${profileConfig.umami.region}.umami.is/script.js`} 
+      data-website-id={profileConfig.umami.shareId}
+    ></script>
+  )}
+</slot>
 <div id="top-row" class="z-50 pointer-events-none relative transition-all duration-700 max-w-[var(--page-width)] px-0 md:px-4 mx-auto" class:list={[""]}>
     <div id="navbar-wrapper" class="pointer-events-auto sticky top-0 transition-all">
         <Navbar></Navbar>
     </div>
 </div>
+
+
 
 <!-- Banner -->
 {siteConfig.banner.enable && <div id="banner-wrapper" class={`absolute z-10 w-full transition duration-700 overflow-hidden ${mobileNonHomeBannerClass}`} style={`top: -${BANNER_HEIGHT_EXTEND}vh`}>
