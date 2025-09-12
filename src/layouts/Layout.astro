@@ -751,6 +751,7 @@ function initCustomScrollbar() {
 			style.setAttribute('data-katex-scrollbar', 'true');
 			document.head.appendChild(style);
 		}
+		
 		element.setAttribute('data-scrollbar-initialized', 'true');
 	});
 }
@@ -1030,6 +1031,8 @@ const setup = () => {
 			}
 		}
 	})
+
+
 	window.swup.hooks.on('content:replace', () => {
 		// 只处理新的katex元素的滚动条，使用原生CSS滚动条
 		initCustomScrollbar();
@@ -1069,8 +1072,8 @@ const setup = () => {
 			
 			if (transparentMode === 'semifull') {
 				// 重新调用初始化函数来重新绑定滚动事件
-				if (typeof window.initSemifullScrollDetection === 'function') {
-					window.initSemifullScrollDetection()
+				if (typeof (window as any).initSemifullScrollDetection === 'function') {
+					(window as any).initSemifullScrollDetection()
 				}
 			}
 		}
@@ -1332,8 +1335,5 @@ if (window.swup) {
 } else {
 	document.addEventListener("swup:enable", setup)
 }
-
-
-</script>
 
 </script>

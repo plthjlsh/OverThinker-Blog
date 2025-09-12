@@ -22,7 +22,7 @@ const { Content } = await render(aboutPost);
             </Markdown>
         </div>
         
-        <!-- 眼球容器 - 右上角 -->
+        <!-- 眼球容器 - 右上角（保持原样式） -->
         <div id="eye-container" class="absolute top-4 right-4 z-20">
             <div class="eye">
                 <div class="pupil">
@@ -32,8 +32,8 @@ const { Content } = await render(aboutPost);
         </div>
     </div>
     
+    <!-- 眼球样式（保持不变） -->
     <style>
-        /* 椭圆眼白样式 */
         .eye {
             width: 60px;
             height: 40px;
@@ -50,8 +50,6 @@ const { Content } = await render(aboutPost);
             cursor: pointer;
             transition: transform 0.3s ease;
         }
-        
-        /* 炫酷绿色瞳孔 */
         .pupil {
             width: 25px;
             height: 25px;
@@ -63,12 +61,10 @@ const { Content } = await render(aboutPost);
             transform: translate(-50%, -50%);
             transition: transform 0.08s ease-out;
             box-shadow: 
-                0 0 12px rgba(0, 255, 0, 0.8), /* 固定发光效果，不再变化 */
+                0 0 12px rgba(0, 255, 0, 0.8),
                 inset 2px 2px 5px rgba(255, 255, 255, 0.4),
                 inset -2px -2px 5px rgba(0, 0, 0, 0.4);
         }
-        
-        /* 瞳孔高光 */
         .pupil-reflect {
             width: 8px;
             height: 8px;
@@ -80,88 +76,98 @@ const { Content } = await render(aboutPost);
             z-index: 2;
             box-shadow: 0 0 5px white;
         }
-        
-        /* 悬停效果 */
         #eye-container:hover .eye {
             transform: rotate(5deg) scale(1.1);
         }
-        
-        /* 悬停时瞳孔效果 */
         #eye-container:hover .pupil {
             box-shadow: 
-                0 0 18px rgba(0, 255, 0, 1), /* 悬停时增强发光 */
+                0 0 18px rgba(0, 255, 0, 1),
                 inset 2px 2px 5px rgba(255, 255, 255, 0.4),
                 inset -2px -2px 5px rgba(0, 0, 0, 0.4);
         }
-        
-        /* 点击效果 */
         #eye-container:active .eye {
             transform: rotate(5deg) scale(0.95);
             transition: transform 0.1s ease;
         }
     </style>
     
+    <!-- 关键修改：适配 Swup 的脚本初始化逻辑 -->
     <script>
-        // 只在客户端执行
-        if (typeof window !== 'undefined') {
-            document.addEventListener('DOMContentLoaded', () => {
-                const pupil = document.querySelector('.pupil');
-                const eye = document.querySelector('.eye');
-                const container = document.querySelector('#eye-container');
-                
-                if (!pupil || !eye) return;
-                
-                // 获取眼球的中心位置
-                const getEyeCenter = () => {
-                    const rect = eye.getBoundingClientRect();
-                    return {
-                        x: rect.left + rect.width / 2,
-                        y: rect.top + rect.height / 2
-                    };
+        // 1. 提取眼球初始化逻辑为独立函数（方便重复调用）
+        function initEyeFollow() {
+            // 确保只在客户端执行，且能找到眼球元素
+            const pupil = document.querySelector('.pupil');
+            const eye = document.querySelector('.eye');
+            const container = document.querySelector('#eye-container');
+            
+            if (!pupil || !eye || !container) return;
+
+            // 移除旧的事件监听（避免多次绑定导致性能问题）
+            document.removeEventListener('mousemove', handleMouseMove);
+            document.removeEventListener('touchmove', handleTouchMove);
+
+            // 获取眼球中心位置的工具函数
+            function getEyeCenter() {
+                const rect = eye.getBoundingClientRect();
+                return {
+                    x: rect.left + rect.width / 2,
+                    y: rect.top + rect.height / 2
                 };
+            }
+
+            // 瞳孔移动核心逻辑
+            function handleMouseMove(e) {
+                const eyeCenter = getEyeCenter();
+                const deltaX = e.clientX - eyeCenter.x;
+                const deltaY = e.clientY - eyeCenter.y;
                 
-                // 计算瞳孔应该移动的距离
-                const movePupil = (e) => {
-                    const eyeCenter = getEyeCenter();
-                    const mouseX = e.clientX;
-                    const mouseY = e.clientY;
-                    
-                    // 计算鼠标相对于眼球中心的位置
-                    const deltaX = mouseX - eyeCenter.x;
-                    const deltaY = mouseY - eyeCenter.y;
-                    
-                    // 计算角度和距离（限制移动范围）
-                    const angle = Math.atan2(deltaY, deltaX);
-                    const maxDistance = 7; // 椭圆眼白的移动范围较小
-                    const distance = Math.min(maxDistance, Math.sqrt(deltaX * deltaX + deltaY * deltaY) / 30);
-                    
-                    // 计算瞳孔的新位置
-                    const moveX = Math.cos(angle) * distance;
-                    const moveY = Math.sin(angle) * distance;
-                    
-                    // 应用变换
-                    pupil.style.transform = `translate(calc(-50% + ${moveX}px), calc(-50% + ${moveY}px))`;
-                };
+                // 限制瞳孔移动范围（避免超出眼白）
+                const angle = Math.atan2(deltaY, deltaX);
+                const maxDistance = 7; // 椭圆眼白的合理移动范围
+                const distance = Math.min(maxDistance, Math.sqrt(deltaX ** 2 + deltaY ** 2) / 30);
                 
-                // 添加鼠标移动事件监听器
-                document.addEventListener('mousemove', movePupil);
-                
-                // 添加触摸事件支持（移动设备）
-                document.addEventListener('touchmove', (e) => {
-                    e.preventDefault();
-                    if (e.touches.length > 0) {
-                        movePupil(e.touches[0]);
-                    }
-                }, { passive: false });
-                
-                // 点击特效
-                container.addEventListener('click', () => {
-                    container.style.transform = 'scale(1.2)';
-                    setTimeout(() => {
-                        container.style.transform = 'scale(1)';
-                    }, 300);
-                });
+                // 计算并应用瞳孔新位置
+                const moveX = Math.cos(angle) * distance;
+                const moveY = Math.sin(angle) * distance;
+                pupil.style.transform = `translate(calc(-50% + ${moveX}px), calc(-50% + ${moveY}px))`;
+            }
+
+            // 移动设备触摸事件支持
+            function handleTouchMove(e) {
+                e.preventDefault();
+                if (e.touches.length > 0) {
+                    handleMouseMove(e.touches[0]); // 复用鼠标移动逻辑
+                }
+            }
+
+            // 重新绑定事件监听
+            document.addEventListener('mousemove', handleMouseMove);
+            document.addEventListener('touchmove', handleTouchMove, { passive: false });
+
+            // 点击特效（保持不变）
+            container.addEventListener('click', () => {
+                container.style.transform = 'scale(1.2)';
+                setTimeout(() => {
+                    container.style.transform = 'scale(1)';
+                }, 300);
             });
+        }
+
+        // 2. 首次加载页面时初始化
+        if (typeof window !== 'undefined') {
+            // 普通页面加载（如刷新）时执行
+            document.addEventListener('DOMContentLoaded', initEyeFollow);
+
+            // 3. Swup 页面切换后执行（解决无刷新导航问题）
+            if (window.swup) {
+                // 页面切换完成后重新初始化
+                window.swup.hooks.on('page:view', initEyeFollow);
+            } else {
+                // 若 swup 尚未加载，监听其启用事件
+                document.addEventListener('swup:enable', () => {
+                    window.swup.hooks.on('page:view', initEyeFollow);
+                });
+            }
         }
     </script>
 </MainGridLayout>
