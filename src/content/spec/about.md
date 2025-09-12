@@ -2,7 +2,7 @@
 
 欢迎来到我的数字小窝！这里记录着**过度思考者**的一些东东。
 
-本博客基于 [Astro](https://astro.build/) 框架搭建，使用了前端大佬 [Mizuki](https://space.bilibili.com/701864046) 提供的模板。在此特别感谢 Astro 团队和 Mizuki 大佬的开源贡献！
+本博客基于 [Astro](https://astro.build/) 框架搭建，使用了前端大佬 [松坂有希](https://space.bilibili.com/701864046) 提供的模板。在此特别感谢 Astro 团队和大佬们的开源贡献！
 
 
 ---

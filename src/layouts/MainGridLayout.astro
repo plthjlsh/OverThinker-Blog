@@ -12,7 +12,6 @@ import TypewriterText from "../components/TypewriterText.astro";
 import TOC from "../components/widget/TOC.astro";
 import {
 	fullscreenWallpaperConfig,
-	profileConfig,
 	sidebarLayoutConfig,
 	siteConfig,
 } from "../config";
@@ -190,22 +189,26 @@ const transparentClass = shouldEnableTransparency
 )}
 
 <!-- Navbar -->
-<slot slot="head" name="head">
-      {profileConfig.umami?.enable && (
-    <script 
-      defer 
-      src={`https://${profileConfig.umami.region}.umami.is/script.js`} 
-      data-website-id={profileConfig.umami.shareId}
-    ></script>
-  )}
-</slot>
+<slot slot="head" name="head"></slot>
 <div id="top-row" class="z-50 pointer-events-none relative transition-all duration-700 max-w-[var(--page-width)] px-0 md:px-4 mx-auto" class:list={[""]}>
     <div id="navbar-wrapper" class="pointer-events-auto sticky top-0 transition-all">
         <Navbar></Navbar>
     </div>
 </div>
 
+<!-- 设置访问统计 -->
+<script defer src="https://cloud.umami.is/script.js" data-website-id="334d6844-684e-4fa8-b1f1-33433ce848d8"></script>
 
+<!-- 眼球效果 -->
+<div class="Eye">
+  <div class="eye-container">
+    <div class="eye-white"></div>
+    <div class="eye-pupil" id="pupil">
+      <div class="eye-highlight"></div>
+      <div class="eye-highlight-small"></div>
+    </div>
+  </div>
+</div>
 
 <!-- Banner -->
 {siteConfig.banner.enable && <div id="banner-wrapper" class={`absolute z-10 w-full transition duration-700 overflow-hidden ${mobileNonHomeBannerClass}`} style={`top: -${BANNER_HEIGHT_EXTEND}vh`}>

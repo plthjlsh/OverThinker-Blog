@@ -9,6 +9,7 @@ pinned: true
 draft: false
 ---
 
+
 ## 写在前面
 
 欢迎来到我的数字小窝！这里记录着**过度思考者**的一些东东。
@@ -49,3 +50,4 @@ public class SeeYou {
         System.out.println("Catch you later!");
     }
 }
+```

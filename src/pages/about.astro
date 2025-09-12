@@ -1,5 +1,4 @@
 ---
-
 import { getEntry, render } from "astro:content";
 import Markdown from "@components/misc/Markdown.astro";
 import I18nKey from "../i18n/i18nKey";
@@ -14,6 +13,7 @@ if (!aboutPost) {
 
 const { Content } = await render(aboutPost);
 ---
+
 <MainGridLayout title={i18n(I18nKey.about)} description={i18n(I18nKey.about)}>
     <div class="flex w-full rounded-[var(--radius-large)] overflow-hidden relative min-h-32">
         <div class="card-base z-10 px-9 py-6 relative w-full ">
@@ -21,5 +21,147 @@ const { Content } = await render(aboutPost);
                 <Content />
             </Markdown>
         </div>
+        
+        <!-- 眼球容器 - 右上角 -->
+        <div id="eye-container" class="absolute top-4 right-4 z-20">
+            <div class="eye">
+                <div class="pupil">
+                    <div class="pupil-reflect"></div>
+                </div>
+            </div>
+        </div>
     </div>
+    
+    <style>
+        /* 椭圆眼白样式 */
+        .eye {
+            width: 60px;
+            height: 40px;
+            background: linear-gradient(135deg, #f0f0f0 0%, #ffffff 100%);
+            border-radius: 60% / 50%;
+            position: relative;
+            border: 2px solid #333;
+            overflow: hidden;
+            box-shadow: 
+                0 0 15px rgba(0, 0, 0, 0.3),
+                inset 5px 5px 10px rgba(255, 255, 255, 0.8),
+                inset -5px -5px 10px rgba(0, 0, 0, 0.1);
+            transform: rotate(5deg);
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        
+        /* 炫酷绿色瞳孔 */
+        .pupil {
+            width: 25px;
+            height: 25px;
+            background: linear-gradient(135deg, #00ff00 0%, #008800 100%);
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            transition: transform 0.08s ease-out;
+            box-shadow: 
+                0 0 12px rgba(0, 255, 0, 0.8), /* 固定发光效果，不再变化 */
+                inset 2px 2px 5px rgba(255, 255, 255, 0.4),
+                inset -2px -2px 5px rgba(0, 0, 0, 0.4);
+        }
+        
+        /* 瞳孔高光 */
+        .pupil-reflect {
+            width: 8px;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            position: absolute;
+            top: 25%;
+            left: 25%;
+            z-index: 2;
+            box-shadow: 0 0 5px white;
+        }
+        
+        /* 悬停效果 */
+        #eye-container:hover .eye {
+            transform: rotate(5deg) scale(1.1);
+        }
+        
+        /* 悬停时瞳孔效果 */
+        #eye-container:hover .pupil {
+            box-shadow: 
+                0 0 18px rgba(0, 255, 0, 1), /* 悬停时增强发光 */
+                inset 2px 2px 5px rgba(255, 255, 255, 0.4),
+                inset -2px -2px 5px rgba(0, 0, 0, 0.4);
+        }
+        
+        /* 点击效果 */
+        #eye-container:active .eye {
+            transform: rotate(5deg) scale(0.95);
+            transition: transform 0.1s ease;
+        }
+    </style>
+    
+    <script>
+        // 只在客户端执行
+        if (typeof window !== 'undefined') {
+            document.addEventListener('DOMContentLoaded', () => {
+                const pupil = document.querySelector('.pupil');
+                const eye = document.querySelector('.eye');
+                const container = document.querySelector('#eye-container');
+                
+                if (!pupil || !eye) return;
+                
+                // 获取眼球的中心位置
+                const getEyeCenter = () => {
+                    const rect = eye.getBoundingClientRect();
+                    return {
+                        x: rect.left + rect.width / 2,
+                        y: rect.top + rect.height / 2
+                    };
+                };
+                
+                // 计算瞳孔应该移动的距离
+                const movePupil = (e) => {
+                    const eyeCenter = getEyeCenter();
+                    const mouseX = e.clientX;
+                    const mouseY = e.clientY;
+                    
+                    // 计算鼠标相对于眼球中心的位置
+                    const deltaX = mouseX - eyeCenter.x;
+                    const deltaY = mouseY - eyeCenter.y;
+                    
+                    // 计算角度和距离（限制移动范围）
+                    const angle = Math.atan2(deltaY, deltaX);
+                    const maxDistance = 7; // 椭圆眼白的移动范围较小
+                    const distance = Math.min(maxDistance, Math.sqrt(deltaX * deltaX + deltaY * deltaY) / 30);
+                    
+                    // 计算瞳孔的新位置
+                    const moveX = Math.cos(angle) * distance;
+                    const moveY = Math.sin(angle) * distance;
+                    
+                    // 应用变换
+                    pupil.style.transform = `translate(calc(-50% + ${moveX}px), calc(-50% + ${moveY}px))`;
+                };
+                
+                // 添加鼠标移动事件监听器
+                document.addEventListener('mousemove', movePupil);
+                
+                // 添加触摸事件支持（移动设备）
+                document.addEventListener('touchmove', (e) => {
+                    e.preventDefault();
+                    if (e.touches.length > 0) {
+                        movePupil(e.touches[0]);
+                    }
+                }, { passive: false });
+                
+                // 点击特效
+                container.addEventListener('click', () => {
+                    container.style.transform = 'scale(1.2)';
+                    setTimeout(() => {
+                        container.style.transform = 'scale(1)';
+                    }, 300);
+                });
+            });
+        }
+    </script>
 </MainGridLayout>

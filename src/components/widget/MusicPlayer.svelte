@@ -66,8 +66,8 @@ let progressBar: HTMLElement;
 let volumeBar: HTMLElement;
 
 const localPlaylist = [
-	{
-		id: 1,
+      {
+		id: 12,
 		title: "Mushrooms",
 		artist: "Re-Logic",
 		cover: "assets/music/cover/Terraria.jpg",
@@ -162,6 +162,15 @@ const localPlaylist = [
 		url: "assets/music/url/Terraria/Re-Logic - Alternate Day.mp3",
 		duration: 200,
 	},
+    {
+		id: 12,
+		title: "如果有来生",
+		artist: "LTH翻唱",
+		cover: "assets/music/cover/如果有来生.jpg",
+		url: "assets/music/url/如果有来生.mp3",
+		duration: 200,
+	},
+  
 ];
 
 async function fetchMetingPlaylist() {
