@@ -15,8 +15,20 @@ draft: false
   <p style="font-size: 28px; font-weight: 900; line-height: 1.6; transition: transform 0.3s ease; cursor: default;
              background: linear-gradient(45deg, #e4f3e7ff, #f5fbf9ff); -webkit-background-clip: text; background-clip: text; color: transparent;
              text-shadow: 0 0 10px rgba(54, 211, 153, 0.3);">
-    由于本人技术较菜＞﹏＜，不会搞留言板，就在这里搞了个空博客，在下方评论区就可以留言啦，但是应该要先注册一下个人信息！
+    本人技术较菜＞﹏＜，不会搞留言板，就在这里搞了个空博客（实名/匿名）:
+
+    想实名留言
+    填写正确的邮箱就可以直接留言啦;
+
+    想匿名留言
+    随便填一些数字的邮箱就可以匿名留言【后台真的看不到！】
+
   </p>
 </div>
+
+## 如图！
+
+![证据！](image.png)
+
 
 

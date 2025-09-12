@@ -14,10 +14,16 @@
 [**📝 ドキュメント**](https://docs.mizuki.mysqil.com/)
 
 🌏 README 言語
-[**中文**](../README.md) /
-[**English**](../README.en.md) /
+[**English**](../README.md) /
+[**中文**](../README.zh.md) /
 [**日本語**](./README.ja.md) /
 [**中文繁体**](./README.tw.md) /
+
+## 🆕 v4.8 アップデート
+## 🆕 v4.9 アップデート
+- **Pio Live2D統合**: Pio Live2Dキャラクターを統合し、可愛らしいインタラクティブな仲間を提供してユーザーエンゲージメントを向上させます。
+- **高度な設定**: モデルパス、位置、サイズ、会話内容など、`src/config.ts`で詳細な設定をサポートし、パーソナライズされたニーズに対応します。
+- **シームレスなナビゲーション**: 「ホームに戻る」機能は、テーマに組み込まれたSwupを使用して、スムーズでリフレッシュなしのページ遷移を提供します。
 
 ## 🆕 v4.3 アップデート
 - **アニメページ：** より可愛くて魅力的なアニメページにリデザインし、アニメリスト、詳細、タイムラインを含みます。
@@ -103,30 +109,30 @@
 ### 📦 インストール
 
 1. **リポジトリをクローン：**
-   ```bash
-   git clone https://github.com/matsuzaka-yuki/mizuki.git
-   cd mizuki
-   ```
+```bash
+git clone https://github.com/matsuzaka-yuki/mizuki.git
+cd mizuki
+```
 
 2. **依存関係をインストール：**
-   ```bash
-   # pnpmがインストールされていない場合はインストール
-   npm install -g pnpm
-   
-   # プロジェクトの依存関係をインストール
-   pnpm install
-   ```
+```bash
+# pnpmがインストールされていない場合はインストール
+npm install -g pnpm
+
+# プロジェクトの依存関係をインストール
+pnpm install
+```
 
 3. **ブログを設定：**
-   - `src/config.ts`を編集してブログ設定をカスタマイズ
-   - サイト情報、テーマカラー、バナー画像、ソーシャルリンクを更新
-   - 翻訳設定と機能ページの機能を設定
+- `src/config.ts`を編集してブログ設定をカスタマイズ
+- サイト情報、テーマカラー、バナー画像、ソーシャルリンクを更新
+- 翻訳設定と機能ページの機能を設定
 
 4. **開発サーバーを起動：**
-   ```bash
-   pnpm dev
-   ```
-   ブログは`http://localhost:4321`で利用可能になります
+```bash
+pnpm dev
+```
+ブログは`http://localhost:4321`で利用可能になります
 
 ### 📝 コンテンツ管理
 
@@ -232,26 +238,26 @@ Mizukiは標準のGitHub Flavored Markdownを超える拡張機能をサポー�
 
 ```typescript
 export const siteConfig: SiteConfig = {
-  title: "あなたのブログ名",
-  subtitle: "あなたのブログの説明",
-  lang: "ja", // または "zh-CN"、"en" など
-  themeColor: {
-    hue: 210, // 0-360、テーマの色相
-    fixed: false, // テーマカラーピッカーを非表示
-  },
-  translate: {
-    enable: true, // 翻訳を有効化
-    service: "client.edge", // 翻訳サービス
-    defaultLanguage: "japanese",
-  },
-  banner: {
-    enable: true,
-    src: ["assets/banner/1.webp"], // バナー画像
-    carousel: {
-      enable: true,
-      interval: 0.8, // 秒
-    },
-  },
+ title: "あなたのブログ名",
+ subtitle: "あなたのブログの説明",
+ lang: "ja", // または "zh-CN"、"en" など
+ themeColor: {
+   hue: 210, // 0-360、テーマの色相
+   fixed: false, // テーマカラーピッカーを非表示
+ },
+ translate: {
+   enable: true, // 翻訳を有効化
+   service: "client.edge", // 翻訳サービス
+   defaultLanguage: "japanese",
+ },
+ banner: {
+   enable: true,
+   src: ["assets/banner/1.webp"], // バナー画像
+   carousel: {
+     enable: true,
+     interval: 0.8, // 秒
+   },
+ },
 };
 ```
 
@@ -290,5 +296,3 @@ export const siteConfig: SiteConfig = {
 - **[translate](https://gitee.com/mail_osc/translate)** - JavaScriptコードたった2行で自動HTML翻訳を可能にする革新的なAI駆動のi18nソリューションを提供してくれたことに感謝します。このオープンソースツールは、多言語サポートを非常にシンプルかつ効率的にします。
 
 ---
-
-⭐ このプロジェクトが役立つと思ったら、スターを付けることを検討してください！

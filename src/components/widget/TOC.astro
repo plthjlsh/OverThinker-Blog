@@ -262,11 +262,12 @@ class TableOfContents extends HTMLElement {
         // 从当前页面重新获取标题
         const headings = Array.from(document.querySelectorAll('h1, h2, h3, h4, h5, h6'))
             .filter(h => h.id) // 只包含有id的标题
-            .map(h => ({
-                depth: parseInt(h.tagName.substring(1)),
-                slug: h.id,
-                text: h.textContent || ''
-            }));
+                .map(h => ({
+                    depth: parseInt(h.tagName.substring(1)),
+                    slug: h.id,
+                    // 去除标题开头和结尾的 # 及空格
+                    text: (h.textContent || '').replace(/^#+\s*/, '').replace(/#+\s*$/, '')
+                }));
         
         // 如果没有标题，清空TOC
         if (headings.length === 0) {

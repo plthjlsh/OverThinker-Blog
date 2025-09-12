@@ -712,63 +712,46 @@ function loadHue() {
 }
 
 function initCustomScrollbar() {
-	// 延迟初始化滚动条以提升性能
-	requestIdleCallback(() => {
-		const bodyElement = document.querySelector('body');
-		if (!bodyElement) return;
-		
-		// 简化配置以提升性能
-		OverlayScrollbars(
-			{
-				target: bodyElement,
-				cancel: {
-					nativeScrollbarsOverlaid: true,
-				}
-			}, {
-			scrollbars: {
-				theme: 'scrollbar-base scrollbar-auto py-1',
-				autoHide: 'move',
-				autoHideDelay: 100,
-				autoHideSuspend: true,
-			},
-		});
+	// 完全禁用OverlayScrollbars的body初始化，避免导致页面重新加载
+	// 只处理katex元素的滚动条
+	const katexElements = document.querySelectorAll('.katex-display:not([data-scrollbar-initialized])') as NodeListOf<HTMLElement>;
+	katexElements.forEach(element => {
+		if (!element.parentNode) return;
 
-		// 懒加载katex滚动条
-		const katexElements = document.querySelectorAll('.katex-display') as NodeListOf<HTMLElement>;
-		if (katexElements.length === 0) return;
+		const container = document.createElement('div');
+		container.className = 'katex-display-container';
+		element.parentNode.insertBefore(container, element);
+		container.appendChild(element);
 
-		const katexObserver = new IntersectionObserver((entries, observer) => {
-			entries.forEach(entry => {
-				if (entry.isIntersecting) {
-					const element = entry.target as HTMLElement;
-					if (!element.parentNode || element.hasAttribute('data-scrollbar-initialized')) return;
+		// 使用简单的CSS滚动条而不是OverlayScrollbars
+		container.style.cssText = `
+			overflow-x: auto;
+			scrollbar-width: thin;
+			scrollbar-color: rgba(0,0,0,0.3) transparent;
+		`;
 
-					const container = document.createElement('div');
-					container.className = 'katex-display-container';
-					element.parentNode.insertBefore(container, element);
-					container.appendChild(element);
-
-					OverlayScrollbars(container, {
-						scrollbars: {
-							theme: 'scrollbar-base scrollbar-auto',
-							autoHide: 'leave',
-							autoHideDelay: 800,
-						}
-					});
-
-					element.setAttribute('data-scrollbar-initialized', 'true');
-					observer.unobserve(entry.target);
-				}
-			});
-		}, {
-			root: null,
-			rootMargin: '200px',
-			threshold: 0.1
-		});
-
-		katexElements.forEach(element => {
-			katexObserver.observe(element);
-		});
+		// 为webkit浏览器添加自定义滚动条样式
+		const style = document.createElement('style');
+		style.textContent = `
+			.katex-display-container::-webkit-scrollbar {
+				height: 6px;
+			}
+			.katex-display-container::-webkit-scrollbar-track {
+				background: transparent;
+			}
+			.katex-display-container::-webkit-scrollbar-thumb {
+				background: rgba(0,0,0,0.3);
+				border-radius: 3px;
+			}
+			.katex-display-container::-webkit-scrollbar-thumb:hover {
+				background: rgba(0,0,0,0.5);
+			}
+		`;
+		if (!document.head.querySelector('style[data-katex-scrollbar]')) {
+			style.setAttribute('data-katex-scrollbar', 'true');
+			document.head.appendChild(style);
+		}
+		element.setAttribute('data-scrollbar-initialized', 'true');
 	});
 }
 
@@ -1017,18 +1000,7 @@ async function loadAndInitTranslate() {
 	}
 }
 
-function init() {
-	// disableAnimation()()		// TODO
-	loadTheme();
-	loadHue();
-	initCustomScrollbar();
-	showBanner();
-	
-	// 翻译功能改为懒加载，不在页面初始化时加载
-}
 
-/* Load settings when entering the site */
-init();
 
 const setup = () => {
 	// TODO: temp solution to change the height of the banner
@@ -1059,27 +1031,34 @@ const setup = () => {
 		}
 	})
 	window.swup.hooks.on('content:replace', () => {
+		// 只处理新的katex元素的滚动条，使用原生CSS滚动条
 		initCustomScrollbar();
 		
-		// 重新初始化 TOC 组件
-		const tocElement = document.querySelector('table-of-contents');
-		if (tocElement && typeof tocElement.init === 'function') {
-			setTimeout(() => {
-				tocElement.init();
-			}, 100);
-		}
+		// 检查当前页面是否为文章页面（有TOC元素）
+		const tocWrapper = document.getElementById('toc-wrapper');
+		const isArticlePage = tocWrapper !== null;
 		
-		// 重新初始化移动端 TOC 组件
-		if (typeof window.mobileTOCInit === 'function') {
-			setTimeout(() => {
-				window.mobileTOCInit();
-			}, 100);
+				// 只在文章页面重新初始化 TOC 组件
+		if (isArticlePage) {
+			const tocElement = document.querySelector('table-of-contents');
+			if (tocElement && typeof (tocElement as any).init === 'function') {
+				setTimeout(() => {
+					(tocElement as any).init();
+				}, 100);
+			}
+			
+			// 重新初始化移动端 TOC 组件
+			if (typeof (window as any).mobileTOCInit === 'function') {
+				setTimeout(() => {
+					(window as any).mobileTOCInit();
+				}, 100);
+			}
 		}
 		
 		// 页面内容替换后重新执行翻译（仅在翻译已加载时）
 		setTimeout(() => {
-			if (siteConfig.translate?.enable && typeof window.translate !== 'undefined') {
-				window.translate.execute();
+			if (siteConfig.translate?.enable && typeof (window as any).translate !== 'undefined') {
+				(window as any).translate.execute();
 			}
 		}, 100);
 		
@@ -1126,8 +1105,8 @@ const setup = () => {
 			const transparentMode = navbar.getAttribute('data-transparent-mode')
 			if (transparentMode === 'semifull') {
 				// 重新调用初始化函数来重新绑定滚动事件
-				if (typeof window.initSemifullScrollDetection === 'function') {
-					window.initSemifullScrollDetection()
+				if (typeof (window as any).initSemifullScrollDetection === 'function') {
+					(window as any).initSemifullScrollDetection()
 				}
 			}
 		}
@@ -1280,6 +1259,16 @@ window.onresize = () => {
 	document.documentElement.style.setProperty('--banner-height-extend', `${offset}px`);
 }
 
+// 页面加载完成后初始化banner和轮播图
+if (document.readyState === 'loading') {
+	document.addEventListener('DOMContentLoaded', () => {
+		showBanner();
+	});
+} else {
+	showBanner();
+}
+
+
 </script>
 
 <script>
@@ -1343,218 +1332,8 @@ if (window.swup) {
 } else {
 	document.addEventListener("swup:enable", setup)
 }
+
+
 </script>
 
-<script>
-// 全局相册功能 - 重构版本
-class GalleryManager {
-	constructor() {
-		this.isInitialized = false;
-		this.clickHandler = null;
-	}
-
-	init() {
-		console.log('GalleryManager init called');
-		
-		// 防止重复初始化
-		if (this.isInitialized) {
-			console.log('GalleryManager already initialized, skipping');
-			return;
-		}
-		
-		// 检查是否在相册页面
-		const galleryGroups = document.querySelectorAll('.gallery-group');
-		console.log('Found gallery groups:', galleryGroups.length);
-		if (galleryGroups.length === 0) {
-			console.log('No gallery groups found, skipping initialization');
-			return;
-		}
-
-		// 清理之前的监听器
-		this.cleanup();
-
-		// 创建新的点击处理器
-		console.log('Adding click event listener to document');
-		this.clickHandler = (e) => this.handleClick(e);
-		document.addEventListener('click', this.clickHandler);
-		this.isInitialized = true;
-		console.log('GalleryManager initialized successfully');
-	}
-
-	cleanup() {
-		if (this.clickHandler) {
-			document.removeEventListener('click', this.clickHandler);
-			this.clickHandler = null;
-		}
-		this.isInitialized = false;
-	}
-
-	handleClick(e) {
-		console.log('GalleryManager handleClick triggered', e.target);
-		
-		// 处理相册头部点击（展开/折叠）
-		const galleryHeader = e.target.closest('.gallery-header');
-		if (galleryHeader) {
-			console.log('Gallery header clicked', galleryHeader);
-			e.preventDefault();
-			e.stopPropagation(); // 防止事件冲突，确保相册展开功能正常工作
-			this.toggleGallery(galleryHeader);
-			return;
-		}
-
-		// 处理图片点击（查看大图）
-		const galleryImage = e.target.closest('.gallery-image');
-		if (galleryImage) {
-			console.log('Gallery image clicked', galleryImage);
-			e.preventDefault();
-			e.stopPropagation(); // 防止事件冲突
-			const imageSrc = galleryImage.getAttribute('data-image');
-			if (imageSrc) {
-				this.showImageModal(imageSrc);
-			}
-		}
-	}
-
-	toggleGallery(header) {
-		console.log('toggleGallery called', header);
-		const group = header.closest('.gallery-group');
-		const content = group.querySelector('.gallery-content');
-		const icon = header.querySelector('.expand-icon');
-		
-		console.log('Found elements:', { group, content, icon });
-		console.log('Content hidden?', content?.classList.contains('hidden'));
-
-		if (content && content.classList.contains('hidden')) {
-			// 展开
-			console.log('Expanding gallery');
-			content.classList.remove('hidden');
-			group.classList.add('expanded');
-			if (icon) icon.style.transform = 'rotate(180deg)';
-		} else if (content) {
-			// 折叠
-			console.log('Collapsing gallery');
-			content.classList.add('hidden');
-			group.classList.remove('expanded');
-			if (icon) icon.style.transform = 'rotate(0deg)';
-		} else {
-			console.error('Gallery content not found!');
-		}
-	}
-
-	showImageModal(imageSrc) {
-		// 创建模态框元素
-		const modal = document.createElement('div');
-		modal.className = 'gallery-modal fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50 p-4';
-		modal.style.opacity = '0';
-		modal.style.transition = 'opacity 0.3s ease';
-		modal.style.borderRadius = '12px';
-		
-		const modalContent = document.createElement('div');
-		modalContent.className = 'relative max-w-full max-h-full';
-		modalContent.style.borderRadius = '12px';
-		modalContent.style.overflow = 'hidden';
-		
-		const img = document.createElement('img');
-		img.src = imageSrc;
-		img.alt = '查看图片';
-		img.className = 'max-w-full max-h-full object-contain rounded-lg';
-		img.style.transform = 'scale(0.9)';
-		img.style.transition = 'transform 0.3s ease';
-		img.style.borderRadius = '12px';
-		
-		const closeBtn = document.createElement('button');
-		closeBtn.className = 'close-btn absolute top-4 right-4 bg-black bg-opacity-50 text-white p-2 rounded-full hover:bg-opacity-70 transition-colors';
-		closeBtn.innerHTML = `
-			<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-			</svg>
-		`;
-		
-		modalContent.appendChild(img);
-		modalContent.appendChild(closeBtn);
-		modal.appendChild(modalContent);
-		document.body.appendChild(modal);
-		
-		// 显示动画
-		requestAnimationFrame(() => {
-			modal.style.opacity = '1';
-			img.style.transform = 'scale(1)';
-		});
-		
-		// 事件处理
-		const closeModal = () => {
-			modal.style.opacity = '0';
-			img.style.transform = 'scale(0.9)';
-			setTimeout(() => {
-				if (document.body.contains(modal)) {
-					document.body.removeChild(modal);
-				}
-				document.removeEventListener('keydown', handleEsc);
-			}, 300);
-		};
-		
-		const handleEsc = (e) => {
-			if (e.key === 'Escape') closeModal();
-		};
-		
-		closeBtn.addEventListener('click', closeModal);
-		modal.addEventListener('click', (e) => {
-			if (e.target === modal) closeModal();
-		});
-		document.addEventListener('keydown', handleEsc);
-	}
-
-
-}
-
-// 创建全局相册管理器实例
-window.galleryManager = new GalleryManager();
-
-// 相册初始化函数
-const initGallery = () => {
-	console.log('initGallery called');
-	// 在页面切换时，需要重置初始化状态以允许重新初始化
-	if (window.location.pathname.includes('/gallery')) {
-		window.galleryManager.isInitialized = false;
-	}
-	window.galleryManager.init();
-};
-
-// Swup集成
-let isGallerySetupComplete = false;
-const setupGalleryWithSwup = () => {
-	if (isGallerySetupComplete) return;
-	
-	initGallery();
-	
-	if (window.swup) {
-		window.swup.hooks.on("page:view", () => {
-			// 页面切换后重新初始化，增加延迟确保DOM完全加载
-			setTimeout(() => {
-				console.log('Layout: Swup page:view - reinitializing gallery');
-				initGallery();
-			}, 200);
-		});
-		
-		window.swup.hooks.on("content:replace", () => {
-			// 页面内容替换前清理
-			console.log('Layout: Swup content:replace - cleaning up gallery');
-			window.galleryManager.cleanup();
-		}, { before: true });
-	}
-	
-	isGallerySetupComplete = true;
-};
-
-// 初始化
-if (document.readyState === 'loading') {
-	document.addEventListener('DOMContentLoaded', setupGalleryWithSwup);
-} else {
-	setupGalleryWithSwup();
-}
-
-// Swup启用时的处理
-if (!window.swup) {
-	document.addEventListener("swup:enable", setupGalleryWithSwup);
-}
 </script>
