@@ -42,13 +42,13 @@ export const zh_CN: Translation = {
 	[Key.author]: "作者",
 	[Key.publishedAt]: "发布于",
 	[Key.license]: "许可协议",
-	[Key.anime]: "追番",
+	[Key.anime]: "番剧",
 	[Key.diary]: "日记",
 
 	// 番剧页面
-	[Key.animeTitle]: "我的追番记录",
+	[Key.animeTitle]: "我的影视记录",
 	[Key.animeSubtitle]: "记录我的一些...",
-	[Key.animeList]: "追番列表",
+	[Key.animeList]: "番剧列表",
 	[Key.animeTotal]: "总数",
 	[Key.animeWatching]: "追番中",
 	[Key.animeCompleted]: "已追完",

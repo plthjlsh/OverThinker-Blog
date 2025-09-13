@@ -1,11 +1,109 @@
 {
 	"title": "一些随拍",
 	"hidden": false,
+	"mode": "external",
 	"description": "没有高超的摄影技术，只是单纯的记录生活中的一些瞬间。",
 	"date": "2025-09-11",
 	"location": "Memories",
 	"tags": ["snap", "moments", "life"],
 	"layout": "masonry",
 	"columns": 4,
-	"cover": "cover.jpg"
+	"cover": "https://overthinker.oss-cn-guangzhou.aliyuncs.com/ima_for_overthinker/snap/Snap/cover.jpg",
+	"photos": [
+		{
+			"src": "https://overthinker.oss-cn-guangzhou.aliyuncs.com/ima_for_overthinker/snap/Snap/1.jpg",
+			"alt": "照片1",
+			"title": "随拍1"
+		},
+		{
+			"src": "https://overthinker.oss-cn-guangzhou.aliyuncs.com/ima_for_overthinker/snap/Snap/2.jpg",
+			"alt": "照片2",
+			"title": "随拍2"
+		},
+		{
+			"src": "https://overthinker.oss-cn-guangzhou.aliyuncs.com/ima_for_overthinker/snap/Snap/3.jpg",
+			"alt": "照片3",
+			"title": "随拍3"
+		},
+		{
+			"src": "https://overthinker.oss-cn-guangzhou.aliyuncs.com/ima_for_overthinker/snap/Snap/4.jpg",
+			"alt": "照片4",
+			"title": "随拍4"
+		},
+		{
+			"src": "https://overthinker.oss-cn-guangzhou.aliyuncs.com/ima_for_overthinker/snap/Snap/5.jpg",
+			"alt": "照片5",
+			"title": "随拍5"
+		},
+		{
+			"src": "https://overthinker.oss-cn-guangzhou.aliyuncs.com/ima_for_overthinker/snap/Snap/6.jpg",
+			"alt": "照片6",
+			"title": "随拍6"
+		},
+		{
+			"src": "https://overthinker.oss-cn-guangzhou.aliyuncs.com/ima_for_overthinker/snap/Snap/7.jpg",
+			"alt": "照片7",
+			"title": "随拍7"
+		},
+		{
+			"src": "https://overthinker.oss-cn-guangzhou.aliyuncs.com/ima_for_overthinker/snap/Snap/8.jpg",
+			"alt": "照片8",
+			"title": "随拍8"
+		},
+		{
+			"src": "https://overthinker.oss-cn-guangzhou.aliyuncs.com/ima_for_overthinker/snap/Snap/9.jpg",
+			"alt": "照片9",
+			"title": "随拍9"
+		},
+		{
+			"src": "https://overthinker.oss-cn-guangzhou.aliyuncs.com/ima_for_overthinker/snap/Snap/10.jpg",
+			"alt": "照片10",
+			"title": "随拍10"
+		},
+		{
+			"src": "https://overthinker.oss-cn-guangzhou.aliyuncs.com/ima_for_overthinker/snap/Snap/11.jpg",
+			"alt": "照片11",
+			"title": "随拍11"
+		},
+		{
+			"src": "https://overthinker.oss-cn-guangzhou.aliyuncs.com/ima_for_overthinker/snap/Snap/12.jpg",
+			"alt": "照片12",
+			"title": "随拍12"
+		},
+		{
+			"src": "https://overthinker.oss-cn-guangzhou.aliyuncs.com/ima_for_overthinker/snap/Snap/13.jpg",
+			"alt": "照片13",
+			"title": "随拍13"
+		},
+		{
+			"src": "https://overthinker.oss-cn-guangzhou.aliyuncs.com/ima_for_overthinker/snap/Snap/14.jpg",
+			"alt": "照片14",
+			"title": "随拍14"
+		},
+		{
+			"src": "https://overthinker.oss-cn-guangzhou.aliyuncs.com/ima_for_overthinker/snap/Snap/15.jpg",
+			"alt": "照片15",
+			"title": "随拍15"
+		},
+		{
+			"src": "https://overthinker.oss-cn-guangzhou.aliyuncs.com/ima_for_overthinker/snap/Snap/16.jpg",
+			"alt": "照片16",
+			"title": "随拍16"
+		},
+		{
+			"src": "https://overthinker.oss-cn-guangzhou.aliyuncs.com/ima_for_overthinker/snap/Snap/17.jpg",
+			"alt": "照片17",
+			"title": "随拍17"
+		},
+		{
+			"src": "https://overthinker.oss-cn-guangzhou.aliyuncs.com/ima_for_overthinker/snap/Snap/18.jpg",
+			"alt": "照片18",
+			"title": "随拍18"
+		},
+		{
+			"src": "https://overthinker.oss-cn-guangzhou.aliyuncs.com/ima_for_overthinker/snap/Snap/19.jpg",
+			"alt": "照片19",
+			"title": "随拍19"
+		}
+	]
 }
