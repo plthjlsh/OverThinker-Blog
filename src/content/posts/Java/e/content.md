@@ -4,7 +4,7 @@ published: 2025-04-27
 description: "本文将系统性地介绍二叉树的核心知识点，包括基本概念、性质、存储方式、遍历方法以及常见面试题解析。"
 image: "./cover.jpg"
 tags: ["Java", "数据结构", "博客"]
-category: Java数据结构
+category: 数据结构
 pinned: false
 draft: false
 ---

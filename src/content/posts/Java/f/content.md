@@ -4,7 +4,7 @@ published: 2025-08-12
 description: "本文将系统性地介绍优先级队列（Priority Queue）就是这样一个不讲武德的数据结构，它不遵循FIFO（先进先出），而是谁优先级高谁先出。"
 image: "./cover.jpg"
 tags: ["Java", "数据结构", "博客"]
-category: Java数据结构
+category: 数据结构
 pinned: false
 draft: false
 ---

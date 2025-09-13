@@ -1,10 +1,10 @@
 ---
-title: "📧七大排序魔法之争"
+title: "七大排序算法奇幻之旅"
 published: 2025-08-22
 description: "排序算法的使用指南"
 image: "./cover.jpg"
 tags: ["Java", "数据结构", "博客"]
-category: Java数据结构
+category: 数据结构
 pinned: false
 draft: false
 ---

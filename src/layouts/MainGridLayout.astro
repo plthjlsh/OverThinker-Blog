@@ -197,18 +197,8 @@ const transparentClass = shouldEnableTransparency
 </div>
 
 <!-- 设置访问统计 -->
-<script defer src="https://cloud.umami.is/script.js" data-website-id="334d6844-684e-4fa8-b1f1-33433ce848d8"></script>
 
-<!-- 眼球效果 -->
-<div class="Eye">
-  <div class="eye-container">
-    <div class="eye-white"></div>
-    <div class="eye-pupil" id="pupil">
-      <div class="eye-highlight"></div>
-      <div class="eye-highlight-small"></div>
-    </div>
-  </div>
-</div>
+<script defer src="https://cloud.umami.is/script.js" data-website-id="603fb768-e38c-412d-a26d-3363afa681b7"></script>
 
 <!-- Banner -->
 {siteConfig.banner.enable && <div id="banner-wrapper" class={`absolute z-10 w-full transition duration-700 overflow-hidden ${mobileNonHomeBannerClass}`} style={`top: -${BANNER_HEIGHT_EXTEND}vh`}>
@@ -446,6 +436,7 @@ const transparentClass = shouldEnableTransparency
     </div>
 </div>
 
+<!-- 故障效果 -->
 <script is:inline>
 const glitchEffect = {
     timers: [],
@@ -544,7 +535,7 @@ glitchEffect.init();
 
 
 </Layout>
-
+<!-- 故障效果css -->
 <style>
 /* Banner text styles */
 .banner-title {

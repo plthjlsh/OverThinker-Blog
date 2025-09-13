@@ -4,7 +4,7 @@ published: 2025-04-04
 description: "本文将带你深入探索算法效率的“两面性”：时间与空间复杂度全解析"
 image: "./cover.jpg"
 tags: ["Java", "数据结构", "博客"]
-category: Java数据结构
+category: 数据结构
 pinned: false
 draft: false
 ---

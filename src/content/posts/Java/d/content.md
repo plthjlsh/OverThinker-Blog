@@ -4,7 +4,7 @@ published: 2025-04-12
 description: "无论是叠盘子（栈）还是排奶茶（队列），数据结构无处不在。"
 image: "./cover.jpg"
 tags: ["Java", "数据结构", "博客"]
-category: Java数据结构
+category: 数据结构
 pinned: false
 draft: false
 ---

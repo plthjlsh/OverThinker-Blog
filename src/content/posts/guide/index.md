@@ -1,5 +1,5 @@
 ---
-title: ":-D简单自我介绍一下"
+title: "🌟:-D简单自我介绍一下"
 published: 2025-09-08
 description: "一个在大学的海洋中挣扎求生的过度思考者，正在将屎山雕琢成艺术品的路上..."
 image: "./SelfIntroduction.jpeg"

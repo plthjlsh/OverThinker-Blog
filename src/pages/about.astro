@@ -22,7 +22,7 @@ const { Content } = await render(aboutPost);
             </Markdown>
         </div>
         
-        <!-- 眼球容器 - 右上角（保持原样式） -->
+        <!-- 眼球容器 - 右上角 -->
         <div id="eye-container" class="absolute top-4 right-4 z-20">
             <div class="eye">
                 <div class="pupil">
@@ -32,7 +32,7 @@ const { Content } = await render(aboutPost);
         </div>
     </div>
     
-    <!-- 眼球样式（保持不变） -->
+    <!-- 眼球样式 -->
     <style>
         .eye {
             width: 60px;
@@ -89,11 +89,23 @@ const { Content } = await render(aboutPost);
             transform: rotate(5deg) scale(0.95);
             transition: transform 0.1s ease;
         }
+        
+        /* 移动端优化 */
+        @media (max-width: 768px) {
+            .eye {
+                width: 50px;
+                height: 35px;
+            }
+            .pupil {
+                width: 20px;
+                height: 20px;
+            }
+        }
     </style>
     
-    <!-- 关键修改：适配 Swup 的脚本初始化逻辑 -->
+    <!-- 修复后的眼球跟随脚本 -->
     <script>
-        // 1. 提取眼球初始化逻辑为独立函数（方便重复调用）
+        // 提取眼球初始化逻辑为独立函数
         function initEyeFollow() {
             // 确保只在客户端执行，且能找到眼球元素
             const pupil = document.querySelector('.pupil');
@@ -102,9 +114,10 @@ const { Content } = await render(aboutPost);
             
             if (!pupil || !eye || !container) return;
 
-            // 移除旧的事件监听（避免多次绑定导致性能问题）
+            // 移除旧的事件监听（避免多次绑定）
             document.removeEventListener('mousemove', handleMouseMove);
             document.removeEventListener('touchmove', handleTouchMove);
+            container.removeEventListener('click', handleClick);
 
             // 获取眼球中心位置的工具函数
             function getEyeCenter() {
@@ -132,38 +145,64 @@ const { Content } = await render(aboutPost);
                 pupil.style.transform = `translate(calc(-50% + ${moveX}px), calc(-50% + ${moveY}px))`;
             }
 
-            // 移动设备触摸事件支持
+            // 移动设备触摸事件支持 - 修复版
             function handleTouchMove(e) {
-                e.preventDefault();
-                if (e.touches.length > 0) {
-                    handleMouseMove(e.touches[0]); // 复用鼠标移动逻辑
+                // 只在单指触摸时处理（避免干扰多指缩放和滚动）
+                if (e.touches.length === 1) {
+                    // 只在眼球区域内触摸时才阻止默认行为
+                    const eyeRect = eye.getBoundingClientRect();
+                    const touchX = e.touches[0].clientX;
+                    const touchY = e.touches[0].clientY;
+                    
+                    // 检查触摸点是否在眼球区域内
+                    const isInEyeArea = (
+                        touchX >= eyeRect.left && 
+                        touchX <= eyeRect.right &&
+                        touchY >= eyeRect.top && 
+                        touchY <= eyeRect.bottom
+                    );
+                    
+                    if (isInEyeArea) {
+                        e.preventDefault(); // 只在眼球区域内阻止默认行为
+                        handleMouseMove(e.touches[0]); // 复用鼠标移动逻辑
+                    }
                 }
+            }
+            
+            // 点击特效
+            function handleClick() {
+                container.style.transform = 'scale(1.2)';
+                setTimeout(() => {
+                    container.style.transform = 'scale(1)';
+                }, 300);
             }
 
             // 重新绑定事件监听
             document.addEventListener('mousemove', handleMouseMove);
             document.addEventListener('touchmove', handleTouchMove, { passive: false });
-
-            // 点击特效（保持不变）
-            container.addEventListener('click', () => {
-                container.style.transform = 'scale(1.2)';
-                setTimeout(() => {
-                    container.style.transform = 'scale(1)';
-                }, 300);
+            container.addEventListener('click', handleClick);
+            
+            // 添加触摸开始事件，确保首次触摸就能响应
+            eye.addEventListener('touchstart', (e) => {
+                if (e.touches.length === 1) {
+                    handleMouseMove(e.touches[0]);
+                }
             });
         }
 
-        // 2. 首次加载页面时初始化
+        // 页面加载时初始化
         if (typeof window !== 'undefined') {
-            // 普通页面加载（如刷新）时执行
-            document.addEventListener('DOMContentLoaded', initEyeFollow);
+            // 使用DOMContentLoaded确保DOM已加载
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', initEyeFollow);
+            } else {
+                initEyeFollow();
+            }
 
-            // 3. Swup 页面切换后执行（解决无刷新导航问题）
+            // Swup 页面切换后执行
             if (window.swup) {
-                // 页面切换完成后重新初始化
                 window.swup.hooks.on('page:view', initEyeFollow);
             } else {
-                // 若 swup 尚未加载，监听其启用事件
                 document.addEventListener('swup:enable', () => {
                     window.swup.hooks.on('page:view', initEyeFollow);
                 });

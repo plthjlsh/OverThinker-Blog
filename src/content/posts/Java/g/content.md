@@ -4,7 +4,7 @@ published: 2025-08-17
 description: "本文介绍了Java中的Map和Set数据结构，同时讲解了二叉搜索树（BST）的基本概念和实现。"
 image: "./cover.jpg"
 tags: ["Java", "数据结构", "博客"]
-category: Java数据结构
+category: 数据结构
 pinned: false
 draft: false
 ---

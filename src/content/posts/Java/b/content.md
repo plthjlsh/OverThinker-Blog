@@ -4,7 +4,7 @@ published: 2025-04-07
 description: "本文将带你深入探索List接口和ArrayList实现类的奥秘，通过丰富的示例和直观的图示，让你彻底掌握它们的用法和原理。"
 image: "./cover.jpg"
 tags: ["Java", "数据结构", "博客"]
-category: Java数据结构
+category: 数据结构
 pinned: false
 draft: false
 ---
