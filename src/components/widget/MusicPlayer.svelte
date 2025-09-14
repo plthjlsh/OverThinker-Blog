@@ -28,7 +28,7 @@ let isPlaying = false;
 // 播放器是否展开，默认为 false
 let isExpanded = false;
 // 播放器是否隐藏，默认为 false
-let isHidden = true;
+let isHidden = false;
 // 是否显示播放列表，默认为 false
 let showPlaylist = false;
 // 当前播放时间，默认为 0
@@ -67,11 +67,11 @@ let volumeBar: HTMLElement;
 
 const localPlaylist = [
       {
-		id: 12,
-		title: "Mushrooms",
-		artist: "Re-Logic",
-		cover: "https://overthinker.oss-cn-guangzhou.aliyuncs.com/ima_for_overthinker/musicCover/cover/Terraria.jpg",
-		url: "assets/music/url/Terraria/Re-Logic - Mushrooms.mp3",
+		id: 1,
+		title: "夜空中最亮的星",
+		artist: "逃跑计划",
+		cover: "https://overthinker.oss-cn-guangzhou.aliyuncs.com/ima_for_overthinker/musicCover/cover/%E9%80%83%E8%B7%91%E8%AE%A1%E5%88%92.jpg",
+		url: "assets/music/url/夜空中最亮的星.mp3",
 		duration: 200,
 	},
 	{
@@ -164,12 +164,20 @@ const localPlaylist = [
 	},
     {
 		id: 12,
+		title: "Mushrooms",
+		artist: "Re-Logic",
+		cover: "https://overthinker.oss-cn-guangzhou.aliyuncs.com/ima_for_overthinker/musicCover/cover/Terraria.jpg",
+		url: "assets/music/url/Terraria/Re-Logic - Mushrooms.mp3",
+		duration: 200,
+	},
+    {
+		id: 13,
 		title: "如果有来生",
 		artist: "LTH翻唱",
 		cover: "https://overthinker.oss-cn-guangzhou.aliyuncs.com/ima_for_overthinker/musicCover/cover/%E5%A6%82%E6%9E%9C%E6%9C%89%E6%9D%A5%E7%94%9F.jpg",
 		url: "assets/music/url/如果有来生.mp3",
 		duration: 200,
-	},
+	}
   
 ];
 
