@@ -25,12 +25,13 @@ export const projectsData: Project[] = [
 		title: "OverThinker Blog",
 		description:
 			"基于Astro框架开发的现代化博客主题，支持多语言、暗黑模式、响应式设计等功能。",
-		image: "", // 补充项目专属图片
-		category: "other",
-		techStack: ["Astro", "TypeScript", "Tailwind CSS", "Svelte"],
+		image:
+			"https://overthinker.oss-cn-guangzhou.aliyuncs.com/ima_for_overthinker/diary/20250914-1.png", // 补充项目专属图片
+		category: "web",
+		techStack: ["Astro", "TypeScript"],
 		status: "in-progress",
-		liveDemo: "https://your-blog-url.com", // 补全演示地址（若有）
-		sourceCode: "https://github.com/example/mizuki",
+		liveDemo: "https://www.overthinker13.cn/", // 补全演示地址（若有）
+		sourceCode: "https://github.com/plthjlsh/OverThinker-Blog",
 		startDate: "2025-04-29",
 		endDate: "2025-09-10",
 		featured: true,
@@ -39,17 +40,18 @@ export const projectsData: Project[] = [
 	{
 		id: "Multi-user Chat Room",
 		title: "多人聊天室",
-		description: "学校课程项目，基于WebSocket实现的实时聊天应用。",
-		image: "", // 补充图片
-		category: "other",
-		techStack: ["WebSocket", "React", "Node.js", "Express"], // 补全技术栈
-		status: "planned",
+		description: "Spring Web项目，基于WebSocket实现的实时聊天应用。",
+		image:
+			"https://overthinker.oss-cn-guangzhou.aliyuncs.com/ima_for_overthinker/diary/20251213.png", // 补充图片
+		category: "web",
+		techStack: ["WebSocket", "Spring Web", "MySql"], // 补全技术栈
+		status: "in-progress",
 		liveDemo: "https://portfolio.example.com",
 		sourceCode: "https://github.com/example/portfolio",
 		startDate: "2023-09-01",
 		endDate: "2023-12-01",
 		featured: true,
-		tags: ["Portfolio", "React", "Animation"],
+		tags: ["Spring Web", "MySql", "聊天应用"],
 	},
 	{
 		id: "Godot游戏引擎",
@@ -70,7 +72,7 @@ export const projectsData: Project[] = [
 			"Java是一种广泛使用的面向对象编程语言，具有跨平台特性，适用于开发企业级应用、移动应用和大数据处理等。",
 		image: "", // 补充图片
 		category: "web",
-		techStack: ["Java", "JavaSE", "OOP"], // 补充细分技术栈
+		techStack: ["Java", "JavaSE"], // 补充细分技术栈
 		status: "completed",
 		liveDemo: "https://dataviz.example.com",
 		startDate: "2025-01-01",
