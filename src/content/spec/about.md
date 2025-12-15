@@ -7,7 +7,8 @@
 
 ---
 能给我的Github仓库点点Star🌟吗🥹
-::github{repo="plthjlsh/OverThinker-Blog"}
+::github{repo="OverThinker13/OverThinker-Blog"}
+::github{repo="OverThinker13/OverThinker_ChatRoom"}
 ---
 
 

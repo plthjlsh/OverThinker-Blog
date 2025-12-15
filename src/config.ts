@@ -172,7 +172,7 @@ export const navBarConfig: NavBarConfig = {
 			children: [
 				{
 					name: "GitHub",
-					url: "https://github.com/plthjlsh",
+					url: "https://github.com/OverThinker13",
 					external: true,
 					icon: "fa6-brands:github",
 				},
@@ -228,7 +228,7 @@ export const navBarConfig: NavBarConfig = {
 				},
 				{
 					name: "网络聊天室",
-					url: "http://127.0.0.1:8080/register.html",
+					url: "http://114.132.122.97:8080/login.html",
 					external: true,
 					icon: "material-symbols:person",
 				},
