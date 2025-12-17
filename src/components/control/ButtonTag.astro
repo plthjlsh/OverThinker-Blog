@@ -7,7 +7,27 @@ interface Props {
 }
 const { dot, href, label }: Props = Astro.props;
 ---
-<a href={href} aria-label={label} class="btn-regular h-8 text-sm px-3 rounded-lg">
+<a href={href} aria-label={label} class="btn-regular h-8 text-sm px-3 rounded-lg transition-transform duration-300 hover:rotate-12">
     {dot && <div class="h-1 w-1 bg-[var(--btn-content)] dark:bg-[var(--card-bg)] transition rounded-md mr-2"></div>}
     <slot></slot>
 </a>
+
+<style>
+  /* 添加更复杂的旋转动画 */
+  .btn-regular {
+    transform-origin: center;
+    transition: transform 0.3s ease;
+  }
+  
+  .btn-regular:hover {
+    animation: spin 0.8s ease-in-out;
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    25% { transform: rotate(15deg); }
+    50% { transform: rotate(-15deg); }
+    75% { transform: rotate(5deg); }
+    100% { transform: rotate(0deg); }
+  }
+</style>

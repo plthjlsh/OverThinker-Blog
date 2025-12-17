@@ -28,8 +28,12 @@ export const siteConfig: SiteConfig = {
 	lang: SITE_LANG,
 
 	themeColor: {
-		hue: 120, // 主题色的默认色相，范围从 0 到 360。例如：红色：0，青色：200，蓝绿色：250，粉色：345
+		hue: 120, // 主题色的默认色相，范围从 0 到 360。绿色的色相约为120
 		fixed: true, // 对访问者隐藏主题色选择器
+	},
+	cyberpunkTheme: {
+		enable: true, // 启用赛博朋克主题
+		default: true, // 默认是否启用赛博朋克主题
 	},
 	translate: {
 		enable: true, // 启用翻译功能
@@ -320,8 +324,8 @@ export const footerConfig: FooterConfig = {
 // 直接编辑 FooterConfig.html 文件来添加备案号等自定义内容
 
 /**
- * 侧边栏布局配置
- * 用于控制侧边栏组件的显示、排序、动画和响应式行为
+ * 左侧边栏布局配置
+ * 用于控制左侧边栏组件的显示、排序、动画和响应式行为
  */
 export const sidebarLayoutConfig: SidebarLayoutConfig = {
 	// 是否启用侧边栏功能
@@ -456,12 +460,87 @@ export const sakuraConfig: SakuraConfig = {
 	zIndex: 100, // 层级，确保樱花在合适的层级显示
 };
 
+/**
+ * 右侧边栏布局配置
+ * 用于控制右侧边栏组件的显示、排序、动画和响应式行为
+ */
+export const rightSidebarLayoutConfig: SidebarLayoutConfig = {
+	// 是否启用侧边栏功能
+	enable: true,
+
+	// 侧边栏位置：左侧或右侧
+	position: "right",
+
+	// 侧边栏组件配置列表
+	components: [
+		{
+			// 组件类型：日历组件
+			type: "calendar",
+			// 是否启用该组件
+			enable: true,
+			// 组件显示顺序
+			order: 1,
+			// 组件位置："sticky" 表示粘性定位
+			position: "sticky",
+			// CSS 类名
+		},
+		{
+			// 组件类型：终端模拟器组件
+			type: "terminal-emulator",
+			// 是否启用该组件
+			enable: true,
+			// 组件显示顺序
+			order: 2,
+			// 组件位置："sticky" 表示粘性定位
+			position: "sticky",
+			// CSS 类名
+			class: "onload-animation",
+			// 动画延迟时间
+			animationDelay: 150,
+		},
+	],
+
+	// 默认动画配置
+	defaultAnimation: {
+		// 是否启用默认动画
+		enable: true,
+		// 基础延迟时间（毫秒）
+		baseDelay: 0,
+		// 递增延迟时间（毫秒），每个组件依次增加的延迟
+		increment: 50,
+	},
+
+	// 响应式布局配置
+	responsive: {
+		// 断点配置（像素值）
+		breakpoints: {
+			// 移动端断点：屏幕宽度小于768px
+			mobile: 768,
+			// 平板端断点：屏幕宽度小于1024px
+			tablet: 1024,
+			// 桌面端断点：屏幕宽度小于1280px
+			desktop: 1280,
+		},
+		// 不同设备的布局模式
+		//hidden:不显示侧边栏(桌面端)   drawer:抽屉模式(移动端不显示)   sidebar:显示侧边栏
+		layout: {
+			// 移动端：抽屉模式
+			mobile: "sidebar",
+			// 平板端：显示侧边栏
+			tablet: "sidebar",
+			// 桌面端：显示侧边栏
+			desktop: "sidebar",
+		},
+	},
+};
+
 // 导出所有配置的统一接口
 export const widgetConfigs = {
 	profile: profileConfig,
 	announcement: announcementConfig,
 	music: musicPlayerConfig,
 	layout: sidebarLayoutConfig,
+	rightLayout: rightSidebarLayoutConfig,
 	sakura: sakuraConfig,
 	fullscreenWallpaper: fullscreenWallpaperConfig,
 } as const;

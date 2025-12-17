@@ -32,8 +32,8 @@ const { badge, url, label } = Astro.props;
             </div>
             { badge !== undefined && badge !== null && badge !== '' &&
                 <div class="transition px-2 h-7 ml-4 min-w-[2rem] rounded-lg text-sm font-bold
-                    text-[var(--btn-content)] dark:text-[var(--deep-text)]
-                    bg-[oklch(0.95_0.025_var(--hue))] dark:bg-[var(--primary)]
+                    text-[#000] dark:text-[#000]
+                    bg-[#99ffcc] dark:bg-[#99ffcc]
                     flex items-center justify-center">
                     { badge }
                 </div>

@@ -1,23 +1,31 @@
 ---
 import type { MarkdownHeading } from "astro";
-import { widgetManager } from "../../utils/widget-manager";
-import Profile from "./Profile.astro";
+import { WidgetManager, widgetManager } from "../../utils/widget-manager";
 import Announcement from "./Announcement.astro";
+import Calendar from "./Calendar.astro";
 import Categories from "./Categories.astro";
-import Tags from "./Tags.astro";
-import TOC from "./TOC.astro";
 import MusicPlayer from "./MusicPlayer.svelte";
+import Profile from "./Profile.astro";
+import Tags from "./Tags.astro";
+import TerminalEmulator from "./TerminalEmulator.astro";
+import TOC from "./TOC.astro";
 
 interface Props {
 	class?: string;
 	headings?: MarkdownHeading[];
+	widgetManagerInstance?: WidgetManager;
 }
 
-const { class: className, headings } = Astro.props;
+const {
+	class: className,
+	headings,
+	widgetManagerInstance = widgetManager,
+} = Astro.props;
 
 // 获取配置的组件列表
-const topComponents = widgetManager.getComponentsByPosition("top");
-const stickyComponents = widgetManager.getComponentsByPosition("sticky");
+const topComponents = widgetManagerInstance.getComponentsByPosition("top");
+const stickyComponents =
+	widgetManagerInstance.getComponentsByPosition("sticky");
 
 // 组件映射表
 const componentMap = {
@@ -27,6 +35,8 @@ const componentMap = {
 	tags: Tags,
 	toc: TOC,
 	"music-player": MusicPlayer,
+	calendar: Calendar,
+	"terminal-emulator": TerminalEmulator,
 };
 
 // 渲染组件的辅助函数
@@ -35,8 +45,14 @@ function renderComponent(component: any, index: number, components: any[]) {
 		componentMap[component.type as keyof typeof componentMap];
 	if (!ComponentToRender) return null;
 
-	const componentClass = widgetManager.getComponentClass(component, index);
-	const componentStyle = widgetManager.getComponentStyle(component, index);
+	const componentClass = widgetManagerInstance.getComponentClass(
+		component,
+		index,
+	);
+	const componentStyle = widgetManagerInstance.getComponentStyle(
+		component,
+		index,
+	);
 
 	return {
 		Component: ComponentToRender,

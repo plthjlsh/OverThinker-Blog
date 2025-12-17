@@ -15,21 +15,42 @@ const isCollapsed = categories.length >= COLLAPSE_THRESHOLD;
 interface Props {
 	class?: string;
 	style?: string;
+	maxItems?: number; // 最大显示项目数
 }
-const className = Astro.props.class;
-const style = Astro.props.style;
+const { class: className, style, maxItems = 10 } = Astro.props;
+
+// 按文章数量排序分类
+const sortedCategories = [...categories].sort((a, b) => b.count - a.count);
+
+// 控制展开状态
+let isExpanded = false;
+
+// 计算要显示的分类
+const displayCategories = isExpanded ? sortedCategories : sortedCategories.slice(0, maxItems);
+const hasMore = sortedCategories.length > maxItems;
 ---
 
 <WidgetLayout name={i18n(I18nKey.categories)} id="categories" isCollapsed={isCollapsed} collapsedHeight={COLLAPSED_HEIGHT}
                 class={className} style={style}
 >
-    {categories.map((c) =>
-        <ButtonLink
-            url={c.url}
-            badge={String(c.count)}
-            label={`View all posts in the ${c.name.trim()} category`}
+    {
+        displayCategories.map((c) =>
+            <ButtonLink
+                url={c.url}
+                badge={String(c.count)}
+                label={`View all posts in the ${c.name.trim()} category`}
+            >
+                {c.name.trim()}
+            </ButtonLink>
+        )
+    }
+    
+    {hasMore && (
+        <button 
+            class="expand-toggle"
+            onClick={() => isExpanded = !isExpanded}
         >
-            {c.name.trim()}
-        </ButtonLink>
+            {isExpanded ? 'Show Less' : `Show ${sortedCategories.length - maxItems} More`}
+        </button>
     )}
 </WidgetLayout>

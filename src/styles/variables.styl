@@ -11,6 +11,9 @@ rainbow-dark = linear-gradient(to right, oklch(0.70 0.10 0), oklch(0.70 0.10 30)
 :root
   --radius-large 1rem
   --content-delay 150ms
+  --cyber-grid-opacity 0.05 /* 赛博网格透明度 */
+  --scanline-opacity 0.1 /* 扫描线透明度 */
+  --neon-glow-intensity 0.7 /* 霓虹发光强度 */
 
 /* An util to define variables that vary with light and dark mode */
 define(vars)
@@ -23,12 +26,14 @@ define(vars)
         {key}: value[1]
 
 define({
-  --primary: oklch(0.70 0.14 var(--hue)) oklch(0.75 0.14 var(--hue))
+  --primary: #99ffcc #99ffcc
   --page-bg: oklch(0.95 0.01 var(--hue)) oklch(0.16 0.014 var(--hue))
   --card-bg: white oklch(0.23 0.015 var(--hue))
   --card-bg-transparent: rgba(255, 255, 255, 0.8) rgba(23, 23, 23, 0.8)
 
-  --btn-content: oklch(0.55 0.12 var(--hue)) oklch(0.75 0.1 var(--hue))
+  --text-color: #333 #ddd
+  
+  --btn-content: #000 #99ffcc
 
   --btn-regular-bg: oklch(0.95 0.025 var(--hue)) oklch(0.33 0.035 var(--hue))
   --btn-regular-bg-hover: oklch(0.9 0.05 var(--hue)) oklch(0.38 0.04 var(--hue))
@@ -86,11 +91,11 @@ define({
   --display-light-icon: 1 0
   --display-dark-icon: 0 1
 
-  --admonitions-color-tip: oklch(0.7 0.14 180) oklch(0.75 0.14 180)
-  --admonitions-color-note: oklch(0.7 0.14 250) oklch(0.75 0.14 250)
-  --admonitions-color-important: oklch(0.7 0.14 310) oklch(0.75 0.14 310)
-  --admonitions-color-warning: oklch(0.7 0.14 60) oklch(0.75 0.14 60)
-  --admonitions-color-caution: oklch(0.6 0.2 25) oklch(0.65 0.2 25)
+  --admonitions-color-tip: #99ffcc #99ffcc
+  --admonitions-color-note: #99ffcc #99ffcc
+  --admonitions-color-important: #99ffcc #99ffcc
+  --admonitions-color-warning: #99ffcc #99ffcc
+  --admonitions-color-caution: #99ffcc #99ffcc
 
   --toc-badge-bg: oklch(0.9 0.045 var(--hue)) var(--btn-regular-bg)
   --toc-btn-hover: oklch(0.92 0.015 var(--hue)) oklch(0.22 0.02 var(--hue))
@@ -98,3 +103,51 @@ define({
   --toc-width: calc((100vw - var(--page-width)) / 2 - 1rem)
   --toc-item-active: oklch(0.70 0.13 var(--hue)) oklch(0.35 0.07 var(--hue))
 })
+
+/* 赛博朋克主题变量 */
+:root.cyberpunk {
+  --primary: #99ffcc /* 明亮的霓虹绿 */
+  --page-bg: #000 /* 纯黑色背景 */
+  --card-bg: #001100 /* 深绿色卡片背景 */
+  --card-bg-transparent: rgba(0, 17, 0, 0.8) /* 半透明深绿 */
+  
+  --btn-content: #99ffcc /* 明亮的绿色文字 */
+  
+  --btn-regular-bg: #002200 /* 按钮背景 */
+  --btn-regular-bg-hover: #004400 /* 悬停按钮背景 */
+  --btn-regular-bg-active: #006600 /* 激活按钮背景 */
+  
+  --btn-plain-bg-hover: #003300 /* 平面按钮悬停 */
+  --btn-plain-bg-active: #005500 /* 平面按钮激活 */
+  
+  --btn-card-bg-hover: #003300 /* 卡片按钮悬停 */
+  --btn-card-bg-active: #005500 /* 卡片按钮激活 */
+  
+  --deep-text: #99ffcc /* 深色文字 */
+  --title-active: #99ffcc /* 活跃标题 */
+  
+  --line-divider: rgba(153, 255, 204, 0.2) /* 绿色分隔线 */
+  --line-color: rgba(153, 255, 204, 0.3) /* 绿色线条 */
+  --meta-divider: rgba(153, 255, 204, 0.4) /* 元信息分隔线 */
+  --content-meta: rgba(153, 255, 204, 0.6) /* 内容元信息 */
+  
+  --inline-code-bg: #002200 /* 行内代码背景 */
+  --inline-code-color: #99ffcc /* 行内代码文字 */
+  --selection-bg: #004400 /* 选中文本背景 */
+  --codeblock-selection: #006600 /* 代码块选中 */
+  --codeblock-bg: #001100 /* 代码块背景 */
+  --codeblock-topbar-bg: #003300 /* 代码块顶栏 */
+  
+  --license-block-bg: rgba(0, 10, 0, 0.7) /* 许可证块背景 */
+  
+  --link-underline: #004400 /* 链接下划线 */
+  --link-hover: #99ffcc /* 链接悬停 */
+  --link-active: #99ffcc /* 链接激活 */
+  
+  --float-panel-bg: #001100 /* 浮层面板背景 */
+  
+  --toc-badge-bg: #002200 /* TOC徽章背景 */
+  --toc-btn-hover: #004400 /* TOC按钮悬停 */
+  --toc-btn-active: #006600 /* TOC按钮激活 */
+  --toc-item-active: #99ffcc /* TOC活跃项 */
+}

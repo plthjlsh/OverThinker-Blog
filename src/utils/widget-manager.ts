@@ -1,9 +1,9 @@
+import { sidebarLayoutConfig } from "../config";
 import type {
+	SidebarLayoutConfig,
 	WidgetComponentConfig,
 	WidgetComponentType,
-	SidebarLayoutConfig,
 } from "../types/config";
-import { sidebarLayoutConfig } from "../config";
 
 /**
  * 组件映射表 - 将组件类型映射到实际的组件路径
@@ -15,6 +15,8 @@ export const WIDGET_COMPONENT_MAP = {
 	tags: "../components/widget/Tags.astro",
 	toc: "../components/widget/TOC.astro",
 	"music-player": "../components/widget/MusicPlayer.svelte",
+	calendar: "../components/widget/Calendar.astro",
+	"terminal-emulator": "../components/widget/TerminalEmulator.astro",
 	custom: null, // 自定义组件需要在配置中指定路径
 } as const;
 

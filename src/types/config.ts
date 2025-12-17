@@ -20,6 +20,10 @@ export type SiteConfig = {
 		hue: number;
 		fixed: boolean;
 	};
+	cyberpunkTheme?: {
+		enable: boolean; // 是否启用赛博朋克主题
+		default?: boolean; // 默认是否启用赛博朋克主题
+	};
 	translate?: {
 		enable: boolean; // 是否启用翻译功能
 		service?: string; // 翻译服务类型，如 'client.edge'

@@ -5,6 +5,7 @@ import "@fontsource/roboto/700.css";
 
 import ConfigCarrier from "@components/ConfigCarrier.astro";
 import MusicPlayer from "@components/widget/MusicPlayer.svelte";
+import Pet from "@components/widget/Pet.svelte";
 import { profileConfig, siteConfig } from "@/config";
 import { widgetConfigs } from "../config";
 import {
@@ -172,6 +173,29 @@ const bannerOffset =
 						document.documentElement.classList.remove('dark');
 					}
 			}
+			
+			// Load cyberpunk theme from local storage
+			const cyberpunk = localStorage.getItem('cyberpunk-theme');
+			if (cyberpunk === 'true') {
+				document.documentElement.classList.add('cyberpunk');
+				
+				// Add cyber effects
+				setTimeout(() => {
+					if (!document.getElementById('cyber-grid')) {
+						let grid = document.createElement('div');
+						grid.className = 'cyber-grid';
+						grid.id = 'cyber-grid';
+						document.body.appendChild(grid);
+					}
+					
+					if (!document.getElementById('scanline')) {
+						let scanline = document.createElement('div');
+						scanline.className = 'scanline';
+						scanline.id = 'scanline';
+						document.body.appendChild(scanline);
+					}
+				}, 100);
+			}
 
 			// Load the hue from local storage
 			const hue = localStorage.getItem('hue') || configHue;
@@ -201,11 +225,16 @@ const bannerOffset =
 	>
 		<!-- 页面顶部渐变高光效果 - 只在full和semifull模式下显示 -->
 		{shouldShowTopHighlight && <div class="top-gradient-highlight"></div>}
+		<!-- Custom Cursor -->
+		<div id="custom-cursor" class="custom-cursor"></div>
 		<ConfigCarrier></ConfigCarrier>
 		<slot />
 		
 		<!-- Music Player -->
 		<MusicPlayer client:load />
+
+		<!-- Pet -->
+		<Pet client:load />
 
 		<!-- increase the page height during page transition to prevent the scrolling animation from jumping -->
 		<div id="page-height-extend" class="hidden h-[300vh]"></div>
@@ -263,17 +292,11 @@ const bannerOffset =
 
 					resetPosition() {
 						this.r = getRandom('fnr', this.config);
-						if (Math.random() > 0.4) {
-							this.x = getRandom('x', this.config);
-							this.y = 0;
-							this.s = getRandom('s', this.config);
-							this.r = getRandom('r', this.config);
-						} else {
-							this.x = window.innerWidth;
-							this.y = getRandom('y', this.config);
-							this.s = getRandom('s', this.config);
-							this.r = getRandom('r', this.config);
-						}
+						// 总是从页面底部随机X位置升起
+						this.x = getRandom('x', this.config);
+						this.y = window.innerHeight;
+						this.s = getRandom('s', this.config);
+						this.r = getRandom('r', this.config);
 					}
 				}
 
@@ -406,7 +429,8 @@ const bannerOffset =
 
 						for (let i = 0; i < this.config.sakuraNum; i++) {
 							const randomX = getRandom('x', this.config);
-							const randomY = getRandom('y', this.config);
+							// 初始樱花也从底部开始
+							const randomY = window.innerHeight;
 							const randomR = getRandom('r', this.config);
 							const randomS = getRandom('s', this.config);
 							const randomFnx = getRandom('fnx', this.config);
@@ -617,6 +641,92 @@ const bannerOffset =
 			transform: translate3d(85px, 0, 0);
 		}
 	}
+
+	/* Custom Cursor Styles */
+	.custom-cursor {
+		position: fixed;
+		width: 20px;
+		height: 20px;
+		background: radial-gradient(circle, #000 0%, #333 50%, transparent 70%);
+		border-radius: 50%;
+		pointer-events: none;
+		z-index: 9999;
+		transition: transform 0.1s ease;
+		animation: rotate 2s linear infinite;
+		box-shadow: 0 0 20px rgba(0, 0, 0, 0.8), 0 0 40px rgba(0, 0, 0, 0.4);
+		margin-left: -10px;
+		margin-top: -10px;
+	}
+
+	@keyframes rotate {
+		from { transform: rotate(0deg); }
+		to { transform: rotate(360deg); }
+	}
+
+	.custom-cursor.clicked {
+		animation: click-flash 0.3s ease-out;
+	}
+
+	@keyframes click-flash {
+		0% { 
+			transform: rotate(0deg); 
+			background: radial-gradient(circle, #000 0%, #333 50%, transparent 70%);
+		}
+		50% { 
+			transform: rotate(180deg); 
+			background: radial-gradient(circle, #00ff00 0%, #008800 50%, transparent 70%);
+			box-shadow: 0 0 20px rgba(0, 255, 0, 0.8);
+		}
+		100% { 
+			transform: rotate(360deg); 
+			background: radial-gradient(circle, #000 0%, #333 50%, transparent 70%);
+		}
+	}
+
+	.particle {
+		position: absolute;
+		width: 4px;
+		height: 4px;
+		background: #00ff00;
+		border-radius: 50%;
+		pointer-events: none;
+		animation: particle-move 1s ease-out forwards;
+		box-shadow: 0 0 6px #00ff00;
+	}
+
+	@keyframes particle-move {
+		0% { opacity: 1; transform: scale(1) translate(0, 0); }
+		100% { opacity: 0; transform: scale(0) translate(var(--offset-x), var(--offset-y)); }
+	}
+
+	.trail-particle {
+		position: fixed;
+		width: 8px;
+		height: 8px;
+		background: #00ff00;
+		border-radius: 50%;
+		pointer-events: none;
+		box-shadow: 0 0 12px #00ff00, 0 0 24px #00ff00, 0 0 36px rgba(0, 255, 0, 0.5);
+		margin-left: -4px;
+		margin-top: -4px;
+		z-index: 9998;
+	}
+
+	/* Hide default cursor on all elements */
+	* {
+		cursor: none !important;
+	}
+
+	/* Custom cursor hover effects */
+	.custom-cursor.hover-link {
+		background: radial-gradient(circle, #0f0 0%, #060 50%, transparent 70%);
+		box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
+	}
+
+	.custom-cursor.hover-button {
+		background: radial-gradient(circle, #0f0 0%, #060 50%, transparent 70%);
+		box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
+	}
 }
 </style>
 
@@ -696,7 +806,9 @@ function setClickOutsideToClose(panel: string, ignores: string[]) {
 				return;
 			}
 		}
-		panelDom!.classList.add("float-panel-closed");
+		if (panelDom) {
+			panelDom.classList.add("float-panel-closed");
+		}
 	});
 }
 setClickOutsideToClose("display-setting", ["display-setting", "display-settings-switch"])
@@ -1338,4 +1450,114 @@ if (window.swup) {
 	document.addEventListener("swup:enable", setup)
 }
 
+</script>
+
+<!-- Custom Cursor Script -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+	const cursor = document.getElementById('custom-cursor');
+	let mouseX = 0;
+	let mouseY = 0;
+	let trailParticles = [];
+	const maxTrailParticles = 15;
+	let animationId = null;
+	let lastTrailTime = 0;
+	const trailInterval = 40; // 每40ms创建一个拖尾粒子
+
+	// Update cursor position and create trail
+	document.addEventListener('mousemove', function(e) {
+		mouseX = e.clientX;
+		mouseY = e.clientY;
+		
+		// Update cursor position first
+		cursor.style.left = mouseX + 'px';
+		cursor.style.top = mouseY + 'px';
+		
+		// Check what element is under the cursor
+		const element = document.elementFromPoint(mouseX, mouseY);
+		cursor.classList.remove('hover-link', 'hover-button');
+		
+		if (element) {
+			if (element.tagName === 'A' || element.closest('a')) {
+				cursor.classList.add('hover-link');
+			} else if (element.tagName === 'BUTTON' || element.closest('button') || 
+					   element.getAttribute('role') === 'button' || 
+					   element.closest('[role="button"]')) {
+				cursor.classList.add('hover-button');
+			}
+		}
+		
+		// Create trail particle with throttling
+		const now = Date.now();
+		if (now - lastTrailTime > trailInterval) {
+			createTrailParticle(mouseX, mouseY);
+			lastTrailTime = now;
+		}
+	});
+	document.addEventListener('click', function(e) {
+		cursor.classList.add('clicked');
+		
+		// Remove clicked class after animation
+		setTimeout(() => {
+			cursor.classList.remove('clicked');
+		}, 300);
+	});
+
+	function createTrailParticle(x, y) {
+		const particle = document.createElement('div');
+		particle.className = 'trail-particle';
+		// Position at exact mouse location
+		particle.style.left = x + 'px';
+		particle.style.top = y + 'px';
+		particle.style.opacity = '1';
+		particle.style.transform = 'scale(1)';
+		
+		document.body.appendChild(particle);
+		trailParticles.push({
+			element: particle,
+			x: x,
+			y: y,
+			life: 1.0,
+			initialLife: 1.0
+		});
+		
+		// Remove old particles
+		if (trailParticles.length > maxTrailParticles) {
+			const oldParticle = trailParticles.shift();
+			if (oldParticle.element.parentNode) {
+				oldParticle.element.parentNode.removeChild(oldParticle.element);
+			}
+		}
+		
+		// Start animation if not running
+		if (!animationId) {
+			animateTrail();
+		}
+	}
+
+	function animateTrail() {
+		animationId = requestAnimationFrame(animateTrail);
+		
+		trailParticles.forEach((particle, index) => {
+			particle.life -= 0.025; // 稍微加快消失速度
+			if (particle.life <= 0) {
+				if (particle.element.parentNode) {
+					particle.element.parentNode.removeChild(particle.element);
+				}
+				trailParticles.splice(index, 1);
+			} else {
+				const opacity = particle.life;
+				const scale = particle.life * 0.8 + 0.2;
+				particle.element.style.opacity = opacity;
+				particle.element.style.transform = `scale(${scale})`;
+			}
+		});
+		
+		// Stop animation if no particles
+		if (trailParticles.length === 0) {
+			cancelAnimationFrame(animationId);
+			animationId = null;
+		}
+	}
+});
 </script>

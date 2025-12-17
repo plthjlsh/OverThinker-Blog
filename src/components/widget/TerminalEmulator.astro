@@ -1,0 +1,266 @@
+---
+import { getEntry, render } from "astro:content";
+
+interface Props {
+	class?: string;
+}
+
+const { class: className = "" } = Astro.props;
+
+// 获取站点配置信息
+const siteTitle = import.meta.env.SITE_TITLE || "Overthinker-Blog";
+const profileName = "Overthinker";
+const bio = "过度思考者，正在将屎山雕琢成艺术品的路上...";
+
+// 获取友链数据
+let friendsItems = [];
+try {
+	const friendsPost = await getEntry("spec", "friends");
+	if (friendsPost) {
+		const { Content } = await render(friendsPost);
+		// 注意：这里的数据是从 friends.astro 页面复制的，因为在当前文件中无法直接访问该文件的变量
+		friendsItems = [
+			{
+				title: "Astro",
+				imgurl: "https://avatars.githubusercontent.com/u/44914786?s=48&v=4",
+				desc: "The web framework for content-driven websites. ⭐️ Star to support our work!",
+				siteurl: "https://github.com/withastro/astro",
+				tags: ["Framework"],
+			},
+			{
+				title: "N",
+				imgurl: "/FriendsAvatar/n.jpg",
+				desc: "N的CSDN博客",
+				siteurl: "https://blog.csdn.net/qq_46698164?type=blog",
+				tags: ["Brother"],
+			},
+			{
+				title: "OverThinker",
+				imgurl: "/FriendsAvatar/K.jpg",
+				desc: "K的CSDN博客",
+				siteurl: "https://blog.csdn.net/weixin_46491509?type=blog",
+				tags: ["Me"],
+			},
+			{
+				title: "澪贰",
+				imgurl: "/FriendsAvatar/澪贰.jpg",
+				desc: "澪贰的个人博客",
+				siteurl: "https://general.zzh-blog.club/",
+				tags: ["Friend"],
+			},
+			{
+				title: "CodeSuc",
+				imgurl: "/FriendsAvatar/CodeSuc.jpg",
+				desc: "CodeSuc的CSDN博客",
+				siteurl: "https://blog.csdn.net/weixin_63944437",
+				tags: ["Friend"],
+			},
+		];
+	}
+} catch (e) {
+	console.error("Failed to load friends data:", e);
+	friendsItems = [];
+}
+
+// 将友链数据转换为 JSON 字符串，以便在客户端脚本中使用
+const friendsDataJson = JSON.stringify(friendsItems);
+---
+
+<div class={`bg-black rounded-xl p-4 shadow-lg font-mono text-sm ${className}`}>
+  <div class="flex items-center mb-2">
+    <div class="flex space-x-2">
+      <div class="w-3 h-3 bg-red-500 rounded-full"></div>
+      <div class="w-3 h-3 bg-yellow-500 rounded-full"></div>
+      <div class="w-3 h-3 bg-green-500 rounded-full"></div>
+    </div>
+    <div class="ml-2 text-[var(--text-color)] text-xs">terminal</div>
+  </div>
+  
+  <div id="terminal-output" class="mb-2 h-40 overflow-y-auto text-[var(--text-color)] bg-black" style="overflow-x: hidden; scrollbar-width: none; -ms-overflow-style: none;">
+    <div class="mb-1">$ Welcome to {siteTitle} Terminal Emulator</div>
+    <div class="mb-1">$ Type 'help' to see available commands</div>
+  </div>
+  
+  <div class="flex items-center bg-black">
+    <span class="text-green-500 mr-2">$</span>
+    <input 
+      id="terminal-input" 
+      type="text" 
+      class="flex-1 bg-black outline-none text-[var(--text-color)]"
+      placeholder="Type a command..."
+    />
+  </div>
+</div>
+
+<style>
+  #terminal-output::-webkit-scrollbar {
+    display: none;
+  }
+</style>
+
+<!-- 隐藏的友链数据元素，供客户端脚本读取 -->
+<div id="friends-data" style="display: none;" data-friends={friendsDataJson}></div>
+
+<script>
+  // 客户端脚本，在浏览器中运行
+  if (typeof window !== 'undefined') {
+    // 页面加载完成后初始化
+    window.addEventListener('DOMContentLoaded', () => {
+      const input = document.getElementById('terminal-input');
+      const output = document.getElementById('terminal-output');
+      
+      // 添加键盘事件监听器
+      input?.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          const command = input.value.trim();
+          
+          // 显示用户输入的命令
+          const commandLine = document.createElement('div');
+          commandLine.className = 'mb-1';
+          commandLine.innerHTML = `<span class="text-green-500">$</span> ${command}`;
+          output.appendChild(commandLine);
+          
+          // 处理命令 (大小写不敏感)
+          const lowerCommand = command.toLowerCase();
+          if (lowerCommand === 'help') {
+            const helpText = document.createElement('div');
+            helpText.className = 'mb-1';
+            helpText.innerHTML = `
+              Available commands:<br>
+              &nbsp;&nbsp;<span class="text-blue-400">help</span> - Show this help message<br>
+              &nbsp;&nbsp;<span class="text-blue-400">ls</span> - List articles<br>
+              &nbsp;&nbsp;<span class="text-blue-400">whoami</span> - Show your profile<br>
+              &nbsp;&nbsp;<span class="text-blue-400">visit</span> - Get blog friends/recommended sites<br>
+              &nbsp;&nbsp;<span class="text-blue-400">chatroom</span> - Access the chatroom<br>
+              &nbsp;&nbsp;<span class="text-blue-400">hack</span> - Secret command<br>
+              &nbsp;&nbsp;<span class="text-blue-400">clear</span> - Clear terminal
+            `;
+            output.appendChild(helpText);
+          } else if (lowerCommand === 'ls') {
+            const lsText = document.createElement('div');
+            lsText.className = 'mb-1';
+            lsText.innerHTML = `
+              Articles:<br>
+              &nbsp;&nbsp;- 🌟:-D简单自我介绍一下<br>
+              &nbsp;&nbsp;- Java系列教程<br>
+              &nbsp;&nbsp;- 数据结构系列教程<br>
+              &nbsp;&nbsp;- 生活随笔<br>
+              &nbsp;&nbsp;- 聊天室开发记录<br>
+              &nbsp;&nbsp;- Markdown使用指南
+            `;
+            output.appendChild(lsText);
+          } else if (lowerCommand === 'whoami') {
+            const whoamiText = document.createElement('div');
+            whoamiText.className = 'mb-1';
+            whoamiText.innerHTML = `
+              User Information:<br>
+              &nbsp;&nbsp;Username: <span class="text-purple-400">Overthinker</span><br>
+              &nbsp;&nbsp;Role: <span class="text-yellow-400">Developer & Blogger</span><br>
+              &nbsp;&nbsp;Bio: 过度思考者，正在将屎山雕琢成艺术品的路上...<br>
+              &nbsp;&nbsp;Motto: "无所谓，跳探戈不像人生，一步跳错了，继续跳就行了"
+            `;
+            output.appendChild(whoamiText);
+          } else if (lowerCommand === 'hack') {
+            // 彩蛋功能：全屏闪烁效果
+            const hackText = document.createElement('div');
+            hackText.className = 'mb-1';
+            hackText.innerHTML = '<span class="text-red-500">[SYSTEM ALERT] Initiating system hack sequence...</span>';
+            output.appendChild(hackText);
+            
+            // 创建全屏闪烁效果
+            const overlay = document.createElement('div');
+            overlay.id = 'hack-overlay';
+            overlay.style.cssText = `
+              position: fixed;
+              top: 0;
+              left: 0;
+              width: 100%;
+              height: 100%;
+              background: #00ff00;
+              z-index: 9999;
+              opacity: 0;
+              pointer-events: none;
+            `;
+            document.body.appendChild(overlay);
+            
+            // 执行闪烁动画
+            let intensity = 0;
+            const flashInterval = setInterval(() => {
+              intensity += 0.1;
+              overlay.style.opacity = Math.abs(Math.sin(intensity)).toString();
+              
+              if (intensity > Math.PI * 2) {
+                clearInterval(flashInterval);
+                setTimeout(() => {
+                  document.body.removeChild(overlay);
+                  
+                  const successText = document.createElement('div');
+                  successText.className = 'mb-1';
+                  successText.innerHTML = '<span class="text-green-500">[HACK COMPLETE] System security bypassed!</span>';
+                  output.appendChild(successText);
+                  
+                  // 滚动到底部
+                  output.scrollTop = output.scrollHeight;
+                }, 500);
+              }
+            }, 50);
+          } else if (lowerCommand === 'visit') {
+            // 从隐藏元素中获取友链数据
+            const friendsDataElement = document.getElementById('friends-data');
+            let friendsData = [];
+            if (friendsDataElement) {
+              try {
+                const friendsDataJson = friendsDataElement.getAttribute('data-friends');
+                friendsData = JSON.parse(friendsDataJson);
+              } catch (e) {
+                console.error('Failed to parse friends data:', e);
+              }
+            }
+            
+            // 生成友链列表
+            let friendsList = 'Blog Friends/Recommended Sites:<br>';
+            if (friendsData.length > 0) {
+              friendsData.forEach((friend, index) => {
+                friendsList += `&nbsp;&nbsp;<span class="text-green-400">${friend.title}</span> - ${friend.desc}<br>`;
+              });
+            } else {
+              friendsList += '&nbsp;&nbsp;No friends data available.<br>';
+            }
+            friendsList += '<br>&nbsp;&nbsp;Use <span class="text-blue-400">visit [sitename]</span> for more details (coming soon)';
+            
+            const visitText = document.createElement('div');
+            visitText.className = 'mb-1';
+            visitText.innerHTML = friendsList;
+            output.appendChild(visitText);
+          } else if (lowerCommand === 'chatroom') {
+            const chatroomText = document.createElement('div');
+            chatroomText.className = 'mb-1';
+            chatroomText.innerHTML = `
+              Chatroom Access:<br>
+              &nbsp;&nbsp;Click the link below to access the chatroom:<br>
+              &nbsp;&nbsp;<a href="http://114.132.122.97:8080/login.html" target="_blank" class="text-blue-400 underline">
+                http://114.132.122.97:8080/login.html
+              </a>
+            `;
+            output.appendChild(chatroomText);
+          } else if (lowerCommand === 'clear') {
+            output.innerHTML = '';
+          } else if (command === '') {
+            // 空命令不处理
+          } else {
+            const errorText = document.createElement('div');
+            errorText.className = 'mb-1 text-red-500';
+            errorText.textContent = `Command not found: ${command}. Type 'help' for available commands.`;
+            output.appendChild(errorText);
+          }
+          
+          // 清空输入框
+          input.value = '';
+          
+          // 滚动到底部
+          output.scrollTop = output.scrollHeight;
+        }
+      });
+    });
+  }
+</script>

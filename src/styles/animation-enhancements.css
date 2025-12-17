@@ -121,6 +121,12 @@ html.is-entering .transition-main {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
+/* btn-regular 按钮旋转动画 */
+.btn-regular:hover {
+    transform: rotate(360deg);
+    transition: transform 0.5s ease;
+}
+
 /* 链接动画增强 */
 .link-enhance {
     position: relative;

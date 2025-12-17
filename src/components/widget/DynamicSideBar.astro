@@ -1,15 +1,14 @@
 ---
 import type { MarkdownHeading } from "astro";
-import { widgetManager } from "../../utils/widget-manager";
 import type { WidgetComponentConfig } from "../../types/config";
-
-// 动态导入所有可能的组件
-import Profile from "./Profile.astro";
+import { widgetManager } from "../../utils/widget-manager";
 import Announcement from "./Announcement.astro";
 import Categories from "./Categories.astro";
+import MusicPlayer from "./MusicPlayer.svelte";
+// 动态导入所有可能的组件
+import Profile from "./Profile.astro";
 import Tags from "./Tags.astro";
 import TOC from "./TOC.astro";
-import MusicPlayer from "./MusicPlayer.svelte";
 
 interface Props {
 	class?: string;

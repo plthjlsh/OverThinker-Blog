@@ -9,9 +9,11 @@ import FullscreenWallpaper from "../components/misc/FullscreenWallpaper.astro";
 import IconifyLoader from "../components/misc/IconifyLoader.astro";
 import ImageWrapper from "../components/misc/ImageWrapper.astro";
 import TypewriterText from "../components/TypewriterText.astro";
+import Calendar from "../components/widget/Calendar.astro";
 import TOC from "../components/widget/TOC.astro";
 import {
 	fullscreenWallpaperConfig,
+	rightSidebarLayoutConfig,
 	sidebarLayoutConfig,
 	siteConfig,
 } from "../config";
@@ -20,8 +22,11 @@ import {
 	BANNER_HEIGHT_EXTEND,
 	MAIN_PANEL_OVERLAPS_BANNER_HEIGHT,
 } from "../constants/constants";
-import { widgetManager } from "../utils/widget-manager";
+import { WidgetManager, widgetManager } from "../utils/widget-manager";
 import Layout from "./Layout.astro";
+
+// 创建右侧侧边栏的widgetManager实例
+const rightWidgetManager = new WidgetManager(rightSidebarLayoutConfig);
 
 interface Props {
 	title?: string;
@@ -130,17 +135,26 @@ const tabletShowSidebar =
 const desktopShowSidebar =
 	globalSidebarEnabled && widgetManager.shouldShowSidebar("desktop");
 
-// 动态网格布局类名 - 根据侧边栏位置调整列宽
+// 新增：右侧侧边栏配置
+const rightSidebarEnabled = true; // 默认启用右侧侧边栏
+const mobileShowRightSidebar =
+	rightSidebarEnabled && rightWidgetManager.shouldShowSidebar("mobile");
+const tabletShowRightSidebar =
+	rightSidebarEnabled && rightWidgetManager.shouldShowSidebar("tablet");
+const desktopShowRightSidebar =
+	rightSidebarEnabled && rightWidgetManager.shouldShowSidebar("desktop");
+
+// 动态网格布局类名 - 支持左右两侧边栏
 const gridCols = `
 	${mobileShowSidebar ? "grid-cols-1" : "grid-cols-1"}
-	${tabletShowSidebar ? (sidebarPosition === "right" ? "md:grid-cols-[1fr_17.5rem]" : "md:grid-cols-[17.5rem_1fr]") : "md:grid-cols-1"}
-	${desktopShowSidebar ? (sidebarPosition === "right" ? "lg:grid-cols-[1fr_17.5rem]" : "lg:grid-cols-[17.5rem_1fr]") : "lg:grid-cols-1"}
+	${tabletShowSidebar ? (sidebarPosition === "right" ? "md:grid-cols-[1fr_17.5rem]" : rightSidebarEnabled ? "md:grid-cols-[17.5rem_1fr_17.5rem]" : "md:grid-cols-[17.5rem_1fr]") : rightSidebarEnabled ? "md:grid-cols-[1fr_17.5rem]" : "md:grid-cols-1"}
+	${desktopShowSidebar ? (sidebarPosition === "right" ? "lg:grid-cols-[1fr_17.5rem]" : rightSidebarEnabled ? "lg:grid-cols-[17.5rem_1fr_17.5rem]" : "lg:grid-cols-[17.5rem_1fr]") : rightSidebarEnabled ? "lg:grid-cols-[1fr_17.5rem]" : "lg:grid-cols-1"}
 `
 	.trim()
 	.replace(/\s+/g, " ");
 
-// 侧边栏容器类名 - 根据位置调整grid-column
-const sidebarClass = `
+// 左侧边栏容器类名 - 根据位置调整grid-column
+const leftSidebarClass = `
 	mb-4 row-start-2 row-end-3 col-span-2 onload-animation
 	${mobileShowSidebar ? "block" : "hidden"}
 	${tabletShowSidebar ? `md:block md:row-start-1 md:row-end-2 md:max-w-[17.5rem] ${sidebarPosition === "right" ? "md:col-start-2 md:col-end-3" : "md:col-start-1 md:col-end-2"}` : "md:hidden"}
@@ -149,12 +163,22 @@ const sidebarClass = `
 	.trim()
 	.replace(/\s+/g, " ");
 
+// 右侧边栏容器类名 - 固定在右侧
+const rightSidebarClass = `
+	mb-4 row-start-2 row-end-3 col-span-2 onload-animation
+	${mobileShowRightSidebar ? "block" : "hidden"}
+	${tabletShowRightSidebar ? "md:block md:row-start-1 md:row-end-2 md:max-w-[17.5rem] md:col-start-3 md:col-end-4" : "md:hidden"}
+	${desktopShowRightSidebar ? "lg:block lg:row-start-1 lg:row-end-2 lg:max-w-[17.5rem] lg:col-start-3 lg:col-end-4" : "lg:hidden"}
+`
+	.trim()
+	.replace(/\s+/g, " ");
+
 // 主内容区域类名 - 根据侧边栏位置调整grid-column
 const mainContentClass = `
 	transition-swup-fade overflow-hidden w-full
-	${mobileShowSidebar ? "col-span-2" : "col-span-1"}
-	${tabletShowSidebar ? `${sidebarPosition === "right" ? "md:col-start-1 md:col-end-2" : "md:col-start-2 md:col-end-3"}` : "md:col-span-1"}
-	${desktopShowSidebar ? `${sidebarPosition === "right" ? "lg:col-start-1 lg:col-end-2" : "lg:col-start-2 lg:col-end-3"}` : "lg:col-span-1"}
+	${mobileShowSidebar || mobileShowRightSidebar ? "col-span-2" : "col-span-1"}
+	${tabletShowSidebar || tabletShowRightSidebar ? (sidebarPosition === "right" ? "md:col-start-1 md:col-end-2" : rightSidebarEnabled ? "md:col-start-2 md:col-end-3" : "md:col-start-2 md:col-end-3") : rightSidebarEnabled ? "md:col-start-1 md:col-end-2" : "md:col-span-1"}
+	${desktopShowSidebar || desktopShowRightSidebar ? (sidebarPosition === "right" ? "lg:col-start-1 lg:col-end-2" : rightSidebarEnabled ? "lg:col-start-2 lg:col-end-3" : "lg:col-start-2 lg:col-end-3") : rightSidebarEnabled ? "lg:col-start-1 lg:col-end-2" : "lg:col-span-1"}
 `
 	.trim()
 	.replace(/\s+/g, " ");
@@ -385,14 +409,19 @@ const transparentClass = shouldEnableTransparency
             >
                 <Icon class="text-white/75 text-[1.25rem] mr-1" name="material-symbols:copyright-outline-rounded" ></Icon>
                 <div class="text-white/75 text-xs">{siteConfig.banner.credit.text}</div>
-                <Icon class:list={["transition absolute text-[oklch(0.75_0.14_var(--hue))] right-4 text-[0.75rem] opacity-0",
+                <Icon class:list={["transition absolute text-[#99ffcc] right-4 text-[0.75rem] opacity-0",
                     {"group-hover:opacity-100": hasBannerLink}]}
                       name="fa6-solid:arrow-up-right-from-square">
                 </Icon>
             </a>}
 
 
-            {(mobileShowSidebar || tabletShowSidebar || desktopShowSidebar) && <SideBar class={`${sidebarClass} ${transparentClass}`} headings={headings}></SideBar>}
+            {(mobileShowSidebar || tabletShowSidebar || desktopShowSidebar) && <SideBar class={`${leftSidebarClass} ${transparentClass}`} headings={headings} widgetManagerInstance={widgetManager}></SideBar>}
+
+{/* 右侧边栏 */}
+{(mobileShowRightSidebar || tabletShowRightSidebar || desktopShowRightSidebar) && (
+	<SideBar class={`${rightSidebarClass} ${transparentClass}`} headings={headings} widgetManagerInstance={rightWidgetManager} />
+)}
 
             <main id="swup-container" class={`${mainContentClass} transition-main`}>
                 <div id="content-wrapper" class="onload-animation transition-leaving">

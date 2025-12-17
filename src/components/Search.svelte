@@ -13,6 +13,9 @@ let result: SearchResult[] = [];
 let isSearching = false;
 let pagefindLoaded = false;
 let initialized = false;
+let searchSuggestions: any[] = [];
+let selectedIndex = -1;
+let recentSearches: string[] = [];
 
 const fakeResult: SearchResult[] = [
 	{
@@ -57,6 +60,8 @@ const closeSearchPanel = (): void => {
 	keywordDesktop = "";
 	keywordMobile = "";
 	result = [];
+	searchSuggestions = [];
+	selectedIndex = -1;
 };
 
 const handleResultClick = (event: Event, url: string): void => {
@@ -65,10 +70,69 @@ const handleResultClick = (event: Event, url: string): void => {
 	navigateToPage(url);
 };
 
+// 高亮搜索关键词
+function highlightText(text: string, query: string): string {
+	if (!query) return text;
+	const regex = new RegExp(`(${query})`, 'gi');
+	return text.replace(regex, '<mark>$1</mark>');
+}
+
+// 保存到最近搜索
+function saveToRecent(query: string): void {
+	if (!query.trim()) return;
+	
+	// 移除重复项
+	recentSearches = recentSearches.filter(item => item !== query);
+	// 添加到开头
+	recentSearches.unshift(query);
+	// 限制数量
+	recentSearches = recentSearches.slice(0, 5);
+	// 保存到 localStorage
+	localStorage.setItem('recentSearches', JSON.stringify(recentSearches));
+}
+
+// 获取搜索建议
+async function getSuggestions(query: string): Promise<void> {
+	if (!window.pagefind || !query.trim()) {
+		searchSuggestions = [];
+		return;
+	}
+
+	try {
+		// 使用 Pagefind 的搜索功能作为建议
+		const suggestions = await window.pagefind.search(query);
+		if (suggestions && suggestions.results) {
+			searchSuggestions = await Promise.all(
+				suggestions.results.slice(0, 5).map(async (result) => {
+					const data = await result.data();
+					return {
+						id: data.url,
+						title: data.meta.title,
+						excerpt: data.excerpt,
+						url: data.url,
+					};
+				}),
+			);
+		} else {
+			// 如果没有建议，显示最近搜索词
+			searchSuggestions = recentSearches.map(term => ({
+				id: term,
+				title: term,
+				isRecent: true
+			}));
+		}
+	} catch (e) {
+		console.error("Suggestions error:", e);
+		searchSuggestions = [];
+	}
+}
+
 const search = async (keyword: string, isDesktop: boolean): Promise<void> => {
 	if (!keyword) {
 		setPanelVisibility(false, isDesktop);
 		result = [];
+		searchSuggestions = [];
+		selectedIndex = -1;
 		return;
 	}
 
@@ -95,6 +159,9 @@ const search = async (keyword: string, isDesktop: boolean): Promise<void> => {
 
 		result = searchResults;
 		setPanelVisibility(result.length > 0, isDesktop);
+		
+		// 保存搜索词
+		saveToRecent(keyword);
 	} catch (error) {
 		console.error("Search error:", error);
 		result = [];
@@ -104,6 +171,32 @@ const search = async (keyword: string, isDesktop: boolean): Promise<void> => {
 	}
 };
 
+function handleKeyDown(e: KeyboardEvent, isDesktop: boolean): void {
+	if (searchSuggestions.length > 0) {
+		if (e.key === 'ArrowDown') {
+			e.preventDefault();
+			selectedIndex = Math.min(selectedIndex + 1, searchSuggestions.length - 1);
+		} else if (e.key === 'ArrowUp') {
+			e.preventDefault();
+			selectedIndex = Math.max(selectedIndex - 1, -1);
+		} else if (e.key === 'Enter' && selectedIndex >= 0) {
+			e.preventDefault();
+			const selected = searchSuggestions[selectedIndex];
+			if (selected.isRecent) {
+				if (isDesktop) {
+					keywordDesktop = selected.title;
+				} else {
+					keywordMobile = selected.title;
+				}
+				search(selected.title, isDesktop);
+			} else {
+				closeSearchPanel();
+				navigateToPage(selected.url);
+			}
+		}
+	}
+}
+
 onMount(() => {
 	const initializeSearch = () => {
 		initialized = true;
@@ -112,6 +205,10 @@ onMount(() => {
 			!!window.pagefind &&
 			typeof window.pagefind.search === "function";
 		console.log("Pagefind status on init:", pagefindLoaded);
+		
+		// 初始化最近搜索词
+		recentSearches = JSON.parse(localStorage.getItem('recentSearches') || '[]');
+		
 		if (keywordDesktop) search(keywordDesktop, true);
 		if (keywordMobile) search(keywordMobile, false);
 	};
@@ -146,12 +243,24 @@ onMount(() => {
 $: if (initialized && keywordDesktop) {
 	(async () => {
 		await search(keywordDesktop, true);
+		// 获取搜索建议
+		if (keywordDesktop.trim()) {
+			await getSuggestions(keywordDesktop);
+		} else {
+			searchSuggestions = [];
+		}
 	})();
 }
 
 $: if (initialized && keywordMobile) {
 	(async () => {
 		await search(keywordMobile, false);
+		// 获取搜索建议
+		if (keywordMobile.trim()) {
+			await getSuggestions(keywordMobile);
+		} else {
+			searchSuggestions = [];
+		}
 	})();
 }
 </script>
