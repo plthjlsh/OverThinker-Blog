@@ -9,6 +9,7 @@ import Profile from "./Profile.astro";
 import Tags from "./Tags.astro";
 import TerminalEmulator from "./TerminalEmulator.astro";
 import TOC from "./TOC.astro";
+import VisitorInfo from "./VisitorInfo.astro";
 
 interface Props {
 	class?: string;
@@ -37,6 +38,7 @@ const componentMap = {
 	"music-player": MusicPlayer,
 	calendar: Calendar,
 	"terminal-emulator": TerminalEmulator,
+	"visitor-info": VisitorInfo,
 };
 
 // 渲染组件的辅助函数
@@ -100,12 +102,31 @@ function renderComponent(component: any, index: number, components: any[]) {
 	@media (max-width: 768px) {
 		#sidebar {
 			display: var(--sidebar-mobile-display, block);
+			/* 移动端侧边栏间距优化 */
+			padding: 0.5rem;
+		}
+		
+		/* 移动端组件间距优化 */
+		#sidebar > div > div {
+			margin-bottom: 1rem;
+		}
+		
+		/* 移动端组件内部间距优化 */
+		#sidebar .onload-animation {
+			padding: 0.75rem;
 		}
 	}
 	
 	@media (min-width: 769px) and (max-width: 1024px) {
 		#sidebar {
 			display: var(--sidebar-tablet-display, block);
+			/* 平板端侧边栏间距优化 */
+			padding: 0.75rem;
+		}
+		
+		/* 平板端组件间距优化 */
+		#sidebar > div > div {
+			margin-bottom: 1.25rem;
 		}
 	}
 	
@@ -113,6 +134,23 @@ function renderComponent(component: any, index: number, components: any[]) {
 		#sidebar {
 			display: var(--sidebar-desktop-display, block);
 		}
+	}
+	
+	/* 通用响应式优化 */
+	#sidebar-sticky {
+		/* 确保粘性组件不会超出视窗 */
+		max-height: calc(100vh - 8rem);
+		overflow-y: auto;
+	}
+	
+	/* 隐藏滚动条但保持功能 */
+	#sidebar-sticky::-webkit-scrollbar {
+		display: none;
+	}
+	
+	#sidebar-sticky {
+		-ms-overflow-style: none;
+		scrollbar-width: none;
 	}
 </style>
 

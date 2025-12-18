@@ -62,31 +62,508 @@ try {
 	friendsItems = [];
 }
 
+// 获取项目数据
+const projectsData = [
+	{
+		id: "OverThinker-blog",
+		title: "OverThinker Blog",
+		description:
+			"基于Astro框架开发的现代化博客主题，支持多语言、暗黑模式、响应式设计等功能。",
+		category: "web",
+		techStack: ["Astro", "TypeScript"],
+		status: "in-progress",
+		startDate: "2025-04-29",
+		endDate: "2025-09-10",
+		featured: true,
+		tags: ["Blog", "Open Source"],
+	},
+	{
+		id: "Multi-user Chat Room",
+		title: "多人聊天室",
+		description: "Spring Web项目，基于WebSocket实现的实时聊天应用。",
+		category: "web",
+		techStack: ["WebSocket", "Spring Web", "MySql"],
+		status: "in-progress",
+		startDate: "2023-09-01",
+		endDate: "2023-12-01",
+		featured: true,
+		tags: ["Spring Web", "MySql", "聊天应用"],
+	},
+	{
+		id: "Godot游戏引擎",
+		title: "Godot游戏引擎",
+		description:
+			"Godot是开源跨平台游戏引擎，轻量高效，支持2D/3D开发，用GDScript等语言，适合各类游戏制作。",
+		category: "mobile",
+		techStack: ["Godot", "GDScript", "Game Engine"],
+		status: "planned",
+		startDate: "2024-10-13",
+		tags: ["Godot", "GDScript", "Game Engine", "开发"],
+	},
+	{
+		id: "Java",
+		title: "JavaSE",
+		description:
+			"Java是一种广泛使用的面向对象编程语言，具有跨平台特性，适用于开发企业级应用、移动应用和大数据处理等。",
+		category: "web",
+		techStack: ["Java", "JavaSE"],
+		status: "completed",
+		startDate: "2025-01-01",
+		endDate: "2025-06-22",
+		tags: ["Java", "JavaSE", "编程语言"],
+	},
+	{
+		id: "数据结构与算法",
+		title: "数据结构初阶",
+		description:
+			"数据结构与算法是计算机科学的核心，涉及数据的组织、存储和操作方法，提升程序效率和性能。",
+		category: "web",
+		techStack: ["数据结构", "算法", "Java", "排序算法"],
+		status: "completed",
+		startDate: "2025-04-07",
+		endDate: "2025-07-01",
+		tags: ["数据结构", "算法", "排序", "查找"],
+	},
+];
+
+// 获取技能数据
+const skillsData = [
+	{
+		id: "javascript",
+		name: "JavaScript",
+		description: "现代JavaScript开发，包括ES6+语法、异步编程、模块化开发等。",
+		category: "frontend",
+		level: "advanced",
+		experience: { years: 3, months: 6 },
+		color: "#F7DF1E",
+	},
+	{
+		id: "typescript",
+		name: "TypeScript",
+		description: "类型安全的JavaScript超集，提升代码质量和开发效率。",
+		category: "frontend",
+		level: "advanced",
+		experience: { years: 2, months: 8 },
+		color: "#3178C6",
+	},
+	{
+		id: "react",
+		name: "React",
+		description: "构建用户界面的JavaScript库，包括Hooks、Context、状态管理等。",
+		category: "frontend",
+		level: "advanced",
+		experience: { years: 2, months: 10 },
+		color: "#61DAFB",
+	},
+	{
+		id: "vue",
+		name: "Vue.js",
+		description: "渐进式JavaScript框架，易学易用，适合快速开发。",
+		category: "frontend",
+		level: "intermediate",
+		experience: { years: 1, months: 8 },
+		color: "#4FC08D",
+	},
+	{
+		id: "angular",
+		name: "Angular",
+		description: "Google开发的企业级前端框架，功能完整的单页应用解决方案。",
+		category: "frontend",
+		level: "beginner",
+		experience: { years: 0, months: 9 },
+		color: "#DD0031",
+	},
+];
+
+// 获取动漫数据
+const animeList = [
+	{
+		title: "Stranger Things （1-5）",
+		status: "completed",
+		rating: 10.0,
+		description:
+			"以1980年代印第安纳州霍金斯小镇为背景，围绕男孩威尔失踪事件展开，随着超能力女孩Eleven的出现，逐步揭露涉及秘密实验与超自然力量的阴谋",
+		episodes: "1000 episodes",
+		year: "2016",
+		genre: ["科幻", "惊悚"],
+		studio: "出版：Netflix",
+		progress: 554,
+		totalEpisodes: 1232,
+		startDate: "2024-8",
+	},
+	{
+		title: "三体",
+		status: "completed",
+		rating: 9.9,
+		description:
+			"该剧是田良良根据科幻作家刘慈欣同名小说《三体》改编，讲述了发生在21世纪初，地球基础科学研究遭遇异常干扰，引发科学界动荡。纳米物理学家汪淼、刑警史强联合，调查“科学边界（ETO）”",
+		episodes: "30 episodes",
+		year: "2023",
+		genre: ["剧情", "科幻"],
+		studio: "原著：刘慈欣",
+		progress: 554,
+		totalEpisodes: 1232,
+		startDate: "2024-8",
+	},
+	{
+		title: "名侦探柯南",
+		status: "watching",
+		rating: 9.8,
+		description: "真相永远只有一个",
+		episodes: "12 episodes",
+		year: "2022",
+		genre: ["悬疑", "推理", "恋爱"],
+		studio: "原著：青山刚昌",
+		progress: 554,
+		totalEpisodes: 1232,
+		startDate: "2024-8",
+	},
+];
+
+// 程序员笑话数据
+const jokes = [
+	"为什么程序员喜欢黑暗模式？因为他们不想看到自己的错误！",
+	"程序员的女朋友说：'你爱我还是爱电脑？' 程序员回答：'我对电脑没有感情。'",
+	"为什么程序员总是分不清万圣节和圣诞节？因为 Oct 31 == Dec 25！",
+	"有一个程序员去买菜，老婆对他说：'去称一斤苹果，如果有鸡蛋的话，买十个。' 程序员回来买了十斤苹果。老婆问：'为什么买十斤苹果？' 程序员答：'因为有鸡蛋啊。'",
+	"程序员的生活：上班写代码，下班调试代码，晚上梦见代码。",
+	"为什么程序员总是混淆'是'和'否'？因为他们总是从0开始计数！",
+	"程序员的浪漫：我对你的爱就像无限循环，永远不会停止。",
+	"程序员面试官问：'你有什么特长？' 应聘者答：'我会预测未来。' 面试官：'那你预测一下，你什么时候能被录用？' 应聘者：'这个嘛...永远都不会。'",
+];
+
+// 励志名言数据
+const quotes = [
+	"代码改变世界，程序员创造未来。",
+	"每一个bug都是一次成长的机会。",
+	"不要害怕犯错，错误是学习的一部分。",
+	"编程不是关于代码，而是关于解决问题。",
+	"持续学习是程序员最好的投资。",
+	"优秀的代码是写给人看的，顺便给机器执行。",
+	"编程就像写作，简洁明了是最好的风格。",
+	"技术会过时，但学习能力永不过时。",
+];
+
+// 相册数据
+const albumsData = [
+	{
+		id: "k-on-collection",
+		title: "轻音少女 K-ON!",
+		description: "可爱的轻音部女孩们的日常时光，青春与音乐的美好回忆",
+		cover: "https://wallpapercave.com/wp/wp2535789.jpg",
+		date: "2024-06-10",
+		location: "樱丘高校",
+		tags: ["K-ON", "轻音少女", "萌系", "日常"],
+		layout: "grid",
+		columns: 3,
+		photos: [
+			{
+				id: "yui-hirasawa-1",
+				src: "https://wallpapercave.com/wp/wp2535789.jpg",
+				alt: "平泽唯 - 可爱的吉他手",
+				width: 1920,
+				height: 1080,
+			},
+			{
+				id: "mio-akiyama-1",
+				src: "https://wallpapercave.com/wp/wp2535790.jpg",
+				alt: "秋山澪 - 害羞的贝斯手",
+				width: 1920,
+				height: 1080,
+			},
+			{
+				id: "ritsu-tainaka-1",
+				src: "https://wallpapercave.com/wp/wp2535791.jpg",
+				alt: "田井中律 - 活泼的鼓手",
+				width: 1920,
+				height: 1080,
+			},
+			{
+				id: "tsumugi-kotobuki-1",
+				src: "https://wallpapercave.com/wp/wp2535792.jpg",
+				alt: "琴吹紬 - 温柔的键盘手",
+				width: 1920,
+				height: 1080,
+			},
+			{
+				id: "azusa-nakano-1",
+				src: "https://wallpapercave.com/wp/wp2535793.jpg",
+				alt: "中野梓 - 认真的后辈",
+				width: 1920,
+				height: 1080,
+			},
+			{
+				id: "k-on-group-1",
+				src: "https://wallpapercave.com/wp/wp2535794.jpg",
+				alt: "轻音部全员合照",
+				width: 1920,
+				height: 1080,
+			},
+		],
+	},
+	{
+		id: "clannad-collection",
+		title: "CLANNAD",
+		description: "感人至深的校园与家庭故事，温暖人心的治愈系动画",
+		cover: "https://wallpapercave.com/wp/wp1810987.jpg",
+		date: "2024-06-15",
+		location: "光坂高校",
+		tags: ["CLANNAD", "治愈", "校园", "感动"],
+		layout: "grid",
+		columns: 3,
+		photos: [
+			{
+				id: "nagisa-furukawa",
+				src: "https://wallpapercave.com/wp/wp1810987.jpg",
+				alt: "古河渚 - 温柔的女主角",
+				width: 1920,
+				height: 1080,
+			},
+			{
+				id: "tomoya-okazaki",
+				src: "https://wallpapercave.com/wp/wp1810988.jpg",
+				alt: "冈崎朋也 - 男主角",
+				width: 1920,
+				height: 1080,
+			},
+			{
+				id: "kyou-fujibayashi",
+				src: "https://wallpapercave.com/wp/wp1810989.jpg",
+				alt: "藤林杏 - 活泼的双胞胎姐姐",
+				width: 1920,
+				height: 1080,
+			},
+			{
+				id: "ryou-fujibayashi",
+				src: "https://wallpapercave.com/wp/wp1810990.jpg",
+				alt: "藤林椋 - 温柔的双胞胎妹妹",
+				width: 1920,
+				height: 1080,
+			},
+			{
+				id: "kotomi-ichinose",
+				src: "https://wallpapercave.com/wp/wp1810991.jpg",
+				alt: "一之濑琴美 - 聪明的图书委员",
+				width: 1920,
+				height: 1080,
+			},
+			{
+				id: "clannad-sakura",
+				src: "https://wallpapercave.com/wp/wp1810992.jpg",
+				alt: "樱花飞舞的校园",
+				width: 1920,
+				height: 1080,
+			},
+		],
+	},
+	{
+		id: "lucky-star-collection",
+		title: "幸运☆星",
+		description: "四个女高中生的搞笑日常，充满欢声笑语的校园生活",
+		cover: "https://wallpapercave.com/wp/wp1847234.jpg",
+		date: "2024-06-20",
+		location: "陵樱学园",
+		tags: ["幸运星", "搞笑", "日常", "萌系"],
+		layout: "grid",
+		columns: 3,
+		photos: [
+			{
+				id: "konata-izumi",
+				src: "https://wallpapercave.com/wp/wp1847234.jpg",
+				alt: "泉此方 - 御宅族女主角",
+				width: 1920,
+				height: 1080,
+			},
+			{
+				id: "kagami-hiiragi",
+				src: "https://wallpapercave.com/wp/wp1847235.jpg",
+				alt: "柊镜 - 认真的班长",
+				width: 1920,
+				height: 1080,
+			},
+			{
+				id: "tsukasa-hiiragi",
+				src: "https://wallpapercave.com/wp/wp1847236.jpg",
+				alt: "柊司 - 天然呆妹妹",
+				width: 1920,
+				height: 1080,
+			},
+			{
+				id: "miyuki-takara",
+				src: "https://wallpapercave.com/wp/wp1847237.jpg",
+				alt: "高良美幸 - 温柔的眼镜娘",
+				width: 1920,
+				height: 1080,
+			},
+			{
+				id: "lucky-star-group",
+				src: "https://wallpapercave.com/wp/wp1847238.jpg",
+				alt: "四人组合照",
+				width: 1920,
+				height: 1080,
+			},
+			{
+				id: "lucky-star-classroom",
+				src: "https://wallpapercave.com/wp/wp1847239.jpg",
+				alt: "教室里的日常",
+				width: 1920,
+				height: 1080,
+			},
+		],
+	},
+	{
+		id: "azumanga-daioh-collection",
+		title: "阿兹漫画大王",
+		description: "经典的四格漫画改编，充满童趣和幽默的校园故事",
+		cover: "https://wallpapercave.com/wp/wp2089456.jpg",
+		date: "2024-06-25",
+		location: "高校",
+		tags: ["阿兹漫画大王", "四格漫画", "搞笑", "经典"],
+		layout: "grid",
+		columns: 3,
+		photos: [
+			{
+				id: "chiyo-mihama",
+				src: "https://wallpapercave.com/wp/wp2089456.jpg",
+				alt: "美浜千代 - 天才小学生",
+				width: 1920,
+				height: 1080,
+			},
+			{
+				id: "osaka-kasuga",
+				src: "https://wallpapercave.com/wp/wp2089457.jpg",
+				alt: "春日步 - 大阪娘",
+				width: 1920,
+				height: 1080,
+			},
+			{
+				id: "sakaki-san",
+				src: "https://wallpapercave.com/wp/wp2089458.jpg",
+				alt: "榊 - 高冷的猫控",
+				width: 1920,
+				height: 1080,
+			},
+			{
+				id: "tomo-takino",
+				src: "https://wallpapercave.com/wp/wp2089459.jpg",
+				alt: "滝野智 - 活力少女",
+				width: 1920,
+				height: 1080,
+			},
+			{
+				id: "yomi-mizuhara",
+				src: "https://wallpapercave.com/wp/wp2089460.jpg",
+				alt: "水原暦 - 吐槽役",
+				width: 1920,
+				height: 1080,
+			},
+			{
+				id: "azumanga-group",
+				src: "https://wallpapercave.com/wp/wp2089461.jpg",
+				alt: "全员大合照",
+				width: 1920,
+				height: 1080,
+			},
+		],
+	},
+	{
+		id: "nichijou-collection",
+		title: "日常",
+		description: "超现实的搞笑日常，脑洞大开的无厘头喜剧",
+		cover: "https://wallpapercave.com/wp/wp1945678.jpg",
+		date: "2024-06-30",
+		location: "时定高校",
+		tags: ["日常", "搞笑", "超现实", "无厘头"],
+		layout: "grid",
+		columns: 3,
+		photos: [
+			{
+				id: "yuuko-aioi",
+				src: "https://wallpapercave.com/wp/wp1945678.jpg",
+				alt: "相生祐子 - 天然呆主角",
+				width: 1920,
+				height: 1080,
+			},
+			{
+				id: "mio-naganohara",
+				src: "https://wallpapercave.com/wp/wp1945679.jpg",
+				alt: "长野原美绪 - 吐槽役",
+				width: 1920,
+				height: 1080,
+			},
+			{
+				id: "mai-minakami",
+				src: "https://wallpapercave.com/wp/wp1945680.jpg",
+				alt: "水上麻衣 - 三无少女",
+				width: 1920,
+				height: 1080,
+			},
+			{
+				id: "nano-shinonome",
+				src: "https://wallpapercave.com/wp/wp1945681.jpg",
+				alt: "东云名乃 - 机器人少女",
+				width: 1920,
+				height: 1080,
+			},
+			{
+				id: "hakase-shinonome",
+				src: "https://wallpapercave.com/wp/wp1945682.jpg",
+				alt: "东云研究所 - 天才博士",
+				width: 1920,
+				height: 1080,
+			},
+			{
+				id: "nichijou-group",
+				src: "https://wallpapercave.com/wp/wp1945683.jpg",
+				alt: "日常系大合照",
+				width: 1920,
+				height: 1080,
+			},
+		],
+	},
+];
+
 // 将友链数据转换为 JSON 字符串，以便在客户端脚本中使用
 const friendsDataJson = JSON.stringify(friendsItems);
+
+// 将项目数据转换为 JSON 字符串
+const projectsDataJson = JSON.stringify(projectsData);
+
+// 将技能数据转换为 JSON 字符串
+const skillsDataJson = JSON.stringify(skillsData);
+
+// 将动漫数据转换为 JSON 字符串
+const animeDataJson = JSON.stringify(animeList);
+
+// 将相册数据转换为 JSON 字符串
+const albumsDataJson = JSON.stringify(albumsData);
+
+// 将笑话和名言数据转换为 JSON 字符串
+const jokesDataJson = JSON.stringify(jokes);
+const quotesDataJson = JSON.stringify(quotes);
 ---
 
-<div class={`bg-black rounded-xl p-4 shadow-lg font-mono text-sm ${className}`}>
+<div class={`bg-black rounded-xl p-3 shadow-lg font-mono text-xs md:p-4 md:text-sm ${className}`}>
   <div class="flex items-center mb-2">
-    <div class="flex space-x-2">
-      <div class="w-3 h-3 bg-red-500 rounded-full"></div>
-      <div class="w-3 h-3 bg-yellow-500 rounded-full"></div>
-      <div class="w-3 h-3 bg-green-500 rounded-full"></div>
+    <div class="flex space-x-1.5">
+      <div class="w-2.5 h-2.5 bg-red-500 rounded-full md:w-3 md:h-3"></div>
+      <div class="w-2.5 h-2.5 bg-yellow-500 rounded-full md:w-3 md:h-3"></div>
+      <div class="w-2.5 h-2.5 bg-green-500 rounded-full md:w-3 md:h-3"></div>
     </div>
     <div class="ml-2 text-[var(--text-color)] text-xs">terminal</div>
   </div>
   
-  <div id="terminal-output" class="mb-2 h-40 overflow-y-auto text-[var(--text-color)] bg-black" style="overflow-x: hidden; scrollbar-width: none; -ms-overflow-style: none;">
-    <div class="mb-1">$ Welcome to {siteTitle} Terminal Emulator</div>
-    <div class="mb-1">$ Type 'help' to see available commands</div>
+  <div id="terminal-output" class="mb-2 h-32 overflow-y-auto text-[var(--text-color)] bg-black md:h-40" style="overflow-x: hidden; scrollbar-width: none; -ms-overflow-style: none;">
+    <div class="mb-1 text-xs md:text-sm">$ Welcome to {siteTitle} Terminal Emulator</div>
+    <div class="mb-1 text-xs md:text-sm">$ Type 'help' to see available commands</div>
   </div>
   
   <div class="flex items-center bg-black">
-    <span class="text-green-500 mr-2">$</span>
+    <span class="text-green-500 mr-1.5 text-xs md:mr-2 md:text-sm">$</span>
     <input 
       id="terminal-input" 
       type="text" 
-      class="flex-1 bg-black outline-none text-[var(--text-color)]"
+      class="flex-1 bg-black outline-none text-[var(--text-color)] text-xs md:text-sm"
       placeholder="Type a command..."
     />
   </div>
@@ -98,8 +575,14 @@ const friendsDataJson = JSON.stringify(friendsItems);
   }
 </style>
 
-<!-- 隐藏的友链数据元素，供客户端脚本读取 -->
+<!-- 隐藏的数据元素，供客户端脚本读取 -->
 <div id="friends-data" style="display: none;" data-friends={friendsDataJson}></div>
+<div id="projects-data" style="display: none;" data-projects={projectsDataJson}></div>
+<div id="skills-data" style="display: none;" data-skills={skillsDataJson}></div>
+<div id="anime-data" style="display: none;" data-anime={animeDataJson}></div>
+<div id="jokes-data" style="display: none;" data-jokes={jokesDataJson}></div>
+<div id="quotes-data" style="display: none;" data-quotes={quotesDataJson}></div>
+<div id="albums-data" style="display: none;" data-albums={albumsDataJson}></div>
 
 <script>
   // 客户端脚本，在浏览器中运行
@@ -124,7 +607,7 @@ const friendsDataJson = JSON.stringify(friendsItems);
           const lowerCommand = command.toLowerCase();
           if (lowerCommand === 'help') {
             const helpText = document.createElement('div');
-            helpText.className = 'mb-1';
+            helpText.className = 'mb-1 text-xs md:text-sm';
             helpText.innerHTML = `
               Available commands:<br>
               &nbsp;&nbsp;<span class="text-blue-400">help</span> - Show this help message<br>
@@ -132,13 +615,15 @@ const friendsDataJson = JSON.stringify(friendsItems);
               &nbsp;&nbsp;<span class="text-blue-400">whoami</span> - Show your profile<br>
               &nbsp;&nbsp;<span class="text-blue-400">visit</span> - Get blog friends/recommended sites<br>
               &nbsp;&nbsp;<span class="text-blue-400">chatroom</span> - Access the chatroom<br>
-              &nbsp;&nbsp;<span class="text-blue-400">hack</span> - Secret command<br>
+              &nbsp;&nbsp;<span class="text-blue-400">joke</span> - Tell a programmer joke<br>
+              &nbsp;&nbsp;<span class="text-blue-400">quote</span> - Show an inspirational quote<br>
+              &nbsp;&nbsp;<span class="text-blue-400">matrix</span> - Simulate matrix effect<br>
               &nbsp;&nbsp;<span class="text-blue-400">clear</span> - Clear terminal
             `;
             output.appendChild(helpText);
           } else if (lowerCommand === 'ls') {
             const lsText = document.createElement('div');
-            lsText.className = 'mb-1';
+            lsText.className = 'mb-1 text-xs md:text-sm';
             lsText.innerHTML = `
               Articles:<br>
               &nbsp;&nbsp;- 🌟:-D简单自我介绍一下<br>
@@ -151,7 +636,7 @@ const friendsDataJson = JSON.stringify(friendsItems);
             output.appendChild(lsText);
           } else if (lowerCommand === 'whoami') {
             const whoamiText = document.createElement('div');
-            whoamiText.className = 'mb-1';
+            whoamiText.className = 'mb-1 text-xs md:text-sm';
             whoamiText.innerHTML = `
               User Information:<br>
               &nbsp;&nbsp;Username: <span class="text-purple-400">Overthinker</span><br>
@@ -163,7 +648,7 @@ const friendsDataJson = JSON.stringify(friendsItems);
           } else if (lowerCommand === 'hack') {
             // 彩蛋功能：全屏闪烁效果
             const hackText = document.createElement('div');
-            hackText.className = 'mb-1';
+            hackText.className = 'mb-1 text-xs md:text-sm';
             hackText.innerHTML = '<span class="text-red-500">[SYSTEM ALERT] Initiating system hack sequence...</span>';
             output.appendChild(hackText);
             
@@ -204,6 +689,160 @@ const friendsDataJson = JSON.stringify(friendsItems);
                 }, 500);
               }
             }, 50);
+          } else if (lowerCommand === 'bug') {
+            // Bug彩蛋命令 - 屏幕内容偏移并出现雪花噪点效果
+            const bugText = document.createElement('div');
+            bugText.className = 'mb-1 text-xs md:text-sm';
+            bugText.innerHTML = '<span class="text-red-500">[ERROR] System malfunction detected!</span>';
+            output.appendChild(bugText);
+            
+            // 创建雪花噪点效果层
+            const glitchOverlay = document.createElement('div');
+            glitchOverlay.id = 'glitch-overlay';
+            glitchOverlay.style.cssText = `
+              position: fixed;
+              top: 0;
+              left: 0;
+              width: 100%;
+              height: 100%;
+              background: transparent;
+              z-index: 9998;
+              pointer-events: none;
+              opacity: 0;
+            `;
+            document.body.appendChild(glitchOverlay);
+            
+            // 创建屏幕偏移效果的样式
+            const style = document.createElement('style');
+            style.id = 'glitch-style';
+            style.innerHTML = `
+              @keyframes glitch-anim {
+                0% { transform: translate(0); }
+                20% { transform: translate(-5px, 5px); }
+                40% { transform: translate(5px, -5px); }
+                60% { transform: translate(-5px, 5px); }
+                80% { transform: translate(5px, -5px); }
+                100% { transform: translate(0); }
+              }
+              
+              @keyframes noise-anim {
+                0% { background-position: 0 0; }
+                10% { background-position: -5% -10%; }
+                20% { background-position: -15% 5%; }
+                30% { background-position: 7% -25%; }
+                40% { background-position: 20% 25%; }
+                50% { background-position: -25% 10%; }
+                60% { background-position: 15% 5%; }
+                70% { background-position: 0 15%; }
+                80% { background-position: 25% 35%; }
+                90% { background-position: -10% 10%; }
+                100% { background-position: 0 0; }
+              }
+              
+              .glitch-effect {
+                animation: glitch-anim 0.3s linear infinite;
+                position: relative;
+              }
+              
+              .glitch-effect::before,
+              .glitch-effect::after {
+                content: attr(data-text);
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+              }
+              
+              .glitch-effect::before {
+                left: 2px;
+                text-shadow: -2px 0 red;
+                clip: rect(44px, 450px, 56px, 0);
+                animation: glitch-anim 0.3s linear infinite reverse;
+              }
+              
+              .glitch-effect::after {
+                left: -2px;
+                text-shadow: -2px 0 blue;
+                clip: rect(44px, 450px, 56px, 0);
+                animation: glitch-anim 0.3s linear infinite;
+              }
+            `;
+            document.head.appendChild(style);
+            
+            // 应用故障效果到整个页面
+            document.body.classList.add('glitch-effect');
+            document.body.setAttribute('data-text', document.body.innerText);
+            
+            // 显示雪花噪点效果
+            glitchOverlay.style.background = `
+              repeating-linear-gradient(
+                0deg,
+                rgba(0, 0, 0, 0.1),
+                rgba(0, 0, 0, 0.1) 1px,
+                transparent 1px,
+                transparent 2px
+              ),
+              repeating-linear-gradient(
+                90deg,
+                rgba(0, 0, 0, 0.1),
+                rgba(0, 0, 0, 0.1) 1px,
+                transparent 1px,
+                transparent 2px
+              )
+            `;
+            glitchOverlay.style.opacity = '0.3';
+            
+            // 随机改变文字颜色制造乱码效果 - 持续快速变化
+            const originalTexts = document.querySelectorAll('body *');
+            const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff', '#ff5500', '#ff00aa', '#00ffcc'];
+            
+            // 存储interval ID以便后续清理
+            const colorChangeInterval = setInterval(() => {
+              originalTexts.forEach(el => {
+                if (el.nodeType === Node.ELEMENT_NODE && el.textContent.trim() !== '') {
+                  const randomColor = colors[Math.floor(Math.random() * colors.length)];
+                  el.style.color = randomColor;
+                  el.style.textShadow = `${Math.random() * 4 - 2}px ${Math.random() * 4 - 2}px 2px rgba(255, 255, 255, 0.5)`;
+                }
+              });
+            }, 100); // 每100ms改变一次颜色
+            
+            // 持续一段时间后恢复正常
+            setTimeout(() => {
+              // 清除颜色变化interval
+              clearInterval(colorChangeInterval);
+              
+              // 移除故障效果
+              document.body.classList.remove('glitch-effect');
+              document.body.removeAttribute('data-text');
+              
+              // 恢复原始文字颜色
+              originalTexts.forEach(el => {
+                if (el.nodeType === Node.ELEMENT_NODE) {
+                  el.style.color = '';
+                  el.style.textShadow = '';
+                }
+              });
+              
+              // 移除雪花噪点层
+              if (glitchOverlay.parentNode) {
+                glitchOverlay.parentNode.removeChild(glitchOverlay);
+              }
+              
+              // 移除样式
+              if (style.parentNode) {
+                style.parentNode.removeChild(style);
+              }
+              
+              const recoveryText = document.createElement('div');
+              recoveryText.className = 'mb-1';
+              recoveryText.innerHTML = '<span class="text-green-500">[SYSTEM RECOVERED] Malfunction resolved!</span>';
+              output.appendChild(recoveryText);
+              
+              // 滚动到底部
+              output.scrollTop = output.scrollHeight;
+            }, 3000);
           } else if (lowerCommand === 'visit') {
             // 从隐藏元素中获取友链数据
             const friendsDataElement = document.getElementById('friends-data');
@@ -229,12 +868,12 @@ const friendsDataJson = JSON.stringify(friendsItems);
             friendsList += '<br>&nbsp;&nbsp;Use <span class="text-blue-400">visit [sitename]</span> for more details (coming soon)';
             
             const visitText = document.createElement('div');
-            visitText.className = 'mb-1';
+            visitText.className = 'mb-1 text-xs md:text-sm';
             visitText.innerHTML = friendsList;
             output.appendChild(visitText);
           } else if (lowerCommand === 'chatroom') {
             const chatroomText = document.createElement('div');
-            chatroomText.className = 'mb-1';
+            chatroomText.className = 'mb-1 text-xs md:text-sm';
             chatroomText.innerHTML = `
               Chatroom Access:<br>
               &nbsp;&nbsp;Click the link below to access the chatroom:<br>
@@ -243,6 +882,207 @@ const friendsDataJson = JSON.stringify(friendsItems);
               </a>
             `;
             output.appendChild(chatroomText);
+          } else if (lowerCommand === 'joke') {
+            // 从隐藏元素中获取笑话数据
+            const jokesDataElement = document.getElementById('jokes-data');
+            let jokesData = [];
+            if (jokesDataElement) {
+              try {
+                const jokesDataJson = jokesDataElement.getAttribute('data-jokes');
+                jokesData = JSON.parse(jokesDataJson);
+              } catch (e) {
+                console.error('Failed to parse jokes data:', e);
+              }
+            }
+            
+            // 随机选择一个笑话
+            let joke = 'Why did the programmer quit his job? He didn\'t get arrays.';
+            if (jokesData.length > 0) {
+              const randomIndex = Math.floor(Math.random() * jokesData.length);
+              joke = jokesData[randomIndex];
+            }
+            
+            const jokeText = document.createElement('div');
+            jokeText.className = 'mb-1 text-xs md:text-sm';
+            jokeText.innerHTML = `<span class="text-yellow-400">Programmer Joke:</span><br>&nbsp;&nbsp;${joke}`;
+            output.appendChild(jokeText);
+          } else if (lowerCommand === 'quote') {
+            // 从隐藏元素中获取名言数据
+            const quotesDataElement = document.getElementById('quotes-data');
+            let quotesData = [];
+            if (quotesDataElement) {
+              try {
+                const quotesDataJson = quotesDataElement.getAttribute('data-quotes');
+                quotesData = JSON.parse(quotesDataJson);
+              } catch (e) {
+                console.error('Failed to parse quotes data:', e);
+              }
+            }
+            
+            // 随机选择一个名言
+            let quote = 'Code is poetry.';
+            if (quotesData.length > 0) {
+              const randomIndex = Math.floor(Math.random() * quotesData.length);
+              quote = quotesData[randomIndex];
+            }
+            
+            const quoteText = document.createElement('div');
+            quoteText.className = 'mb-1 text-xs md:text-sm';
+            quoteText.innerHTML = `<span class="text-green-400">Inspirational Quote:</span><br>&nbsp;&nbsp;"${quote}"`;
+            output.appendChild(quoteText);
+          } else if (lowerCommand === 'matrix') {
+            // 模拟黑客帝国代码雨效果
+            const matrixText = document.createElement('div');
+            matrixText.className = 'mb-1 text-xs md:text-sm';
+            matrixText.innerHTML = '<span class="text-green-500">[INITIATING MATRIX EFFECT...]</span>';
+            output.appendChild(matrixText);
+            
+            // 创建代码雨效果
+            const matrixOverlay = document.createElement('div');
+            matrixOverlay.id = 'matrix-overlay';
+            matrixOverlay.style.cssText = `
+              position: fixed;
+              top: 0;
+              left: 0;
+              width: 100%;
+              height: 100%;
+              background: black;
+              z-index: 9999;
+              pointer-events: none;
+              overflow: hidden;
+            `;
+            document.body.appendChild(matrixOverlay);
+            
+            // 创建代码字符
+            const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$#@%&*";
+            const fontSize = 14;
+            const columns = Math.floor(window.innerWidth / fontSize);
+            
+            // 创建列数组
+            const drops = [];
+            for (let i = 0; i < columns; i++) {
+              drops[i] = Math.floor(Math.random() * window.innerHeight / fontSize);
+            }
+            
+            // 绘制代码雨
+            const drawMatrix = () => {
+              matrixOverlay.innerHTML = '';
+              
+              for (let i = 0; i < drops.length; i++) {
+                const text = chars.charAt(Math.floor(Math.random() * chars.length));
+                const x = i * fontSize;
+                const y = drops[i] * fontSize;
+                
+                const charElement = document.createElement('div');
+                charElement.style.cssText = `
+                  position: absolute;
+                  top: ${y}px;
+                  left: ${x}px;
+                  color: #0f0;
+                  font-size: ${fontSize}px;
+                  font-family: monospace;
+                `;
+                charElement.textContent = text;
+                matrixOverlay.appendChild(charElement);
+                
+                // 重置滴落位置
+                if (y > window.innerHeight && Math.random() > 0.975) {
+                  drops[i] = 0;
+                }
+                drops[i]++;
+              }
+            };
+            
+            // 开始动画
+            let matrixInterval = setInterval(drawMatrix, 50);
+            
+            // 5秒后停止效果
+            setTimeout(() => {
+              clearInterval(matrixInterval);
+              document.body.removeChild(matrixOverlay);
+              
+              const endText = document.createElement('div');
+              endText.className = 'mb-1';
+              endText.innerHTML = '<span class="text-green-500">[MATRIX EFFECT COMPLETE]</span>';
+              output.appendChild(endText);
+              
+              // 滚动到底部
+              output.scrollTop = output.scrollHeight;
+            }, 5000);
+          } else if (lowerCommand === 'virus') {
+            // Virus彩蛋命令 - 创建四组弹窗，每组三个，随机位置出现
+            const virusText = document.createElement('div');
+            virusText.className = 'mb-1 text-xs md:text-sm';
+            virusText.innerHTML = '<span class="text-red-500">[WARNING] Virus detected! System compromised!</span>';
+            output.appendChild(virusText);
+            
+            // 创建带动画效果的自定义弹窗
+            const createAnimatedAlert = (message, groupIndex, alertIndex) => {
+              // 为每组生成随机位置
+              const randomTop = 10 + Math.random() * 80; // 10% 到 90% 的位置
+              const randomLeft = 10 + Math.random() * 80; // 10% 到 90% 的位置
+              
+              const alertBox = document.createElement('div');
+              alertBox.style.cssText = `
+                position: fixed;
+                top: ${randomTop}%;
+                left: ${randomLeft}%;
+                transform: translate(-50%, -50%) scale(0);
+                background: linear-gradient(135deg, #ff0000, #cc0000);
+                color: white;
+                padding: 20px;
+                border: 3px solid #fff;
+                border-radius: 15px;
+                box-shadow: 0 0 30px rgba(255, 0, 0, 0.8);
+                z-index: ${9998 - groupIndex * 10 - alertIndex}; /* 设置z-index低于自定义光标(9999) */
+                font-family: 'Courier New', monospace;
+                font-weight: bold;
+                text-align: center;
+                min-width: 320px;
+                max-width: 350px;
+                opacity: 0;
+                transition: all 0.5s ease-out;
+              `;
+              alertBox.innerHTML = `
+                <div style="font-size: 20px; margin-bottom: 15px; text-shadow: 0 0 5px rgba(255,255,255,0.5);">⚠️ SECURITY ALERT ⚠️</div>
+                <div style="font-size: 16px; line-height: 1.4;">${message}</div>
+                <button onclick="this.parentElement.remove()" style="
+                  margin-top: 20px;
+                  padding: 8px 20px;
+                  background: #fff;
+                  color: #ff0000;
+                  border: none;
+                  border-radius: 8px;
+                  cursor: pointer;
+                  font-weight: bold;
+                  font-size: 14px;
+                  transition: all 0.2s;
+                " onmouseover="this.style.background='#ffcccc'" onmouseout="this.style.background='#fff'">DISMISS</button>
+              `;
+              document.body.appendChild(alertBox);
+              
+              // 添加重叠偏移效果（相对于组内位置）
+              const offsetX = (alertIndex - 1) * 20; // 每个弹窗水平偏移20px
+              const offsetY = (alertIndex - 1) * 20; // 每个弹窗垂直偏移20px
+              
+              // 延迟显示动画
+              setTimeout(() => {
+                alertBox.style.transform = `translate(calc(-50% + ${offsetX}px), calc(-50% + ${offsetY}px)) scale(1)`;
+                alertBox.style.opacity = '1';
+              }, alertIndex * 200); // 每个弹窗间隔200ms出现
+              
+              return alertBox;
+            };
+            
+            // 创建四组弹窗，每组三个
+            for (let group = 0; group < 4; group++) {
+              // 为每组设置不同的延迟时间
+              setTimeout(() => {
+                createAnimatedAlert(`VIRUS ALERT: Your system has been infected! (Group ${group + 1})`, group, 1);
+                createAnimatedAlert(`CRITICAL WARNING: Personal data is being transmitted! (Group ${group + 1})`, group, 2);
+                createAnimatedAlert(`SECURITY BREACH: Please reset your computer immediately! (Group ${group + 1})`, group, 3);
+              }, group * 1000); // 每组间隔1秒出现
+            }
           } else if (lowerCommand === 'clear') {
             output.innerHTML = '';
           } else if (command === '') {

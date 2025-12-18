@@ -201,6 +201,8 @@ export type WidgetComponentType =
 	| "tags"
 	| "toc"
 	| "music-player"
+	| "terminal-emulator"
+	| "visitor-info"
 	| "custom";
 
 export type WidgetComponentConfig = {

@@ -145,8 +145,10 @@ const desktopShowRightSidebar =
 	rightSidebarEnabled && rightWidgetManager.shouldShowSidebar("desktop");
 
 // 动态网格布局类名 - 支持左右两侧边栏
+// 移动端：主内容优先显示，侧边栏在下方
+// 平板及以上：传统三列布局
 const gridCols = `
-	${mobileShowSidebar ? "grid-cols-1" : "grid-cols-1"}
+	grid-cols-1
 	${tabletShowSidebar ? (sidebarPosition === "right" ? "md:grid-cols-[1fr_17.5rem]" : rightSidebarEnabled ? "md:grid-cols-[17.5rem_1fr_17.5rem]" : "md:grid-cols-[17.5rem_1fr]") : rightSidebarEnabled ? "md:grid-cols-[1fr_17.5rem]" : "md:grid-cols-1"}
 	${desktopShowSidebar ? (sidebarPosition === "right" ? "lg:grid-cols-[1fr_17.5rem]" : rightSidebarEnabled ? "lg:grid-cols-[17.5rem_1fr_17.5rem]" : "lg:grid-cols-[17.5rem_1fr]") : rightSidebarEnabled ? "lg:grid-cols-[1fr_17.5rem]" : "lg:grid-cols-1"}
 `
@@ -154,9 +156,11 @@ const gridCols = `
 	.replace(/\s+/g, " ");
 
 // 左侧边栏容器类名 - 根据位置调整grid-column
+// 移动端：显示在主内容下方（row-start-2）
+// 平板及以上：显示在传统位置
 const leftSidebarClass = `
-	mb-4 row-start-2 row-end-3 col-span-2 onload-animation
-	${mobileShowSidebar ? "block" : "hidden"}
+	mb-4 col-span-2 onload-animation
+	${mobileShowSidebar ? "block row-start-2 row-end-3" : "hidden"}
 	${tabletShowSidebar ? `md:block md:row-start-1 md:row-end-2 md:max-w-[17.5rem] ${sidebarPosition === "right" ? "md:col-start-2 md:col-end-3" : "md:col-start-1 md:col-end-2"}` : "md:hidden"}
 	${desktopShowSidebar ? `lg:block lg:row-start-1 lg:row-end-2 lg:max-w-[17.5rem] ${sidebarPosition === "right" ? "lg:col-start-2 lg:col-end-3" : "lg:col-start-1 lg:col-end-2"}` : "lg:hidden"}
 `
@@ -164,9 +168,11 @@ const leftSidebarClass = `
 	.replace(/\s+/g, " ");
 
 // 右侧边栏容器类名 - 固定在右侧
+// 移动端：显示在左侧边栏下方（row-start-3）
+// 平板及以上：显示在传统位置
 const rightSidebarClass = `
-	mb-4 row-start-2 row-end-3 col-span-2 onload-animation
-	${mobileShowRightSidebar ? "block" : "hidden"}
+	mb-4 col-span-2 onload-animation
+	${mobileShowRightSidebar ? "block row-start-3 row-end-4" : "hidden"}
 	${tabletShowRightSidebar ? "md:block md:row-start-1 md:row-end-2 md:max-w-[17.5rem] md:col-start-3 md:col-end-4" : "md:hidden"}
 	${desktopShowRightSidebar ? "lg:block lg:row-start-1 lg:row-end-2 lg:max-w-[17.5rem] lg:col-start-3 lg:col-end-4" : "lg:hidden"}
 `
@@ -174,9 +180,11 @@ const rightSidebarClass = `
 	.replace(/\s+/g, " ");
 
 // 主内容区域类名 - 根据侧边栏位置调整grid-column
+// 移动端：显示在第一行，占据全部宽度
+// 平板及以上：传统布局
 const mainContentClass = `
 	transition-swup-fade overflow-hidden w-full
-	${mobileShowSidebar || mobileShowRightSidebar ? "col-span-2" : "col-span-1"}
+	${mobileShowSidebar || mobileShowRightSidebar ? "col-span-2 row-start-1 row-end-2" : "col-span-1 row-start-1 row-end-2"}
 	${tabletShowSidebar || tabletShowRightSidebar ? (sidebarPosition === "right" ? "md:col-start-1 md:col-end-2" : rightSidebarEnabled ? "md:col-start-2 md:col-end-3" : "md:col-start-2 md:col-end-3") : rightSidebarEnabled ? "md:col-start-1 md:col-end-2" : "md:col-span-1"}
 	${desktopShowSidebar || desktopShowRightSidebar ? (sidebarPosition === "right" ? "lg:col-start-1 lg:col-end-2" : rightSidebarEnabled ? "lg:col-start-2 lg:col-end-3" : "lg:col-start-2 lg:col-end-3") : rightSidebarEnabled ? "lg:col-start-1 lg:col-end-2" : "lg:col-span-1"}
 `
@@ -400,7 +408,7 @@ const transparentClass = shouldEnableTransparency
 <div class={`absolute w-full z-30 pointer-events-none ${mobileNonHomeBannerClass ? 'mobile-main-no-banner' : ''} ${!siteConfig.banner.enable ? 'no-banner-layout' : ''} ${transparentClass}`} style={`top: ${finalMainPanelTop}`}>
     <!-- The pointer-events-none here prevent blocking the click event of the TOC -->
     <div class="relative max-w-[var(--page-width)] mx-auto pointer-events-auto">
-        <div id="main-grid" class={`transition duration-700 w-full left-0 right-0 grid ${gridCols} grid-rows-[auto_1fr_auto] lg:grid-rows-[auto] mx-auto gap-4 px-0 md:px-4 ${!mobileShowSidebar ? 'mobile-no-sidebar' : ''}`}
+        <div id="main-grid" class={`transition duration-700 w-full left-0 right-0 grid ${gridCols} grid-rows-[auto_1fr_auto] md:grid-rows-[auto] mx-auto gap-4 px-0 md:px-4 ${!mobileShowSidebar ? 'mobile-no-sidebar' : ''}`}
         >
             <!-- Banner image credit -->
             {hasBannerCredit && <a href={siteConfig.banner.credit.url} id="banner-credit" target="_blank" rel="noopener" aria-label="Visit image source"

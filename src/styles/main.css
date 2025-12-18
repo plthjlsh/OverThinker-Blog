@@ -295,11 +295,13 @@ html {
 
     .btn-regular-dark {
         @apply flex items-center justify-center
-        bg-[oklch(0.45_0.01_var(--hue))] hover:bg-[oklch(0.50_0.01_var(--hue))] active:bg-[oklch(0.55_0.01_var(--hue))]
-        dark:bg-[oklch(0.30_0.02_var(--hue))] dark:hover:bg-[oklch(0.35_0.03_var(--hue))] dark:active:bg-[oklch(0.40_0.03_var(--hue))]
+        bg-[#3d3d3d] hover:bg-[#4d4d4d] active:bg-[#5d5d5d]
+        bg-[oklch(0.40_0.01_var(--hue))] hover:bg-[oklch(0.45_0.01_var(--hue))] active:bg-[oklch(0.50_0.01_var(--hue))]
+        dark:bg-[#2d2d2d] dark:hover:bg-[#383838] dark:active:bg-[#404040]
+        dark:bg-[oklch(0.25_0.02_var(--hue))] dark:hover:bg-[oklch(0.30_0.03_var(--hue))] dark:active:bg-[oklch(0.35_0.03_var(--hue))]
     }
     .btn-regular-dark.success {
-        @apply bg-[#99ffcc] dark:bg-[#99ffcc]
+        @apply bg-[#66ccaa] dark:bg-[#66ccaa]
     }
 }
 
@@ -333,6 +335,7 @@ html {
 
 /*剧透效果*/
 .custom-md spoiler {
+  --_spoiler-mask: #66ccaa; /* Fallback color */
   --_spoiler-mask: var(--primary);
   @apply hover:bg-transparent px-1 py-0.5 overflow-hidden rounded-md transition-all duration-150;
   background-color: var(--_spoiler-mask);
@@ -347,5 +350,6 @@ html {
 
 /* 浅色模式：使用更浅的主题色且完全不透明 */
 :root:not(.dark) .custom-md spoiler {
+  --_spoiler-mask: #66ccaa; /* Fallback color */
   --_spoiler-mask: color-mix(in oklch, var(--primary) 55%, white 45%);
 }

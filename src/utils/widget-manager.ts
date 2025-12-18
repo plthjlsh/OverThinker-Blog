@@ -17,6 +17,7 @@ export const WIDGET_COMPONENT_MAP = {
 	"music-player": "../components/widget/MusicPlayer.svelte",
 	calendar: "../components/widget/Calendar.astro",
 	"terminal-emulator": "../components/widget/TerminalEmulator.astro",
+	"visitor-info": "../components/widget/VisitorInfo.astro",
 	custom: null, // 自定义组件需要在配置中指定路径
 } as const;
 

@@ -28,7 +28,7 @@ export const siteConfig: SiteConfig = {
 	lang: SITE_LANG,
 
 	themeColor: {
-		hue: 120, // 主题色的默认色相，范围从 0 到 360。绿色的色相约为120
+		hue: 170, // 调整为蓝绿色相值
 		fixed: true, // 对访问者隐藏主题色选择器
 	},
 	cyberpunkTheme: {
@@ -401,6 +401,20 @@ export const sidebarLayoutConfig: SidebarLayoutConfig = {
 				// 折叠阈值：当标签数量超过20个时自动折叠
 				collapseThreshold: 20,
 			},
+		},
+		{
+			// 组件类型：访客信息组件
+			type: "visitor-info",
+			// 是否启用该组件
+			enable: true,
+			// 组件显示顺序
+			order: 5,
+			// 组件位置："sticky" 表示粘性定位
+			position: "sticky",
+			// CSS 类名
+			class: "onload-animation",
+			// 动画延迟时间
+			animationDelay: 250,
 		},
 	],
 

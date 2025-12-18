@@ -1,0 +1,334 @@
+---
+interface Props {
+	class?: string;
+}
+
+const { class: className = "" } = Astro.props;
+---
+
+<div class={`text-xs ${className}`}>
+  <!-- Header -->
+  <div class="flex items-center justify-between mb-1.5 pb-1 border-b border-[var(--line-color)]/[0.5]">
+    <div class="text-[var(--text-color)] font-semibold text-xs flex items-center">
+      <i class="fas fa-user-astronaut mr-1 text-[var(--primary)] animate-pulse float-animation text-xs"></i>
+      <span class="truncate">访客信息</span>
+    </div>
+    <div class="text-[var(--text-color)] text-[0.6rem] bg-[var(--primary)]/[0.15] px-1 py-0.5 rounded-full glow-effect">visitor-info</div>
+  </div>
+  
+  <!-- Combined Info Section -->
+  <div class="space-y-1">
+    <!-- Welcome Message -->
+    <div id="welcome-section" class="hidden">
+      <div class="flex items-start">
+        <i class="fas fa-handshake mr-1.5 text-[var(--primary)] mt-0.5 text-xs pulse-icon"></i>
+        <div class="flex-1">
+          <p id="welcome-message" class="text-[var(--text-color)] font-medium leading-tight text-xs"></p>
+          <p id="location-joke" class="text-[var(--content-meta)] text-[0.6rem] mt-0.5 italic leading-tight"></p>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Combined Device & IP Info -->
+    <div class="space-y-1">
+      <!-- OS and Device Info -->
+      <div class="flex space-x-1">
+        <div class="flex-1 flex items-center p-0.5 rounded hover:bg-[var(--primary)]/[0.08] transition-all duration-300 group">
+          <i class="fab fa-windows text-xs mr-1 text-[var(--primary)] rotating-icon group-hover:scale-110 transition-transform duration-300"></i>
+          <div class="flex-1">
+            <p class="text-[var(--content-meta)] text-[0.55rem] opacity-70 m-0 leading-none">操作系统</p>
+            <p id="os-info" class="text-[var(--text-color)] truncate text-xs m-0 leading-none">Detecting OS...</p>
+          </div>
+        </div>
+        
+        <div class="flex-1 flex items-center p-0.5 rounded hover:bg-[var(--primary)]/[0.08] transition-all duration-300 group">
+          <i class="fas fa-microchip text-xs mr-1 text-[var(--primary)] rotating-icon group-hover:scale-110 transition-transform duration-300"></i>
+          <div class="flex-1">
+            <p class="text-[var(--content-meta)] text-[0.55rem] opacity-70 m-0 leading-none">设备类型</p>
+            <p id="device-info" class="text-[var(--text-color)] truncate text-xs m-0 leading-none">Detecting Device...</p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Browser Info -->
+      <div class="flex items-center p-0.5 rounded hover:bg-[var(--primary)]/[0.08] transition-all duration-300 group">
+        <i class="fab fa-chrome text-xs mr-1 text-[var(--primary)] rotating-icon group-hover:scale-110 transition-transform duration-300"></i>
+        <div class="flex-1">
+          <p class="text-[var(--content-meta)] text-[0.55rem] opacity-70 m-0 leading-none">浏览器</p>
+          <p id="browser-info" class="text-[var(--text-color)] truncate text-xs m-0 leading-none">Detecting Browser...</p>
+        </div>
+      </div>
+      
+      <!-- IP & Location Info -->
+      <div id="ip-info-section" class="hidden space-y-1">
+        <div class="flex space-x-1">
+          <div class="flex-1 flex items-center p-0.5 rounded hover:bg-[var(--primary)]/[0.08] transition-all duration-300 group">
+            <i class="fas fa-network-wired mr-1 text-[var(--primary)] text-xs pulse-icon"></i>
+            <div class="flex-1">
+              <p class="text-[var(--content-meta)] text-[0.55rem] opacity-70 m-0 leading-none">您的IP地址</p>
+              <p id="ip-address" class="text-[var(--text-color)] text-[0.6rem] font-mono truncate m-0 leading-none"></p>
+            </div>
+          </div>
+          
+          <div class="flex-1 flex items-center p-0.5 rounded hover:bg-[var(--primary)]/[0.08] transition-all duration-300 group">
+            <i class="fas fa-map-marker-alt mr-1 text-[var(--primary)] text-xs pulse-icon"></i>
+            <div class="flex-1">
+              <p class="text-[var(--content-meta)] text-[0.55rem] opacity-70 m-0 leading-none">当前位置</p>
+              <p id="location-info" class="text-[var(--text-color)] text-[0.6rem] truncate m-0 leading-none"></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Responsive styles for different devices -->
+<style is:global>
+  @media (max-width: 767px) {
+    /* Compact styling for mobile devices */
+    .widget-container[data-widget-type="visitor-info"] {
+      padding: 0.5rem !important;
+    }
+    
+    .widget-container[data-widget-type="visitor-info"] .text-xs {
+      font-size: 0.65rem;
+    }
+    
+    .widget-container[data-widget-type="visitor-info"] .text-[0.55rem] {
+      font-size: 0.4rem;
+    }
+    
+    .widget-container[data-widget-type="visitor-info"] .text-[0.6rem] {
+      font-size: 0.45rem;
+    }
+    
+    .widget-container[data-widget-type="visitor-info"] .p-0.5 {
+      padding: 0.25rem;
+    }
+    
+    .widget-container[data-widget-type="visitor-info"] .rounded {
+      border-radius: 0.25rem;
+    }
+    
+    .widget-container[data-widget-type="visitor-info"] .mr-1 {
+      margin-right: 0.25rem;
+    }
+    
+    .widget-container[data-widget-type="visitor-info"] .space-y-1 > div {
+      margin-bottom: 0.2rem;
+    }
+  }
+  
+  @media (min-width: 768px) and (max-width: 1024px) {
+    /* Adjustments for tablet devices */
+    .widget-container[data-widget-type="visitor-info"] {
+      padding: 0.6rem !important;
+    }
+    
+    .widget-container[data-widget-type="visitor-info"] .text-xs {
+      font-size: 0.7rem;
+    }
+    
+    .widget-container[data-widget-type="visitor-info"] .text-[0.55rem] {
+      font-size: 0.45rem;
+    }
+    
+    .widget-container[data-widget-type="visitor-info"] .text-[0.6rem] {
+      font-size: 0.5rem;
+    }
+    
+    .widget-container[data-widget-type="visitor-info"] .p-0.5 {
+      padding: 0.3rem;
+    }
+    
+    .widget-container[data-widget-type="visitor-info"] .space-y-1 > div {
+      margin-bottom: 0.25rem;
+    }
+  }
+  
+  @media (min-width: 1025px) {
+    /* Desktop enhancements */
+    .widget-container[data-widget-type="visitor-info"]:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+  }
+</style>
+
+<style>
+  .glow-effect {
+    box-shadow: 0 0 4px color-mix(in srgb, var(--primary), transparent 70%);
+    animation: gentle-glow 2s ease-in-out infinite alternate;
+  }
+
+  .glow-border {
+    box-shadow: inset 0 0 6px color-mix(in srgb, var(--primary), transparent 90%);
+  }
+
+  .glow-on-hover:hover {
+    box-shadow: 0 0 8px color-mix(in srgb, var(--primary), transparent 80%);
+  }
+
+  .pulse-icon {
+    animation: icon-pulse 1.5s ease-in-out infinite;
+  }
+
+  @keyframes gentle-glow {
+    0% {
+      box-shadow: 0 0 4px color-mix(in srgb, var(--primary), transparent 70%);
+    }
+    100% {
+      box-shadow: 0 0 8px color-mix(in srgb, var(--primary), transparent 50%);
+    }
+  }
+
+  @keyframes icon-pulse {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.1);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+</style>
+
+<style>
+  .rotating-icon {
+    animation: spin 3s linear infinite;
+  }
+
+  @keyframes spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  
+  /* 添加脉冲效果 */
+  @keyframes pulse {
+    0%, 100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.7;
+      transform: scale(1.05);
+    }
+  }
+  
+  /* 添加浮动效果 */
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-3px);
+    }
+  }
+  
+  /* 应用浮动效果到标题图标 */
+  .float-animation {
+    animation: float 2s ease-in-out infinite;
+  }
+</style>
+
+<script>
+  // 客户端脚本，在浏览器中运行
+  if (typeof window !== 'undefined') {
+    // 页面加载完成后初始化
+    window.addEventListener('DOMContentLoaded', () => {
+      // 获取操作系统信息
+      function getOS() {
+        const userAgent = navigator.userAgent;
+        if (userAgent.includes('Windows NT 10.0')) return 'Windows 10';
+        if (userAgent.includes('Windows NT 6.3')) return 'Windows 8.1';
+        if (userAgent.includes('Windows NT 6.2')) return 'Windows 8';
+        if (userAgent.includes('Windows NT 6.1')) return 'Windows 7';
+        if (userAgent.includes('Mac OS X')) return 'macOS';
+        if (userAgent.includes('Linux')) return 'Linux';
+        if (userAgent.includes('Android')) return 'Android';
+        if (userAgent.includes('iPhone') || userAgent.includes('iPad')) return 'iOS';
+        return 'Unknown OS';
+      }
+      
+      // 获取浏览器信息
+      function getBrowser() {
+        const userAgent = navigator.userAgent;
+        if (userAgent.includes('Chrome') && !userAgent.includes('Edg')) return 'Chrome';
+        if (userAgent.includes('Firefox')) return 'Firefox';
+        if (userAgent.includes('Safari') && !userAgent.includes('Chrome')) return 'Safari';
+        if (userAgent.includes('Edg')) return 'Edge';
+        if (userAgent.includes('Opera') || userAgent.includes('OPR')) return 'Opera';
+        return 'Unknown Browser';
+      }
+      
+      // 获取设备信息
+      function getDevice() {
+        const userAgent = navigator.userAgent;
+        if (userAgent.includes('Mobile')) return 'Mobile';
+        if (userAgent.includes('Tablet')) return 'Tablet';
+        return 'Desktop';
+      }
+      
+      // 更新UI
+      document.getElementById('os-info').textContent = getOS();
+      document.getElementById('browser-info').textContent = getBrowser() + ' ' + navigator.appVersion.match(/(?:Chrome|Firefox|Safari|Edg|OPR)\/(\d+)/)?.[1] || '';
+      document.getElementById('device-info').textContent = getDevice();
+      
+      // 获取欢迎信息
+      fetchWelcomeMessage();
+    });
+    
+    // 新增API调用获取欢迎信息
+    async function fetchWelcomeMessage() {
+      try {
+        const response = await fetch('/api/generate-message/');
+        
+        // 检查响应状态
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        
+        // 验证数据完整性
+        if (!data || !data.welcomeMessage) {
+          throw new Error('Invalid data received from server');
+        }
+        
+        // 更新欢迎信息UI
+        document.getElementById('welcome-message').textContent = data.welcomeMessage;
+        document.getElementById('location-joke').textContent = data.joke || '欢迎访问本站！';
+        document.getElementById('ip-address').textContent = data.ip || '未知';
+        document.getElementById('location-info').textContent = data.location 
+          ? `${data.location.province} ${data.location.city} (${data.location.distance}公里)`
+          : '未知位置';
+        
+        // 显示信息区域
+        document.getElementById('welcome-section').classList.remove('hidden');
+        document.getElementById('ip-info-section').classList.remove('hidden');
+      } catch (error) {
+        console.error('获取欢迎信息失败:', error);
+        // 错误处理：显示默认信息
+        document.getElementById('welcome-message').textContent = '欢迎访问本站！';
+        document.getElementById('location-joke').textContent = '连接似乎有些问题，请稍后再试。';
+        document.getElementById('welcome-section').classList.remove('hidden');
+        
+        // 在控制台显示详细错误信息
+        if (error instanceof TypeError) {
+          console.error('网络错误或服务器不可达');
+        } else if (error.message.includes('HTTP error')) {
+          console.error('服务器返回错误状态码');
+        } else {
+          console.error('其他错误:', error.message);
+        }
+      }
+    }
+  }
+</script>

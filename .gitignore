@@ -17,6 +17,9 @@ pnpm-debug.log*
 .env
 .env.production
 
+# API keys configuration
+src/config/api-keys.ts
+
 # macOS-specific files
 .DS_Store
 

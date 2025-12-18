@@ -266,15 +266,22 @@ $: if (initialized && keywordMobile) {
 </script>
 
 <!-- search bar for desktop view -->
-<div id="search-bar" class="hidden lg:flex transition-all items-center h-11 mr-2 rounded-lg
-      bg-black/[0.04] hover:bg-black/[0.06] focus-within:bg-black/[0.06]
-      dark:bg-white/5 dark:hover:bg-white/10 dark:focus-within:bg-white/10
-">
-    <Icon icon="material-symbols:search" class="absolute text-[1.25rem] pointer-events-none ml-3 transition my-auto text-black/30 dark:text-white/30"></Icon>
-    <input placeholder="{i18n(I18nKey.search)}" bind:value={keywordDesktop} on:focus={() => search(keywordDesktop, true)}
-           class="transition-all pl-10 text-sm bg-transparent outline-0
-         h-full w-40 active:w-60 focus:w-60 text-black/50 dark:text-white/50"
-    >
+<div id="search-bar" class="hidden lg:flex transition-all items-center h-11 mr-2 rounded-lg bg-black hover:bg-black focus-within:bg-black font-mono border border-gray-800">
+    <!-- Terminal style header with dots -->
+    <div class="flex items-center pl-3 h-full">
+        <div class="flex space-x-1.5 mr-3">
+            <div class="w-2.5 h-2.5 bg-red-500 rounded-full"></div>
+            <div class="w-2.5 h-2.5 bg-yellow-500 rounded-full"></div>
+            <div class="w-2.5 h-2.5 bg-green-500 rounded-full"></div>
+        </div>
+    </div>
+    <div class="flex items-center h-full pr-3">
+        <span class="text-green-500 mr-2">$</span>
+        <input bind:value={keywordDesktop} on:focus={() => search(keywordDesktop, true)}
+               class="transition-all text-sm bg-transparent outline-0
+             h-full w-40 active:w-60 focus:w-60 text-green-500 placeholder-transparent"
+        >
+    </div>
 </div>
 
 <!-- toggle btn for phone/tablet view -->
@@ -285,18 +292,25 @@ $: if (initialized && keywordMobile) {
 
 <!-- search panel -->
 <div id="search-panel" class="float-panel float-panel-closed search-panel absolute md:w-[30rem]
-top-20 left-4 md:left-[unset] right-4 shadow-2xl rounded-2xl p-2">
+top-20 left-4 md:left-[unset] right-4 shadow-2xl rounded-2xl p-2 bg-black font-mono">
 
     <!-- search bar inside panel for phone/tablet -->
-    <div id="search-bar-inside" class="flex relative lg:hidden transition-all items-center h-11 rounded-xl
-      bg-black/[0.04] hover:bg-black/[0.06] focus-within:bg-black/[0.06]
-      dark:bg-white/5 dark:hover:bg-white/10 dark:focus-within:bg-white/10
-  ">
-        <Icon icon="material-symbols:search" class="absolute text-[1.25rem] pointer-events-none ml-3 transition my-auto text-black/30 dark:text-white/30"></Icon>
-        <input placeholder="Search" bind:value={keywordMobile}
-               class="pl-10 absolute inset-0 text-sm bg-transparent outline-0
-               focus:w-60 text-black/50 dark:text-white/50"
-        >
+    <div id="search-bar-inside" class="flex relative lg:hidden transition-all items-center h-11 rounded-xl bg-black hover:bg-black focus-within:bg-black font-mono border border-gray-800">
+        <!-- Terminal style header with dots -->
+        <div class="flex items-center pl-3 h-full">
+            <div class="flex space-x-1.5 mr-3">
+                <div class="w-2.5 h-2.5 bg-red-500 rounded-full"></div>
+                <div class="w-2.5 h-2.5 bg-yellow-500 rounded-full"></div>
+                <div class="w-2.5 h-2.5 bg-green-500 rounded-full"></div>
+            </div>
+        </div>
+        <div class="flex items-center h-full pl-3 pr-3">
+            <span class="text-green-500 mr-2">$</span>
+            <input bind:value={keywordMobile}
+                   class="absolute inset-0 text-sm bg-transparent outline-0 pl-6
+                   focus:w-60 text-green-500 placeholder-transparent"
+            >
+        </div>
     </div>
 
     <!-- search results -->
@@ -304,11 +318,11 @@ top-20 left-4 md:left-[unset] right-4 shadow-2xl rounded-2xl p-2">
         <a href={item.url}
            on:click={(e) => handleResultClick(e, item.url)}
            class="transition first-of-type:mt-2 lg:first-of-type:mt-0 group block
-       rounded-xl text-lg px-3 py-2 hover:bg-[var(--btn-plain-bg-hover)] active:bg-[var(--btn-plain-bg-active)]">
-            <div class="transition text-90 inline-flex font-bold group-hover:text-[var(--primary)]">
-                {item.meta.title}<Icon icon="fa6-solid:chevron-right" class="transition text-[0.75rem] translate-x-1 my-auto text-[var(--primary)]"></Icon>
+       text-lg px-3 py-2 hover:bg-gray-800 active:bg-gray-900 border-b border-gray-800 last:border-0">
+            <div class="transition inline-flex text-green-500 font-mono group-hover:text-green-400">
+                {item.meta.title}<Icon icon="fa6-solid:chevron-right" class="transition text-[0.75rem] translate-x-1 my-auto text-green-500 ml-2"></Icon>
             </div>
-            <div class="transition text-sm text-50">
+            <div class="transition text-sm text-green-500/80 mt-1">
                 {@html item.excerpt}
             </div>
         </a>

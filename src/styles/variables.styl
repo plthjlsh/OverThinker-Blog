@@ -26,61 +26,61 @@ define(vars)
         {key}: value[1]
 
 define({
-  --primary: #99ffcc #99ffcc
-  --page-bg: oklch(0.95 0.01 var(--hue)) oklch(0.16 0.014 var(--hue))
-  --card-bg: white oklch(0.23 0.015 var(--hue))
-  --card-bg-transparent: rgba(255, 255, 255, 0.8) rgba(23, 23, 23, 0.8)
+  --primary: #66ccaa #66ccaa
+  --page-bg: #e0e0e0 #121212 oklch(0.90 0.015 var(--hue)) oklch(0.10 0.02 var(--hue))
+  --card-bg: #f8f8f8 #1e1e1e #f8f8f8 oklch(0.18 0.02 var(--hue))
+  --card-bg-transparent: rgba(255, 255, 255, 0.7) rgba(15, 15, 15, 0.7) rgba(255, 255, 255, 0.7) rgba(15, 15, 15, 0.7)
 
-  --text-color: #333 #ddd
+  --text-color: #222 #eee #222 #eee
   
-  --btn-content: #000 #99ffcc
+  --btn-content: #000 #66ccaa #000 #66ccaa
 
-  --btn-regular-bg: oklch(0.95 0.025 var(--hue)) oklch(0.33 0.035 var(--hue))
-  --btn-regular-bg-hover: oklch(0.9 0.05 var(--hue)) oklch(0.38 0.04 var(--hue))
-  --btn-regular-bg-active: oklch(0.85 0.08 var(--hue)) oklch(0.43 0.045 var(--hue))
+  --btn-regular-bg: #d0d0d0 #3d3d3d oklch(0.90 0.03 var(--hue)) oklch(0.28 0.04 var(--hue))
+  --btn-regular-bg-hover: #c0c0c0 #4d4d4d oklch(0.85 0.05 var(--hue)) oklch(0.33 0.045 var(--hue))
+  --btn-regular-bg-active: #b0b0b0 #5d5d5d oklch(0.80 0.07 var(--hue)) oklch(0.38 0.05 var(--hue))
 
-  --btn-plain-bg-hover: oklch(0.95 0.025 var(--hue)) oklch(0.30 0.035 var(--hue))
-  --btn-plain-bg-active: oklch(0.98 0.01 var(--hue)) oklch(0.27 0.025 var(--hue))
+  --btn-plain-bg-hover: #d0d0d0 #353535 oklch(0.90 0.03 var(--hue)) oklch(0.25 0.04 var(--hue))
+  --btn-plain-bg-active: #d8d8d8 #2d2d2d oklch(0.95 0.015 var(--hue)) oklch(0.22 0.03 var(--hue))
 
-  --btn-card-bg-hover: oklch(0.98 0.005 var(--hue)) oklch(0.3 0.03 var(--hue))
-  --btn-card-bg-active: oklch(0.9 0.03 var(--hue)) oklch(0.35 0.035 var(--hue))
+  --btn-card-bg-hover: #f0f0f0 #282828 oklch(0.95 0.01 var(--hue)) oklch(0.25 0.035 var(--hue))
+  --btn-card-bg-active: #c0c0c0 #383838 oklch(0.85 0.035 var(--hue)) oklch(0.30 0.04 var(--hue))
 
   --enter-btn-bg: var(--btn-regular-bg)
   --enter-btn-bg-hover: var(--btn-regular-bg-hover)
   --enter-btn-bg-active: var(--btn-regular-bg-active)
 
-  --deep-text: oklch(0.25 0.02 var(--hue))
+  --deep-text: #333333 #aaaaaa oklch(0.20 0.03 var(--hue))
 
-  --title-active: oklch(0.6 0.1 var(--hue))
+  --title-active: #666666 #88ddbb oklch(0.55 0.12 var(--hue))
 
-  --line-divider: black(0.08) white(0.08)
+  --line-divider: black(0.1) white(0.1) black(0.1) white(0.1)
 
-  --line-color: black(0.1) white(0.1)
-  --meta-divider: black(0.2) white(0.2)
-  --content-meta: black(0.5) white(0.6)
+  --line-color: black(0.15) white(0.15) black(0.15) white(0.15)
+  --meta-divider: black(0.25) white(0.25) black(0.25) white(0.25)
+  --content-meta: black(0.55) white(0.65) black(0.55) white(0.65)
 
   --inline-code-bg: var(--btn-regular-bg)
   --inline-code-color: var(--btn-content)
-  --selection-bg: oklch(0.90 0.05 var(--hue)) oklch(0.40 0.08 var(--hue))
-  --codeblock-selection: oklch(0.40 0.08 var(--hue))
-  --codeblock-bg: oklch(0.17 0.015 var(--hue)) oklch(0.17 0.015 var(--hue))
-  --codeblock-topbar-bg: oklch(0.3 0.02 var(--hue)) oklch(0.12 0.015 var(--hue))
+  --selection-bg: #bbeedd #003d3d oklch(0.85 0.06 var(--hue)) oklch(0.35 0.09 var(--hue))
+  --codeblock-selection: #003d3d oklch(0.35 0.09 var(--hue))
+  --codeblock-bg: #252525 #252525 oklch(0.15 0.02 var(--hue)) oklch(0.15 0.02 var(--hue))
+  --codeblock-topbar-bg: #3d3d3d #1a1a1a oklch(0.25 0.025 var(--hue)) oklch(0.10 0.02 var(--hue))
 
-  --license-block-bg: black(0.03) var(--codeblock-bg)
+  --license-block-bg: black(0.05) #252525 black(0.05) var(--codeblock-bg)
 
-  --link-underline: oklch(0.93 0.04 var(--hue)) oklch(0.40 0.08 var(--hue))
-  --link-hover: oklch(0.95 0.025 var(--hue)) oklch(0.40 0.08 var(--hue))
-  --link-active: oklch(0.90 0.05 var(--hue)) oklch(0.35 0.07 var(--hue))
+  --link-underline: #bbeedd #008888 oklch(0.88 0.05 var(--hue)) oklch(0.35 0.09 var(--hue))
+  --link-hover: #d0d0d0 #00bbbb oklch(0.90 0.035 var(--hue)) oklch(0.35 0.09 var(--hue))
+  --link-active: #bbeedd #009999 oklch(0.85 0.06 var(--hue)) oklch(0.30 0.08 var(--hue))
 
-  --float-panel-bg: white oklch(0.19 0.015 var(--hue))
+  --float-panel-bg: #f8f8f8 #252525 #f8f8f8 oklch(0.15 0.02 var(--hue))
 
-  --scrollbar-bg-light: black(0.4)
-  --scrollbar-bg-hover-light: black(0.5)
-  --scrollbar-bg-active-light: black(0.6)
+  --scrollbar-bg-light: black(0.5)
+  --scrollbar-bg-hover-light: black(0.6)
+  --scrollbar-bg-active-light: black(0.7)
 
-  --scrollbar-bg-dark: white(0.4)
-  --scrollbar-bg-hover-dark: white(0.5)
-  --scrollbar-bg-active-dark: white(0.6)
+  --scrollbar-bg-dark: white(0.5)
+  --scrollbar-bg-hover-dark: white(0.6)
+  --scrollbar-bg-active-dark: white(0.7)
 
   --scrollbar-bg: var(--scrollbar-bg-light) var(--scrollbar-bg-dark)
   --scrollbar-bg-hover: var(--scrollbar-bg-hover-light) var(--scrollbar-bg-hover-dark)
@@ -91,63 +91,63 @@ define({
   --display-light-icon: 1 0
   --display-dark-icon: 0 1
 
-  --admonitions-color-tip: #99ffcc #99ffcc
-  --admonitions-color-note: #99ffcc #99ffcc
-  --admonitions-color-important: #99ffcc #99ffcc
-  --admonitions-color-warning: #99ffcc #99ffcc
-  --admonitions-color-caution: #99ffcc #99ffcc
+  --admonitions-color-tip: #66ccaa #66ccaa
+  --admonitions-color-note: #66ccaa #66ccaa
+  --admonitions-color-important: #66ccaa #66ccaa
+  --admonitions-color-warning: #66ccaa #66ccaa
+  --admonitions-color-caution: #66ccaa #66ccaa
 
-  --toc-badge-bg: oklch(0.9 0.045 var(--hue)) var(--btn-regular-bg)
-  --toc-btn-hover: oklch(0.92 0.015 var(--hue)) oklch(0.22 0.02 var(--hue))
-  --toc-btn-active: oklch(0.90 0.015 var(--hue)) oklch(0.25 0.02 var(--hue))
+  --toc-badge-bg: #c0e0c0 #003d3d oklch(0.85 0.05 var(--hue)) var(--btn-regular-bg)
+  --toc-btn-hover: #d0d0d0 #353535 oklch(0.88 0.02 var(--hue)) oklch(0.20 0.025 var(--hue))
+  --toc-btn-active: #c0c0c0 #454545 oklch(0.85 0.02 var(--hue)) oklch(0.23 0.025 var(--hue))
   --toc-width: calc((100vw - var(--page-width)) / 2 - 1rem)
-  --toc-item-active: oklch(0.70 0.13 var(--hue)) oklch(0.35 0.07 var(--hue))
+  --toc-item-active: #55bb99 #88ddbb oklch(0.65 0.14 var(--hue)) oklch(0.32 0.08 var(--hue))
 })
 
 /* 赛博朋克主题变量 */
 :root.cyberpunk {
-  --primary: #99ffcc /* 明亮的霓虹绿 */
+  --primary: #66ccaa /* 明亮的霓虹蓝绿色 */
   --page-bg: #000 /* 纯黑色背景 */
-  --card-bg: #001100 /* 深绿色卡片背景 */
-  --card-bg-transparent: rgba(0, 17, 0, 0.8) /* 半透明深绿 */
+  --card-bg: #00110a /* 深蓝绿色卡片背景 */
+  --card-bg-transparent: rgba(0, 17, 10, 0.8) /* 半透明深蓝绿色 */
   
-  --btn-content: #99ffcc /* 明亮的绿色文字 */
+  --btn-content: #66ccaa /* 明亮的蓝绿色文字 */
   
-  --btn-regular-bg: #002200 /* 按钮背景 */
-  --btn-regular-bg-hover: #004400 /* 悬停按钮背景 */
-  --btn-regular-bg-active: #006600 /* 激活按钮背景 */
+  --btn-regular-bg: #002211 /* 按钮背景 */
+  --btn-regular-bg-hover: #004422 /* 悬停按钮背景 */
+  --btn-regular-bg-active: #006633 /* 激活按钮背景 */
   
-  --btn-plain-bg-hover: #003300 /* 平面按钮悬停 */
-  --btn-plain-bg-active: #005500 /* 平面按钮激活 */
+  --btn-plain-bg-hover: #00331a /* 平面按钮悬停 */
+  --btn-plain-bg-active: #00552a /* 平面按钮激活 */
   
-  --btn-card-bg-hover: #003300 /* 卡片按钮悬停 */
-  --btn-card-bg-active: #005500 /* 卡片按钮激活 */
+  --btn-card-bg-hover: #00331a /* 卡片按钮悬停 */
+  --btn-card-bg-active: #00552a /* 卡片按钮激活 */
   
-  --deep-text: #99ffcc /* 深色文字 */
-  --title-active: #99ffcc /* 活跃标题 */
+  --deep-text: #66ccaa /* 深色文字 */
+  --title-active: #66ccaa /* 活跃标题 */
   
-  --line-divider: rgba(153, 255, 204, 0.2) /* 绿色分隔线 */
-  --line-color: rgba(153, 255, 204, 0.3) /* 绿色线条 */
-  --meta-divider: rgba(153, 255, 204, 0.4) /* 元信息分隔线 */
-  --content-meta: rgba(153, 255, 204, 0.6) /* 内容元信息 */
+  --line-divider: rgba(102, 204, 170, 0.2) /* 蓝绿色分隔线 */
+  --line-color: rgba(102, 204, 170, 0.3) /* 蓝绿色线条 */
+  --meta-divider: rgba(102, 204, 170, 0.4) /* 元信息分隔线 */
+  --content-meta: rgba(102, 204, 170, 0.6) /* 内容元信息 */
   
-  --inline-code-bg: #002200 /* 行内代码背景 */
-  --inline-code-color: #99ffcc /* 行内代码文字 */
-  --selection-bg: #004400 /* 选中文本背景 */
-  --codeblock-selection: #006600 /* 代码块选中 */
-  --codeblock-bg: #001100 /* 代码块背景 */
-  --codeblock-topbar-bg: #003300 /* 代码块顶栏 */
+  --inline-code-bg: #002211 /* 行内代码背景 */
+  --inline-code-color: #66ccaa /* 行内代码文字 */
+  --selection-bg: #004422 /* 选中文本背景 */
+  --codeblock-selection: #006633 /* 代码块选中 */
+  --codeblock-bg: #00110a /* 代码块背景 */
+  --codeblock-topbar-bg: #00331a /* 代码块顶栏 */
   
-  --license-block-bg: rgba(0, 10, 0, 0.7) /* 许可证块背景 */
+  --license-block-bg: rgba(0, 10, 5, 0.7) /* 许可证块背景 */
   
-  --link-underline: #004400 /* 链接下划线 */
-  --link-hover: #99ffcc /* 链接悬停 */
-  --link-active: #99ffcc /* 链接激活 */
+  --link-underline: #004422 /* 链接下划线 */
+  --link-hover: #66ccaa /* 链接悬停 */
+  --link-active: #66ccaa /* 链接激活 */
   
-  --float-panel-bg: #001100 /* 浮层面板背景 */
+  --float-panel-bg: #00110a /* 浮层面板背景 */
   
-  --toc-badge-bg: #002200 /* TOC徽章背景 */
-  --toc-btn-hover: #004400 /* TOC按钮悬停 */
-  --toc-btn-active: #006600 /* TOC按钮激活 */
-  --toc-item-active: #99ffcc /* TOC活跃项 */
+  --toc-badge-bg: #002211 /* TOC徽章背景 */
+  --toc-btn-hover: #004422 /* TOC按钮悬停 */
+  --toc-btn-active: #006633 /* TOC按钮激活 */
+  --toc-item-active: #66ccaa /* TOC活跃项 */
 }
