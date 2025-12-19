@@ -231,6 +231,11 @@ export const navBarConfig: NavBarConfig = {
 					icon: "material-symbols:work",
 				},
 				{
+					name: "档案库",
+					url: "/vault/",
+					icon: "material-symbols:database",
+				},
+				{
 					name: "网络聊天室",
 					url: "http://114.132.122.97:8080/login.html",
 					external: true,

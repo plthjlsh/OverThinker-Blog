@@ -1,0 +1,522 @@
+---
+import I18nKey from "../i18n/i18nKey";
+import { i18n } from "../i18n/translation";
+import MainGridLayout from "../layouts/MainGridLayout.astro";
+
+const title = "档案库";
+const description = "解密式技术笔记档案库";
+---
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+</head>
+
+<MainGridLayout title={title} description={description}>
+  
+  <!-- 粒子背景容器 -->
+  <div id="particles-background" class="fixed inset-0 z-0 pointer-events-none"></div>
+  
+  <div class="relative z-10 vault-content">
+    <div class="card-base p-6 backdrop-blur-sm bg-[var(--card-bg-transparent)] border border-black/10 dark:border-white/10 rounded-xl">
+      <!-- 波浪背景效果 -->
+      <div class="wave-background"></div>
+      
+      <h1 id="vault-title" class="text-2xl md:text-3xl font-bold text-[var(--primary)] mb-4 cyber-glitch" data-text="0/1 PIXEL VAULT">
+        0/1 PIXEL VAULT
+      </h1>
+      
+      <div class="access-panel mb-6">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="terminal-prompt text-[var(--primary)] font-mono">$</div>
+          <input 
+            type="password" 
+            id="access-key-input"
+            placeholder="请输入访问密钥..." 
+            class="flex-1 bg-[var(--card-bg)] border border-black/10 dark:border-white/10 rounded px-3 py-2 text-[var(--text-color)] font-mono focus:outline-none focus:ring-2 focus:ring-[var(--primary)]"
+          />
+          <button 
+            id="unlock-btn"
+            class="btn-regular text-[var(--btn-content)] px-4 py-2 rounded transition-all duration-300"
+          >
+            解锁
+          </button>
+        </div>
+        
+        <div id="access-message" class="text-sm min-h-[24px]"></div>
+      </div>
+      
+      <div id="decrypted-content" class="hidden">
+        <h2 class="text-xl font-semibold text-[var(--primary)] mb-4">解密档案</h2>
+        <div id="archive-list" class="space-y-2"></div>
+      </div>
+
+      
+    </div>
+  </div>
+  
+  <style is:global>
+    /* 粒子动画样式 */
+    .particle {
+      position: absolute;
+      border-radius: 50%;
+      background: var(--primary);
+      opacity: 0.7;
+      pointer-events: none;
+      z-index: 0;
+    }
+    
+    /* 波浪背景效果 */
+    .wave-background {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      overflow: hidden;
+      border-radius: inherit;
+      pointer-events: none;
+    }
+    
+    .wave-background::before,
+    .wave-background::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      right: -50%;
+      bottom: -50%;
+      background: conic-gradient(
+        transparent,
+        var(--primary),
+        transparent 30%
+      );
+      animation: waveRotate 10s linear infinite;
+      opacity: 0.2;
+    }
+    
+    .wave-background::after {
+      animation-direction: reverse;
+      animation-duration: 15s;
+      opacity: 0.15;
+    }
+    
+    @keyframes waveRotate {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+    
+    /* 鼠标交互涟漪效果 */
+    .mouse-ripple {
+      position: absolute;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      border: 2px solid var(--primary);
+      opacity: 0.7;
+      z-index: 0;
+    }
+    
+    
+    
+    .cyber-glitch {
+      position: relative;
+    }
+    
+    .cyber-glitch::before,
+    .cyber-glitch::after {
+      content: attr(data-text);
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0.8;
+    }
+    
+    .cyber-glitch::before {
+      left: 2px;
+      text-shadow: -2px 0 var(--primary);
+      clip: rect(44px, 450px, 56px, 0);
+      animation: glitch-anim 5s infinite linear alternate-reverse;
+    }
+    
+    .cyber-glitch::after {
+      left: -2px;
+      text-shadow: -2px 0 var(--primary);
+      clip: rect(44px, 450px, 56px, 0);
+      animation: glitch-anim 3s infinite linear alternate-reverse;
+    }
+    
+    @keyframes glitch-anim {
+      0% { transform: translate(0); }
+      20% { transform: translate(-2px, 2px); }
+      40% { transform: translate(-2px, -2px); }
+      60% { transform: translate(2px, 2px); }
+      80% { transform: translate(2px, -2px); }
+      100% { transform: translate(0); }
+    }
+    
+    /* 抖动动画 */
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+      20%, 40%, 60%, 80% { transform: translateX(5px); }
+    }
+    
+    .animate-shake {
+      animation: shake 0.5s ease-in-out;
+    }
+    
+    /* 档案项目样式 */
+    .archive-item {
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      color: #9CA3AF; /* 灰色，使青色悬停效果更明显 */
+    }
+    
+    .archive-item::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(102, 204, 170, 0.2), transparent);
+      transition: 0.5s;
+    }
+    
+    .archive-item:hover::before {
+      left: 100%;
+    }
+    
+    .archive-item:hover {
+      border-color: var(--primary) !important;
+      box-shadow: 0 0 15px rgba(102, 204, 170, 0.4);
+      transform: translateY(-2px);
+    }
+    
+    /* 解锁按钮动画 */
+    #unlock-btn {
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+    
+    #unlock-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: 0.5s;
+    }
+    
+    #unlock-btn:hover::before {
+      left: 100%;
+    }
+    
+    #unlock-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 15px rgba(102, 204, 170, 0.4);
+    }
+    
+    #unlock-btn:active {
+      transform: scale(0.95);
+    }
+  </style>
+  
+  <script is:global>
+    // 访问密钥（通过终端模拟器'hack'命令获取）
+    const ACCESS_KEY = "binary123";
+    
+    // 粒子数组
+    let particles = [];
+    let mouseX = 0;
+    let mouseY = 0;
+    let particleContainer;
+    
+    // 创建粒子系统
+    function createParticleSystem() {
+      particleContainer = document.getElementById('particles-background');
+      if (!particleContainer) return;
+      
+      // 创建背景粒子
+      for (let i = 0; i < 30; i++) {
+        createParticle();
+      }
+      
+      // 动画循环
+      animateParticles();
+    }
+    
+    // 创建单个粒子
+    function createParticle(x, y, isMouseParticle = false) {
+      const particle = document.createElement('div');
+      particle.className = isMouseParticle ? 'mouse-ripple' : 'particle';
+      
+      // 设置粒子大小
+      const size = isMouseParticle ? Math.random() * 20 + 10 : Math.random() * 4 + 1;
+      particle.style.width = `${size}px`;
+      particle.style.height = `${size}px`;
+      
+      // 设置初始位置
+      if (isMouseParticle) {
+        particle.style.left = `${x}px`;
+        particle.style.top = `${y}px`;
+      } else {
+        particle.style.left = `${Math.random() * 100}%`;
+        particle.style.top = `${Math.random() * 100}%`;
+      }
+      
+      // 设置透明度
+      particle.style.opacity = isMouseParticle ? '0.7' : `${Math.random() * 0.5 + 0.2}`;
+      
+      // 添加到容器
+      if (particleContainer) {
+        particleContainer.appendChild(particle);
+      }
+      
+      // 粒子属性
+      const particleObj = {
+        element: particle,
+        x: isMouseParticle ? x : parseFloat(particle.style.left),
+        y: isMouseParticle ? y : parseFloat(particle.style.top),
+        vx: isMouseParticle ? (Math.random() - 0.5) * 2 : (Math.random() - 0.5) * 0.5,
+        vy: isMouseParticle ? (Math.random() - 0.5) * 2 : (Math.random() - 0.5) * 0.5,
+        size: size,
+        isMouseParticle: isMouseParticle,
+        life: isMouseParticle ? 30 : undefined,
+        maxSize: isMouseParticle ? size * 3 : undefined
+      };
+      
+      if (isMouseParticle) {
+        particles.push(particleObj);
+      } else {
+        particles.push(particleObj);
+      }
+      
+      return particleObj;
+    }
+    
+    // 动画粒子
+    function animateParticles() {
+      particles.forEach((particle, index) => {
+        // 更新鼠标粒子
+        if (particle.isMouseParticle) {
+          particle.life--;
+          if (particle.life <= 0) {
+            particle.element.remove();
+            particles.splice(index, 1);
+            return;
+          }
+          
+          // 扩散效果
+          const scale = 1 - (particle.life / 30);
+          particle.element.style.width = `${particle.size * (1 + scale * 2)}px`;
+          particle.element.style.height = `${particle.size * (1 + scale * 2)}px`;
+          particle.element.style.opacity = `${0.7 * (1 - scale)}`;
+        } else {
+          // 更新背景粒子
+          particle.x += particle.vx;
+          particle.y += particle.vy;
+          
+          // 边界检测
+          if (particle.x > 100) particle.x = 0;
+          if (particle.x < 0) particle.x = 100;
+          if (particle.y > 100) particle.y = 0;
+          if (particle.y < 0) particle.y = 100;
+          
+          particle.element.style.left = `${particle.x}%`;
+          particle.element.style.top = `${particle.y}%`;
+        }
+      });
+      
+      requestAnimationFrame(animateParticles);
+    }
+    
+    // 鼠标移动事件
+    function handleMouseMove(e) {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+    }
+    
+    // 鼠标点击事件 - 创建涟漪效果
+    function handleMouseClick(e) {
+      for (let i = 0; i < 5; i++) {
+        setTimeout(() => {
+          createParticle(e.clientX, e.clientY, true);
+        }, i * 100);
+      }
+    }
+    
+    // 解密标题显示
+    function decryptTitle(element, encryptedTitle, decryptedTitle) {
+      element.addEventListener('mouseenter', () => {
+        element.textContent = decryptedTitle;
+        element.style.color = 'var(--primary)'; // 使用CSS变量保持一致的颜色主题
+      });
+      
+      element.addEventListener('mouseleave', () => {
+        element.textContent = encryptedTitle;
+        element.style.color = '#9CA3AF'; // 恢复为灰色
+      });
+    }
+    
+    // 随机0/1标题效果（支持长度随机变化）
+    function randomBinaryTitle() {
+      const titleElement = document.getElementById('vault-title');
+      const originalText = "0/1 PIXEL VAULT";
+      
+      // 随机决定新文本长度（原始长度的0.5倍到1.5倍之间）
+      const minLength = Math.max(5, Math.floor(originalText.length * 0.5));
+      const maxLength = Math.floor(originalText.length * 1.5);
+      const newLength = Math.floor(Math.random() * (maxLength - minLength + 1)) + minLength;
+      
+      let newText = "";
+      
+      for (let i = 0; i < newLength; i++) {
+        // 随机选择0或1
+        newText += Math.random() > 0.5 ? "1" : "0";
+      }
+      
+      titleElement.textContent = newText;
+      
+      // 更新data-text属性以保持故障效果一致性
+      titleElement.setAttribute('data-text', newText);
+    }
+    
+    // 启动随机0/1标题效果
+    function startRandomBinaryTitle() {
+      // 初始立即执行一次
+      randomBinaryTitle();
+      
+      // 每200毫秒更新一次
+      setInterval(randomBinaryTitle, 200);
+    }
+    
+    // 初始化函数
+    function initializeVault() {
+      startRandomBinaryTitle();
+      
+      // 初始化粒子系统
+      createParticleSystem();
+      
+      // 添加鼠标事件监听器
+      document.addEventListener('mousemove', handleMouseMove);
+      document.addEventListener('click', handleMouseClick);
+      
+      // 访问密钥验证
+      const accessKeyInput = document.getElementById('access-key-input');
+      const unlockBtn = document.getElementById('unlock-btn');
+      const accessMessage = document.getElementById('access-message');
+      const decryptedContent = document.getElementById('decrypted-content');
+      const archiveList = document.getElementById('archive-list');
+      
+      // 确保所有元素都存在
+      if (accessKeyInput && unlockBtn && accessMessage && decryptedContent && archiveList) {
+        // 清除可能已存在的事件监听器，防止重复绑定
+        const newUnlockBtn = unlockBtn.cloneNode(true);
+        unlockBtn.parentNode.replaceChild(newUnlockBtn, unlockBtn);
+        
+        const newAccessKeyInput = accessKeyInput.cloneNode(true);
+        accessKeyInput.parentNode.replaceChild(newAccessKeyInput, accessKeyInput);
+        
+        // 重新获取元素引用
+        const updatedUnlockBtn = document.getElementById('unlock-btn');
+        const updatedAccessKeyInput = document.getElementById('access-key-input');
+        
+        // 添加点击事件
+        updatedUnlockBtn.addEventListener('click', () => {
+          // 验证访问密钥
+          if (updatedAccessKeyInput.value === ACCESS_KEY) {
+            accessMessage.textContent = "访问授权成功！正在解密档案...";
+            accessMessage.className = "text-green-400 text-sm";
+            
+            // 延迟显示解密内容
+            setTimeout(() => {
+              decryptedContent.classList.remove('hidden');
+              
+              // 生成档案列表（实际项目中应从服务器获取）
+              archiveList.innerHTML = '';
+              const mockArchives = [
+                { id: 1, title: "河堤记", decrypted: "河堤记", slug: "lifeblog/river" },
+                { id: 2, title: "雨夜奔跑的少年", decrypted: "雨夜奔跑的少年", slug: "lifeblog/rain" }
+              ];
+              
+              mockArchives.forEach(archive => {
+                const item = document.createElement('div');
+                item.className = 'archive-item p-3 bg-[var(--card-bg)] border border-black/10 dark:border-white/10 rounded cursor-pointer text-gray-400';
+                item.textContent = archive.title;
+                decryptTitle(item, archive.title, archive.decrypted);
+                
+                // 添加点击事件跳转到文章页面
+                item.addEventListener('click', () => {
+                  // 构建完整的URL路径
+                  const fullPath = `/posts/${archive.slug}/`;
+                  console.log('Attempting to navigate to:', fullPath);
+                  
+                  // 在当前页面跳转而不是打开新标签页
+                  window.location.href = fullPath;
+                });
+                
+                archiveList.appendChild(item);
+              });
+            }, 1500);
+          } else if (updatedAccessKeyInput.value.trim() === "") {
+            accessMessage.textContent = "请输入访问密钥！";
+            accessMessage.className = "text-red-400 text-sm";
+            
+            // 添加抖动效果
+            updatedAccessKeyInput.classList.add('animate-shake');
+            setTimeout(() => {
+              updatedAccessKeyInput.classList.remove('animate-shake');
+            }, 500);
+            
+            // 清空解密档案内容
+            decryptedContent.classList.add('hidden');
+            archiveList.innerHTML = '';
+          } else {
+            accessMessage.textContent = "访问密钥错误！";
+            accessMessage.className = "text-red-400 text-sm";
+            
+            // 添加抖动效果
+            updatedAccessKeyInput.classList.add('animate-shake');
+            setTimeout(() => {
+              updatedAccessKeyInput.classList.remove('animate-shake');
+            }, 500);
+            
+            // 清空解密档案内容
+            decryptedContent.classList.add('hidden');
+            archiveList.innerHTML = '';
+          }
+        });
+        
+        // 回车键触发解锁
+        updatedAccessKeyInput.addEventListener('keypress', (e) => {
+          if (e.key === 'Enter') {
+            updatedUnlockBtn.click();
+          }
+        });
+      }
+    }
+    
+
+    
+
+    
+
+    
+
+    
+    // 调用初始化函数
+    initializeVault();
+  </script>
+</MainGridLayout>

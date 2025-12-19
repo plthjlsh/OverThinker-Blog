@@ -7,6 +7,7 @@ tags: ["OverThinker", "日志", "随笔", "书"]
 category: 生活随笔
 pinned: false
 draft: false
+archiveOnly: true
 ---
 y
 

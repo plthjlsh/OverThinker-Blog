@@ -1,0 +1,57 @@
+---
+import { getCollection } from "astro:content";
+import { getSortedPosts } from "../utils/content-utils";
+
+const allPosts = await getCollection("posts");
+const sortedPosts = await getSortedPosts();
+
+const lifeBlogPostsAll = allPosts.filter((post) =>
+	post.slug.includes("lifeblog"),
+);
+const lifeBlogPostsSorted = sortedPosts.filter((post) =>
+	post.slug.includes("lifeblog"),
+);
+
+const postData = {
+	all: lifeBlogPostsAll.map((post) => ({
+		slug: post.slug,
+		title: post.data.title,
+		archiveOnly: post.data.archiveOnly,
+		draft: post.data.draft,
+	})),
+	sorted: lifeBlogPostsSorted.map((post) => ({
+		slug: post.slug,
+		title: post.data.title,
+		archiveOnly: post.data.archiveOnly,
+		draft: post.data.draft,
+	})),
+};
+---
+
+<h1>LifeBlog Posts Test</h1>
+
+<h2>All Posts (including filtered)</h2>
+<ul>
+  {postData.all.map(post => (
+    <li>
+      <strong>{post.title}</strong><br/>
+      Slug: <code>{post.slug}</code><br/>
+      ArchiveOnly: {String(post.archiveOnly)}<br/>
+      Draft: {String(post.draft)}<br/>
+      URL: <a href={`/posts/${post.slug}/`}>/posts/{post.slug}/</a>
+    </li>
+  ))}
+</ul>
+
+<h2>Sorted Posts (filtered)</h2>
+<ul>
+  {postData.sorted.map(post => (
+    <li>
+      <strong>{post.title}</strong><br/>
+      Slug: <code>{post.slug}</code><br/>
+      ArchiveOnly: {String(post.archiveOnly)}<br/>
+      Draft: {String(post.draft)}<br/>
+      URL: <a href={`/posts/${post.slug}/`}>/posts/{post.slug}/</a>
+    </li>
+  ))}
+</ul>

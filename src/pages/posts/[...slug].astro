@@ -1,4 +1,5 @@
 ---
+import { getCollection } from "astro:content";
 import path from "node:path";
 import Comment from "@components/comment/index.astro";
 import License from "@components/misc/License.astro";
@@ -6,7 +7,6 @@ import Markdown from "@components/misc/Markdown.astro";
 import I18nKey from "@i18n/i18nKey";
 import { i18n } from "@i18n/translation";
 import MainGridLayout from "@layouts/MainGridLayout.astro";
-import { getSortedPosts } from "@utils/content-utils";
 import { getDir, getPostUrlBySlug } from "@utils/url-utils";
 import { Icon } from "astro-icon/components";
 import { licenseConfig } from "src/config";
@@ -14,9 +14,27 @@ import ImageWrapper from "../../components/misc/ImageWrapper.astro";
 import PostMetadata from "../../components/PostMeta.astro";
 import { profileConfig, siteConfig } from "../../config";
 import { formatDateToYYYYMMDD } from "../../utils/date-utils";
+
 export async function getStaticPaths() {
-	const blogEntries = await getSortedPosts();
-	return blogEntries.map((entry) => ({
+	// Get all posts except drafts, but include archive-only posts for their routes
+	const blogEntries = await getCollection("posts", ({ data }) => {
+		// Filter out drafts but include archive-only posts for their routes
+		return data.draft !== true;
+	});
+
+	// Sort the entries similar to getSortedPosts
+	const sorted = blogEntries.sort((a, b) => {
+		// 首先按置顶状态排序，置顶文章在前
+		if (a.data.pinned && !b.data.pinned) return -1;
+		if (!a.data.pinned && b.data.pinned) return 1;
+
+		// 如果置顶状态相同，则按发布日期排序
+		const dateA = new Date(a.data.published);
+		const dateB = new Date(b.data.published);
+		return dateA > dateB ? -1 : 1;
+	});
+
+	return sorted.map((entry) => ({
 		params: { slug: entry.slug },
 		props: { entry },
 	}));

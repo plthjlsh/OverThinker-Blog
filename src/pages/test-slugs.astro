@@ -1,0 +1,26 @@
+---
+import { getCollection } from "astro:content";
+
+const posts = await getCollection("posts");
+const lifeBlogPosts = posts.filter(
+	(post) =>
+		post.slug.includes("lifeblog") &&
+		(post.slug.includes("rain") || post.slug.includes("river")),
+);
+
+const slugs = lifeBlogPosts.map((post) => ({
+	slug: post.slug,
+	title: post.data.title,
+}));
+---
+
+<h1>Test Slugs</h1>
+<ul>
+  {slugs.map(({ slug, title }) => (
+    <li>
+      <strong>{title}</strong>: <code>{slug}</code>
+      <br />
+      <a href={`/posts/${slug}/`}>Link</a>
+    </li>
+  ))}
+</ul>
