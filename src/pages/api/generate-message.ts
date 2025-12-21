@@ -12,6 +12,10 @@ const IP_LOCATION_DATA: Record<
 	"111.192.123.124": { province: "北京市", city: "北京市", distance: 2100 },
 	"112.123.124.125": { province: "上海市", city: "上海市", distance: 1200 },
 	"114.115.116.117": { province: "浙江省", city: "杭州市", distance: 1100 },
+	"222.168.123.123": { province: "四川省", city: "成都市", distance: 1500 },
+	"123.123.123.123": { province: "湖北省", city: "武汉市", distance: 1300 },
+	"122.122.122.122": { province: "湖南省", city: "长沙市", distance: 1250 },
+	"133.133.133.133": { province: "山东省", city: "青岛市", distance: 1800 },
 };
 
 // 模拟地理位置笑话库（作为备用）
@@ -101,21 +105,68 @@ function getClientIP(request: Request): string {
 	// 尝试从各种请求头获取IP
 	const xForwardedFor = request.headers.get("x-forwarded-for");
 	if (xForwardedFor) {
-		return xForwardedFor.split(",")[0].trim();
+		// x-forwarded-for可能包含多个IP，取第一个（最接近客户端的）
+		const clientIP = xForwardedFor.split(",")[0].trim();
+		if (clientIP && clientIP !== "127.0.0.1" && clientIP !== "::1") {
+			return clientIP;
+		}
 	}
 
 	const cfConnectingIP = request.headers.get("cf-connecting-ip");
-	if (cfConnectingIP) {
+	if (
+		cfConnectingIP &&
+		cfConnectingIP !== "127.0.0.1" &&
+		cfConnectingIP !== "::1"
+	) {
 		return cfConnectingIP;
 	}
 
 	const xRealIP = request.headers.get("x-real-ip");
-	if (xRealIP) {
+	if (xRealIP && xRealIP !== "127.0.0.1" && xRealIP !== "::1") {
 		return xRealIP;
 	}
 
-	// 如果都获取不到，返回一个模拟IP用于测试
-	return "119.123.124.125"; // 模拟珠海的IP
+	// 获取请求对象中的IP地址
+	const clientAddr =
+		request.headers.get("x-forwarded-for") ||
+		request.headers.get("cf-connecting-ip") ||
+		request.headers.get("x-real-ip") ||
+		(request as any).connection?.remoteAddress ||
+		(request as any).socket?.remoteAddress ||
+		(request as any).client?.remoteAddress;
+
+	if (clientAddr && clientAddr !== "127.0.0.1" && clientAddr !== "::1") {
+		// 如果是IPv6格式的本地地址，继续使用测试IP
+		if (!clientAddr.startsWith("::ffff:127.0.0.1")) {
+			return clientAddr;
+		}
+	}
+
+	// 如果都获取不到或都是本地地址，在开发环境中返回一个模拟IP用于测试
+	// 但在生产环境中，我们应该尽可能返回真实IP或明确表示无法获取
+	if (import.meta.env.DEV) {
+		// 优先尝试获取真实IP，如果获取不到则使用测试IP
+		console.log("开发环境：无法获取真实客户端IP，使用测试IP");
+		const testIPs = [
+			"119.123.124.125", // 珠海
+			"202.96.128.86", // 广州
+			"113.108.192.123", // 深圳
+			"111.192.123.124", // 北京
+			"112.123.124.125", // 上海
+			"114.115.116.117", // 杭州
+			"222.168.123.123", // 成都
+			"123.123.123.123", // 武汉
+			"122.122.122.122", // 长沙
+			"133.133.133.133", // 青岛
+		];
+
+		// 默认返回珠海的IP（因为您在珠海）
+		return "119.123.124.125";
+	}
+
+	// 生产环境：如果无法获取真实IP，返回空字符串或特定标识
+	console.log("生产环境：无法获取真实客户端IP");
+	return ""; // 或者返回特定标识如 "unknown"
 }
 
 // 获取地理位置信息的辅助函数
