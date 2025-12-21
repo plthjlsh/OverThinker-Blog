@@ -16,17 +16,50 @@ const IP_LOCATION_DATA: Record<
 	"123.123.123.123": { province: "湖北省", city: "武汉市", distance: 1300 },
 	"122.122.122.122": { province: "湖南省", city: "长沙市", distance: 1250 },
 	"133.133.133.133": { province: "山东省", city: "青岛市", distance: 1800 },
+	"61.135.169.121": { province: "北京市", city: "北京市", distance: 2100 },
+	"180.101.49.11": { province: "江苏省", city: "南京市", distance: 1150 },
+	"110.242.68.3": { province: "河北省", city: "石家庄市", distance: 1900 },
+	"120.232.23.23": { province: "广东省", city: "广州市", distance: 120 },
+	"119.75.216.20": { province: "北京市", city: "北京市", distance: 2100 },
+	"183.207.95.95": { province: "广东省", city: "深圳市", distance: 90 },
+	"124.70.100.100": { province: "广东省", city: "东莞市", distance: 110 },
+	"113.96.120.120": { province: "广东省", city: "中山市", distance: 105 },
+	"116.13.120.120": { province: "福建省", city: "厦门市", distance: 300 },
+	"39.156.66.10": { province: "北京市", city: "北京市", distance: 2100 },
 };
 
 // 模拟地理位置笑话库（作为备用）
 const LOCATION_JOKES: Record<string, string[]> = {
-	广东省: ["老板来两斤福建人。", "食神钦点的美食家。", "早茶文化的传承者。"],
-	北京市: ["帝都来的VIP客人。", "烤鸭的终极品鉴家。", "胡同里的时尚达人。"],
-	上海市: ["魔都潮流引领者。", "外滩夜景欣赏专家。", "精致生活的代言人。"],
+	广东省: [
+		"老板来两斤福建人。",
+		"食神钦点的美食家。",
+		"早茶文化的传承者。",
+		"粤语说得比英语溜。",
+		"凉茶比咖啡更日常。",
+	],
+	北京市: [
+		"帝都来的VIP客人。",
+		"烤鸭的终极品鉴家。",
+		"胡同里的时尚达人。",
+		"说起话来都像领导。",
+		"出门就堵车，回家看升旗。",
+	],
+	上海市: [
+		"魔都潮流引领者。",
+		"外滩夜景欣赏专家。",
+		"精致生活的代言人。",
+		"垃圾分类比吃饭重要。",
+		"地铁比走路还快。",
+	],
+	江苏省: ["上有天堂，下有苏杭。", "园林设计的鼻祖。", "经济发达但低调做人。"],
+	浙江省: ["马云的老乡。", "西湖美景天天见。", "电商之都的原住民。"],
+	四川省: ["火锅比暖气更管用。", "国宝熊猫的邻居。", "麻将一打一下午。"],
 	default: [
 		"远方的朋友，欢迎来访！",
 		"跨越千山万水来相聚。",
 		"网络让我们心连心。",
+		"世界那么大，你来了正好。",
+		"不同的地方，同样的温暖。",
 	],
 };
 
@@ -102,71 +135,95 @@ export const GET: APIRoute = async ({ request }) => {
 
 // 获取客户端IP地址的辅助函数
 function getClientIP(request: Request): string {
-	// 尝试从各种请求头获取IP
+	// Vercel/标准方式：尝试从 x-forwarded-for 头获取IP
+	// x-forwarded-for 可能包含多个IP地址，用逗号分隔，第一个是最接近客户端的
 	const xForwardedFor = request.headers.get("x-forwarded-for");
+	console.log(`原始 x-forwarded-for 头: "${xForwardedFor}"`);
+
 	if (xForwardedFor) {
-		// x-forwarded-for可能包含多个IP，取第一个（最接近客户端的）
-		const clientIP = xForwardedFor.split(",")[0].trim();
-		if (clientIP && clientIP !== "127.0.0.1" && clientIP !== "::1") {
-			return clientIP;
+		// 处理可能包含端口号的情况 (格式: "ip:port")
+		const ips = xForwardedFor.split(",").map((ip) => ip.trim());
+		console.log("分割后的IP列表:", ips);
+
+		// 遍历所有IP，找到第一个非本地IP
+		for (const ipWithPort of ips) {
+			// 移除端口号 (如果存在)
+			const ip = ipWithPort.split(":")[0];
+			console.log(`处理IP: "${ip}" (来自 "${ipWithPort}")`);
+
+			if (ip && !isLocalIP(ip)) {
+				console.log(`通过 x-forwarded-for 获取到客户端IP: ${ip}`);
+				return ip;
+			}
 		}
 	}
 
-	const cfConnectingIP = request.headers.get("cf-connecting-ip");
-	if (
-		cfConnectingIP &&
-		cfConnectingIP !== "127.0.0.1" &&
-		cfConnectingIP !== "::1"
-	) {
-		return cfConnectingIP;
+	// 尝试其他常见的代理头部字段
+	const ipHeaders = [
+		"cf-connecting-ip",
+		"x-real-ip",
+		"x-client-ip",
+		"x-original-forwarded-for",
+		"true-client-ip",
+	];
+
+	for (const header of ipHeaders) {
+		const ip = request.headers.get(header);
+		console.log(`检查头部 ${header}: "${ip}"`);
+
+		if (ip && !isLocalIP(ip)) {
+			console.log(`通过 ${header} 获取到客户端IP: ${ip}`);
+			return ip;
+		}
 	}
 
-	const xRealIP = request.headers.get("x-real-ip");
-	if (xRealIP && xRealIP !== "127.0.0.1" && xRealIP !== "::1") {
-		return xRealIP;
-	}
-
-	// 获取请求对象中的IP地址
-	const clientAddr =
-		request.headers.get("x-forwarded-for") ||
-		request.headers.get("cf-connecting-ip") ||
-		request.headers.get("x-real-ip") ||
+	// 尝试从请求对象中直接获取
+	const directIP =
 		(request as any).connection?.remoteAddress ||
 		(request as any).socket?.remoteAddress ||
-		(request as any).client?.remoteAddress;
+		(request as any).client?.remoteAddress ||
+		(request as any).info?.remoteAddress;
 
-	if (clientAddr && clientAddr !== "127.0.0.1" && clientAddr !== "::1") {
-		// 如果是IPv6格式的本地地址，继续使用测试IP
-		if (!clientAddr.startsWith("::ffff:127.0.0.1")) {
-			return clientAddr;
+	if (directIP && !isLocalIP(directIP)) {
+		console.log(`通过直接连接获取到客户端IP: ${directIP}`);
+		return directIP;
+	}
+
+	// 改进的fallback机制：即使在生产环境也尝试返回一些信息
+	// 如果x-forwarded-for存在但所有IP都是本地IP，至少返回第一个IP
+	if (xForwardedFor) {
+		const firstIP = xForwardedFor.split(",")[0].trim().split(":")[0];
+		if (firstIP) {
+			console.log(`Fallback: 返回x-forwarded-for中的第一个IP: ${firstIP}`);
+			return firstIP;
 		}
 	}
 
-	// 如果都获取不到或都是本地地址，在开发环境中返回一个模拟IP用于测试
-	// 但在生产环境中，我们应该尽可能返回真实IP或明确表示无法获取
+	// 如果都获取不到，在开发环境中返回一个模拟IP用于测试
 	if (import.meta.env.DEV) {
-		// 优先尝试获取真实IP，如果获取不到则使用测试IP
 		console.log("开发环境：无法获取真实客户端IP，使用测试IP");
-		const testIPs = [
-			"119.123.124.125", // 珠海
-			"202.96.128.86", // 广州
-			"113.108.192.123", // 深圳
-			"111.192.123.124", // 北京
-			"112.123.124.125", // 上海
-			"114.115.116.117", // 杭州
-			"222.168.123.123", // 成都
-			"123.123.123.123", // 武汉
-			"122.122.122.122", // 长沙
-			"133.133.133.133", // 青岛
-		];
-
 		// 默认返回珠海的IP（因为您在珠海）
 		return "119.123.124.125";
 	}
 
-	// 生产环境：如果无法获取真实IP，返回空字符串或特定标识
-	console.log("生产环境：无法获取真实客户端IP");
-	return ""; // 或者返回特定标识如 "unknown"
+	// 生产环境：记录日志并返回空字符串
+	console.log("生产环境：无法获取真实客户端IP，所有尝试均失败");
+	console.log("请求的所有头部信息:", [...request.headers.entries()]);
+
+	// 最后的fallback：返回一个特殊标记，让前端知道IP获取失败
+	return "IP_DETECTION_FAILED";
+}
+
+// 辅助函数：检查是否为本地IP地址
+function isLocalIP(ip: string): boolean {
+	return (
+		ip === "127.0.0.1" ||
+		ip === "::1" ||
+		ip.startsWith("::ffff:127.0.0.1") ||
+		ip.startsWith("10.") ||
+		ip.startsWith("172.") ||
+		ip.startsWith("192.168.")
+	);
 }
 
 // 获取地理位置信息的辅助函数

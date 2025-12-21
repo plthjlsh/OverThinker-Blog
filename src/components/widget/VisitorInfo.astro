@@ -294,6 +294,30 @@ const { class: className = "" } = Astro.props;
       
       // 获取欢迎信息
       fetchWelcomeMessage();
+      
+      // 如果API调用失败，至少显示基本的浏览器信息
+      setTimeout(() => {
+        const ipElement = document.getElementById('ip-address');
+        const locationElement = document.getElementById('location-info');
+        
+        if (ipElement && locationElement) {
+          // 如果元素仍然是默认值，说明API调用可能失败了
+          if (ipElement.textContent === 'Detecting OS...' || ipElement.textContent === '' || ipElement.textContent === '无法获取IP地址') {
+            // 显示本地检测的信息
+            const osInfo = getOSInfo();
+            document.getElementById('os-info').textContent = osInfo.name;
+            document.getElementById('os-icon').className = osInfo.icon + ' text-xs mr-1 text-[var(--primary)] rotating-icon group-hover:scale-110 transition-transform duration-300';
+            
+            // 显示提示信息
+            ipElement.textContent = '无法获取公网IP';
+            locationElement.textContent = '本地访问';
+            
+            // 显示欢迎信息区域
+            document.getElementById('welcome-section').classList.remove('hidden');
+            document.getElementById('ip-info-section').classList.remove('hidden');
+          }
+        }
+      }, 3000); // 3秒后检查
     });
     
     // 新增API调用获取欢迎信息
@@ -313,13 +337,16 @@ const { class: className = "" } = Astro.props;
           throw new Error('Invalid data received from server');
         }
         
+        // 特殊处理IP检测失败的情况
+        const isIPDetectionFailed = data.ip === "IP_DETECTION_FAILED";
+        
         // 更新欢迎信息UI
         document.getElementById('welcome-message').textContent = data.welcomeMessage;
         document.getElementById('location-joke').textContent = data.joke || '欢迎访问本站！';
-        document.getElementById('ip-address').textContent = data.ip || '无法获取IP地址';
+        document.getElementById('ip-address').textContent = isIPDetectionFailed ? '无法获取公网IP' : (data.ip || '无法获取IP地址');
         document.getElementById('location-info').textContent = data.location 
           ? `${data.location.province} ${data.location.city} (${data.location.distance}公里)`
-          : (data.ip ? '未知位置' : '无法获取位置信息');
+          : (isIPDetectionFailed ? 'IP检测失败' : (data.ip ? '未知位置' : '无法获取位置信息'));
         
         // 显示信息区域
         document.getElementById('welcome-section').classList.remove('hidden');
@@ -330,6 +357,31 @@ const { class: className = "" } = Astro.props;
         document.getElementById('welcome-message').textContent = '欢迎访问本站！';
         document.getElementById('location-joke').textContent = '连接似乎有些问题，请稍后再试。';
         document.getElementById('welcome-section').classList.remove('hidden');
+        
+        // 显示基本的访客信息
+        const osInfo = getOSInfo();
+        document.getElementById('os-info').textContent = osInfo.name;
+        document.getElementById('os-icon').className = osInfo.icon + ' text-xs mr-1 text-[var(--primary)] rotating-icon group-hover:scale-110 transition-transform duration-300';
+        document.getElementById('browser-info').textContent = getBrowser() + ' ' + navigator.appVersion.match(/(?:Chrome|Firefox|Safari|Edg|OPR)\/(\d+)/)?.[1] || '';
+        document.getElementById('device-info').textContent = getDevice();
+        
+        // 显示提示信息
+        const ipElement = document.getElementById('ip-address');
+        const locationElement = document.getElementById('location-info');
+        if (ipElement) {
+          // 显示更详细的错误信息
+          if (error instanceof TypeError) {
+            ipElement.textContent = '网络连接错误';
+          } else if (error.message.includes('HTTP error')) {
+            ipElement.textContent = `服务器错误 (${error.message})`;
+          } else {
+            ipElement.textContent = '无法获取公网IP';
+          }
+        }
+        if (locationElement) locationElement.textContent = '本地访问';
+        
+        // 显示信息区域
+        document.getElementById('ip-info-section').classList.remove('hidden');
         
         // 在控制台显示详细错误信息
         if (error instanceof TypeError) {
